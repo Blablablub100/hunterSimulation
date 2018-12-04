@@ -1,4 +1,4 @@
 package java.Simulation.SimulationObjects;
 
-public class Prey {
+public class Prey implements LivingCreature {
 }

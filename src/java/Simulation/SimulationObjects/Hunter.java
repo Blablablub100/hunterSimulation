@@ -1,4 +1,6 @@
 package java.Simulation.SimulationObjects;
 
-public class Hunter {
+public class Hunter implements LivingCreature {
+
+
 }
