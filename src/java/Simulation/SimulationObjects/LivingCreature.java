@@ -1,4 +1,6 @@
 package java.Simulation.SimulationObjects;
 
-public interface LivingCreature {
+public interface LivingCreature extends BoardObject {
+
+
 }
