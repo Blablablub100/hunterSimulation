@@ -10,5 +10,15 @@ public class Board {
     private List<Prey> preys;
     private List<Obstacle> obstacles;
 
+    public void spawnHunter() {
 
+    }
+
+    public void spawnPrey() {
+
+    }
+
+    public void spawnObstacle() {
+
+    }
 }
