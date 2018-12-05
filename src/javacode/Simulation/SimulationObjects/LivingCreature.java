@@ -1,4 +1,4 @@
-package java.Simulation.SimulationObjects;
+package javacode.Simulation.SimulationObjects;
 
 public interface LivingCreature extends BoardObject {
 

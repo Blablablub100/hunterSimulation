@@ -1,4 +1,4 @@
-package java.UI;
+package javacode.UI;
 
 import java.util.Scanner;
 

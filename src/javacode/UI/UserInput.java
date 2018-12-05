@@ -1,4 +1,4 @@
-package java.UI;
+package javacode.UI;
 
 public class UserInput {
 
@@ -8,7 +8,12 @@ public class UserInput {
     private int initialPreyCount;
     private int initialObstacleCount;
 
-    public UserInput(int boardWidth, int boardHeight, int initialHunterCount, int initialPreyCount, int initialObstacleCount) {
+    public UserInput(int boardWidth
+            , int boardHeight
+            , int initialHunterCount
+            , int initialPreyCount
+            , int initialObstacleCount) {
+
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
         this.initialHunterCount = initialHunterCount;

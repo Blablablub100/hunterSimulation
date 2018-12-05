@@ -1,7 +1,6 @@
-package java;
+package javacode;
 
-import java.Simulation.SimulationController;
-import java.UI.CLI;
+import javacode.UI.CLI;
 
 public class Main {
 

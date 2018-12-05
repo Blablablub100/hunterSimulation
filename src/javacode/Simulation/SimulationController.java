@@ -1,7 +1,7 @@
-package java.Simulation;
+package javacode.Simulation;
 
-import java.Simulation.SimulationObjects.Board;
-import java.UI.UserInput;
+import javacode.Simulation.SimulationObjects.Board;
+import javacode.UI.UserInput;
 
 public class SimulationController {
 
