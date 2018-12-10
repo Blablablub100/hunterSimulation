@@ -1,5 +1,6 @@
 package javacode.Simulation.SimulationObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -7,13 +8,22 @@ public class Board {
 
     private int width;
     private int height;
-    private List<Hunter> hunters;
-    private List<Prey> preys;
-    private List<Obstacle> obstacles;
+    private List<Hunter> hunters = new ArrayList<>();
+    private List<Prey> preys = new ArrayList<>();
+    private List<Obstacle> obstacles = new ArrayList<>();
 
-    public Board(int width, int height, int hunterCount, int PreyCount, int obstacleCount) {
+    public Board(int width, int height, int hunterCount, int preyCount, int obstacleCount) {
         this.width = width;
         this.height = height;
+        for (int i = 0; i < hunterCount; i++) {
+            spawnHunter();
+        }
+        for (int i = 0; i < preyCount; i++) {
+            spawnPrey();
+        }
+        for (int i = 0; i < obstacleCount; i++) {
+            spawnObstacle();
+        }
     }
 
     public void spawnHunter() {

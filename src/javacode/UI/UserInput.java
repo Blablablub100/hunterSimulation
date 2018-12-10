@@ -24,7 +24,6 @@ public class UserInput {
 
     public void checkInput() throws WrongUserInputException {
         //TODO überprüfen ob die inputs alle stimmen wenn nicht:
-        throw new WrongUserInputException("a", "b");
     }
 
     public int getBoardWidth() {
