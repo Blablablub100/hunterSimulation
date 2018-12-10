@@ -35,4 +35,25 @@ public class UserInput {
         if(initialObstacleCount < 0) throw new WrongUserInputException("Count of obstacles", "Count of obstacles can't be " +
                 "negative.\n");
     }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
+    public int getInitialHunterCount() {
+        return initialHunterCount;
+    }
+
+    public int getInitialPreyCount() {
+        return initialPreyCount;
+    }
+
+    public int getInitialObstacleCount() {
+        return initialObstacleCount;
+    }
+
 }
