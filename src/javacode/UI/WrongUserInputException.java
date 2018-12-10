@@ -7,6 +7,7 @@ public class WrongUserInputException extends Exception {
     public WrongUserInputException(String variable, String reason) {
         message = variable + " is invalid\n";
         message = message + "Reason: " + reason;
+        message = message + "Please enter values again:\n";
     }
 
     public String toString() {

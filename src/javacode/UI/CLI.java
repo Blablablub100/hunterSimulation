@@ -23,24 +23,16 @@ public class CLI {
         System.out.print("ObstacleCount eingeben: ");
         int tmp4 = sc.nextInt();
 
-        sc.close();
-
         UserInput input = null;
 
         try {
             input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
+            sc.close();
         } catch (WrongUserInputException e) {
             // TODO Was soll passieren, wenn der Input falsch ist?
+            System.out.println(e.toString());
+            input = getInput();
         }
-
-        UserInput input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
-
-        /*System.out.println(input.boardWidth);
-        System.out.println(input.boardHeight);
-        System.out.println(input.initialHunterCount);
-        System.out.println(input.initialPreyCount);
-        System.out.println(input.initialObstacleCount);*/
-
         return input;
     }
 

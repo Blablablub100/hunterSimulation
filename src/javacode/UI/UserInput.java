@@ -24,6 +24,15 @@ public class UserInput {
 
     public void checkInput() throws WrongUserInputException {
         //TODO überprüfen ob die inputs alle stimmen wenn nicht:
-        throw new WrongUserInputException("a", "b");
+
+
+        if(boardWidth <= 0) throw new WrongUserInputException("Board Width", "Width can't be smaller or equal 0.\n");
+        if(boardHeight <= 0) throw new WrongUserInputException("Board Height", "Height can't be smaller or equal 0.\n");
+        if(initialHunterCount < 0) throw new WrongUserInputException("Count of hunters", "Count of hunters can't be " +
+                "negative.\n");
+        if(initialPreyCount < 0) throw new WrongUserInputException("Count of preys", "Count of preys can't be " +
+                "negative.\n");
+        if(initialObstacleCount < 0) throw new WrongUserInputException("Count of obstacles", "Count of obstacles can't be " +
+                "negative.\n");
     }
 }
