@@ -26,7 +26,19 @@ public class Board {
         }
     }
 
-    public void spawnHunter() {
+    public List<Hunter> getHunters() {
+        return hunters;
+    }
+
+    public List<Prey> getPreys() {
+        return preys;
+    }
+
+    public List<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
+    protected void spawnHunter() {
         hunters.add(new Hunter(generateRandomLoc()));
     }
 
