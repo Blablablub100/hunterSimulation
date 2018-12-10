@@ -10,8 +10,8 @@ public class Board {
     private List<Prey> preys;
     private List<Obstacle> obstacles;
 
-    public void spawnHunter() {
-
+    public void spawnHunter(BoardObject.Location loc) {
+        hunters.add(new Hunter(loc));
     }
 
     public void spawnPrey() {

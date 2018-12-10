@@ -25,6 +25,13 @@ public class CLI {
 
         sc.close();
 
+        UserInput input = null;
+
+        try {
+            input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
+        } catch (WrongUserInputException e) {
+            // TODO Was soll passieren, wenn der Input falsch ist?
+        }
 
         UserInput input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
 

@@ -2,7 +2,7 @@ package javacode.Simulation.SimulationObjects;
 
 public interface BoardObject {
 
-    Location location = new Location(-1, -1);
+    Location loc = null;
 
     class Location {
         public Location(int x, int y) {
