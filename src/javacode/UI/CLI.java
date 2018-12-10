@@ -8,24 +8,32 @@ public class CLI {
         // TODO ALLES MIT SCANNER HOLEN
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Width eingeben: ");
+        System.out.print("Width eingeben: ");
         int tmp0 = sc.nextInt();
 
-        System.out.println("Height eingeben: ");
+        System.out.print("Height eingeben: ");
         int tmp1 = sc.nextInt();
 
-        System.out.println("HunterCount eingeben: ");
+        System.out.print("HunterCount eingeben: ");
         int tmp2 = sc.nextInt();
 
-        System.out.println("PreyCount eingeben: ");
+        System.out.print("PreyCount eingeben: ");
         int tmp3 = sc.nextInt();
 
-        System.out.println("ObstacleCount eingeben: ");
+        System.out.print("ObstacleCount eingeben: ");
         int tmp4 = sc.nextInt();
 
         sc.close();
 
+
         UserInput input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
+
+        /*System.out.println(input.boardWidth);
+        System.out.println(input.boardHeight);
+        System.out.println(input.initialHunterCount);
+        System.out.println(input.initialPreyCount);
+        System.out.println(input.initialObstacleCount);*/
+
         return input;
     }
 
