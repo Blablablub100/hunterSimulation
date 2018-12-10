@@ -26,4 +26,25 @@ public class UserInput {
         //TODO überprüfen ob die inputs alle stimmen wenn nicht:
         throw new WrongUserInputException("a", "b");
     }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
+    public int getInitialHunterCount() {
+        return initialHunterCount;
+    }
+
+    public int getInitialPreyCount() {
+        return initialPreyCount;
+    }
+
+    public int getInitialObstacleCount() {
+        return initialObstacleCount;
+    }
+
 }

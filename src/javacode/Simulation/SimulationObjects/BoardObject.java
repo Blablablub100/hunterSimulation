@@ -2,7 +2,9 @@ package javacode.Simulation.SimulationObjects;
 
 public interface BoardObject {
 
-    Location loc = null;
+    void setLocation(Location loc);
+
+    Location getLocation(Location loc);
 
     class Location {
         public Location(int x, int y) {

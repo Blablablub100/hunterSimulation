@@ -32,6 +32,7 @@ public class CLI {
         } catch (WrongUserInputException e) {
             // TODO Was soll passieren, wenn der Input falsch ist?
         }
+        
         return input;
     }
 

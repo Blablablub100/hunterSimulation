@@ -8,8 +8,16 @@ public class SimulationController {
     private Board board;
     private Statistics stats;
 
-    public void initSimulation(UserInput input) {
+    public SimulationController(UserInput input) {
+        initSimulation(input);
+    }
 
+    private void initSimulation(UserInput input) {
+        board = new Board(input.getBoardWidth()
+                , input.getBoardHeight()
+                , input.getInitialHunterCount()
+                , input.getInitialPreyCount()
+                , input.getInitialObstacleCount());
     }
 
     public Statistics getStats() {
