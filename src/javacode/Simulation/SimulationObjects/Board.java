@@ -24,6 +24,7 @@ public class Board {
         for (int i = 0; i < obstacleCount; i++) {
             spawnObstacle();
         }
+        // TODO ÜBERLAGERUNG BEACHTEN
     }
 
 

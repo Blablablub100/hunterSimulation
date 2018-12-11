@@ -11,6 +11,15 @@ public interface BoardObject {
             this.x = x;
             this.y = y;
         }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
         int x;
         int y;
 

@@ -1,5 +1,8 @@
 package javacode.UI;
 
+import javacode.Simulation.SimulationObjects.*;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class CLI {
@@ -23,7 +26,7 @@ public class CLI {
         System.out.print("ObstacleCount eingeben: ");
         int tmp4 = sc.nextInt();
 
-        UserInput input = null;
+        UserInput input;
 
         try {
             input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
@@ -38,4 +41,50 @@ public class CLI {
     }
 
 
+    public void printBoard(Board b) {
+        char[][] boardOutputCLI = new char[b.getWidth()][b.getHeight()];
+        fill(boardOutputCLI, '#');
+
+        List<Hunter> hunters;
+        List<Prey> preys;
+        List<Obstacle> obstacles;
+
+        hunters = b.getHunters();
+        preys = b.getPreys();
+        obstacles = b.getObstacles();
+
+        for (Hunter hunter : hunters) setElement(boardOutputCLI, hunter);
+        for (Prey prey : preys) setElement(boardOutputCLI, prey);
+        for (Obstacle obstacle : obstacles) setElement(boardOutputCLI, obstacle);
+
+        outputBoard(boardOutputCLI);
+    }
+
+    private void setElement(char[][] board, BoardObject o) {
+        BoardObject.Location loc = o.getLocation();
+        if (o instanceof Hunter) {
+            board[loc.getX()][loc.getY()] = 'h';
+        } else if (o instanceof Prey) {
+            board[loc.getX()][loc.getY()] = 'p';
+        } else if (o instanceof Obstacle) {
+            board[loc.getX()][loc.getY()] = 'o';
+        }
+    }
+
+    private void fill(char[][] toFill, char c) {
+        for(int x = 0; x < toFill.length; x++) {
+            for(int y = 0; y < toFill[x].length; y++) {
+                toFill[x][y] = c;
+            }
+        }
+    }
+
+    private void outputBoard(char[][] output) {
+        for(int y = 0; y < output[0].length; y++) {
+            for(int x = 0; x < output.length; x++) {
+                System.out.print(output[x][y]);
+            }
+            System.out.println();
+        }
+    }
 }
