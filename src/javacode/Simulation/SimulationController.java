@@ -12,6 +12,7 @@ public class SimulationController {
         initSimulation(input);
     }
 
+    // musst be called to create the initial state of the simulation
     private void initSimulation(UserInput input) {
         board = new Board(input.getBoardWidth()
                 , input.getBoardHeight()

@@ -2,19 +2,25 @@ package javacode.Simulation;
 
 public class Statistics {
 
+    private SimulationController simulation;
+
+    public Statistics(SimulationController simulation) {
+        this.simulation = simulation;
+    }
+
     public int getHunterCounter() {
-        return 0;
+        return (simulation.getBoard().getHunters().size());
     }
 
     public int getPreyCount() {
-        return 0;
+        return (simulation.getBoard().getPreys().size());
     }
 
     public int getObstacleCount() {
-        return 0;
+        return (simulation.getBoard().getObstacles().size());
     }
 
     public int getHunterPreyRatio() {
-        return 0;
+        return (simulation.getBoard().getObstacles().size());
     }
 }

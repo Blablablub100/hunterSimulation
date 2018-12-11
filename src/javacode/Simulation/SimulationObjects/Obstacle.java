@@ -14,7 +14,7 @@ public class Obstacle implements BoardObject {
     }
 
     @Override
-    public Location getLocation(Location loc) {
+    public Location getLocation() {
         return loc;
     }
 }

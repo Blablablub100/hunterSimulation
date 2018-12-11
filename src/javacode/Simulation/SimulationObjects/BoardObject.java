@@ -4,7 +4,7 @@ public interface BoardObject {
 
     void setLocation(Location loc);
 
-    Location getLocation(Location loc);
+    Location getLocation();
 
     class Location {
         public Location(int x, int y) {
@@ -13,5 +13,13 @@ public interface BoardObject {
         }
         int x;
         int y;
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Location)) return false;
+            Location loc = (Location) obj;
+            if (!(loc.x == x && loc.y == y)) return false;
+            return true;
+        }
     }
 }
