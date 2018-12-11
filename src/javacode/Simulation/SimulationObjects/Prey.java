@@ -14,7 +14,7 @@ public class Prey implements LivingCreature {
     }
 
     @Override
-    public Location getLocation(Location loc) {
+    public Location getLocation() {
         return loc;
     }
 }

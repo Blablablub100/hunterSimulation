@@ -12,5 +12,8 @@ public class Main {
 
         CLI test = new CLI();
         SimulationController sim = new SimulationController(test.getInput());
+        test.printBoard(sim.getBoard());
+
+        System.out.println("END");
     }
 }
