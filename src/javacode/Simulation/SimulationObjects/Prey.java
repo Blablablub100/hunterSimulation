@@ -1,20 +1,42 @@
 package javacode.Simulation.SimulationObjects;
 
-public class Prey implements LivingCreature {
+import java.util.List;
 
-    private Location loc;
+public class Prey extends LivingCreature {
 
-    public Prey(Location loc) {
+    Prey(Location loc) {
+        // TODO randomize rest
         this.loc = loc;
     }
 
+    // methods from LivingCreature
     @Override
-    public void setLocation(Location loc) {
-        this.loc = loc;
+    public void react() {
+
     }
 
     @Override
-    public Location getLocation() {
-        return loc;
+    List<BoardObject> see() {
+        return null;
+    }
+
+    @Override
+    void move() {
+
+    }
+
+    @Override
+    void eat() {
+
+    }
+
+    @Override
+    void attack(LivingCreature opponent) {
+
+    }
+
+    @Override
+    void die() {
+
     }
 }

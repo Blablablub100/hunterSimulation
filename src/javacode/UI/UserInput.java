@@ -23,8 +23,6 @@ public class UserInput {
     }
 
     public void checkInput() throws WrongUserInputException {
-        //TODO überprüfen ob die inputs alle stimmen wenn nicht:
-
 
         if(boardWidth <= 0) throw new WrongUserInputException("Board Width", "Width can't be smaller or equal 0.\n");
         if(boardHeight <= 0) throw new WrongUserInputException("Board Height", "Height can't be smaller or equal 0.\n");

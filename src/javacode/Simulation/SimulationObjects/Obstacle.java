@@ -4,12 +4,7 @@ public class Obstacle implements BoardObject {
 
     private Location loc;
 
-    public Obstacle(Location loc) {
-        this.loc = loc;
-    }
-
-    @Override
-    public void setLocation(Location loc) {
+    Obstacle(Location loc) {
         this.loc = loc;
     }
 

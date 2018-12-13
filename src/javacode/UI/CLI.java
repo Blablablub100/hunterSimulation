@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class CLI {
 
     public UserInput getInput() {
-        // TODO ALLES MIT SCANNER HOLEN
         Scanner sc = new Scanner(System.in);
 
         System.out.print("Width eingeben: ");
@@ -32,7 +31,6 @@ public class CLI {
             input = new UserInput(tmp0, tmp1, tmp2, tmp3, tmp4);
             sc.close();
         } catch (WrongUserInputException e) {
-            // TODO Was soll passieren, wenn der Input falsch ist?
             System.out.println(e.toString());
             input = getInput();
         }

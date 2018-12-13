@@ -24,7 +24,6 @@ public class Board {
         for (int i = 0; i < obstacleCount; i++) {
             spawnObstacle();
         }
-        // TODO ÜBERLAGERUNG BEACHTEN
     }
 
 
@@ -56,6 +55,30 @@ public class Board {
     }
 
 
+    // remove Object
+    void removeFromBoard(BoardObject b) {
+        if (b instanceof Hunter) {
+            removeHunter((Hunter) b);
+        } else if (b instanceof Prey) {
+            removePrey((Prey) b);
+        } else if (b instanceof Obstacle) {
+            removeObstacle((Obstacle) b);
+        }
+    }
+
+    void removeHunter(Hunter h) {
+        hunters.remove(h);
+    }
+
+    void removePrey(Prey p) {
+        preys.remove(p);
+    }
+
+    void removeObstacle(Obstacle o) {
+        obstacles.remove(o);
+    }
+
+
     // getters
     public List<Hunter> getHunters() {
         return hunters;
@@ -83,6 +106,15 @@ public class Board {
         res.addAll((List<BoardObject>)(List<?>) preys);
         res.addAll((List<BoardObject>)(List<?>) obstacles);
         return res;
+    }
+
+    // returns null if there is no object at certain location
+    public BoardObject getObjectAtLocation(BoardObject.Location loc) {
+        List<BoardObject> boardObjects = getBoardObjects();
+        for (BoardObject curr: boardObjects) {
+            if (curr.getLocation().equals(loc)) return curr;
+        }
+        return null;
     }
 
 
