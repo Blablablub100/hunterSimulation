@@ -1,6 +1,8 @@
 package javacode.Simulation;
 
 import javacode.Simulation.SimulationObjects.Board;
+import javacode.Simulation.SimulationObjects.BoardObject;
+import javacode.Simulation.SimulationObjects.LivingCreature;
 import javacode.UI.UserInput;
 
 public class SimulationController {
@@ -19,6 +21,12 @@ public class SimulationController {
                 , input.getInitialHunterCount()
                 , input.getInitialPreyCount()
                 , input.getInitialObstacleCount());
+    }
+
+    public void simulateNextStep() {
+        for (LivingCreature curr: getBoard().getLivingCreatues()) {
+            curr.react();
+        }
     }
 
     public Statistics getStats() {

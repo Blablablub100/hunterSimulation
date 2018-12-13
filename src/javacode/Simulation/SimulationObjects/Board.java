@@ -29,7 +29,7 @@ public class Board {
 
     // spawn at specific position
     public void spawnHunter(BoardObject.Location loc) {
-        hunters.add(new Hunter(loc));
+        hunters.add(new Hunter(loc, this));
     }
 
     public void spawnPrey(BoardObject.Location loc) {
@@ -43,7 +43,7 @@ public class Board {
 
     // spawn at random positions
     private void spawnHunter() {
-        hunters.add(new Hunter(generateRandomLoc()));
+        hunters.add(new Hunter(generateRandomLoc(), this));
     }
 
     private void spawnPrey() {
@@ -108,6 +108,13 @@ public class Board {
         return res;
     }
 
+    public List<LivingCreature> getLivingCreatues() {
+        List<LivingCreature> res = new ArrayList<>();
+        res.addAll((List<LivingCreature>)(List<?>) hunters);
+        res.addAll((List<LivingCreature>)(List<?>) preys);
+        return res;
+    }
+
     // returns null if there is no object at certain location
     public BoardObject getObjectAtLocation(BoardObject.Location loc) {
         List<BoardObject> boardObjects = getBoardObjects();
@@ -135,6 +142,12 @@ public class Board {
             if (curr.getLocation().equals(loc)) return false;
         }
         return true;
+    }
+
+    public boolean isOnBoard(BoardObject.Location loc) {
+        int x = loc.getX();
+        int y = loc.getY();
+        return ((x>0 && x<width)  &&  (y>0 && y<height));
     }
 
 }

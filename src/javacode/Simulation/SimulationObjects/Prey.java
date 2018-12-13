@@ -21,22 +21,12 @@ public class Prey extends LivingCreature {
     }
 
     @Override
-    void move() {
-
-    }
-
-    @Override
     void eat() {
 
     }
 
     @Override
     void attack(LivingCreature opponent) {
-
-    }
-
-    @Override
-    void die() {
 
     }
 }

@@ -4,6 +4,7 @@ public interface BoardObject {
 
     Location getLocation();
 
+
     class Location {
         public Location(int x, int y) {
             this.x = x;
@@ -18,8 +19,24 @@ public interface BoardObject {
             return y;
         }
 
-        int x;
-        int y;
+        public void moveRight() {
+            x++;
+        }
+
+        public void moveLeft() {
+            x--;
+        }
+
+        public void moveUp() {
+            y--;
+        }
+
+        public void moveDown() {
+            y++;
+        }
+
+        private int x;
+        private int y;
 
         @Override
         public boolean equals(Object obj) {
