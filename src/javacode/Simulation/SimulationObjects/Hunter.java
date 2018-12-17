@@ -43,11 +43,19 @@ public class Hunter extends LivingCreature {
 
     @Override
     void eat() {
+        BoardObject tmp = myBoard.getObjectAtLocation(getLocation());
+        if (!(tmp instanceof Prey)) return;
+        Prey toEat = (Prey) tmp;
+        attack(toEat);
 
     }
 
     @Override
     void attack(LivingCreature opponent) {
-
+        if (!getLocation().equals(opponent.getLocation())) return;
+        if (opponent.getStrength() < getStrength()) return;
+        if (!(opponent instanceof Prey)) return;
+        opponent.die();
+        eat();
     }
 }

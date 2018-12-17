@@ -21,7 +21,7 @@ public abstract class LivingCreature implements BoardObject {
 
     abstract void eat();
 
-    abstract void attack(LivingCreature opponent);
+    abstract boolean attack(LivingCreature opponent);
 
     void die() {
         myBoard.removeFromBoard(this);
@@ -119,5 +119,9 @@ public abstract class LivingCreature implements BoardObject {
             possibleSteps = maxMovementSpeed - stepsTaken;
         }
         return false;
+    }
+
+    int getStrength() {
+        return strength;
     }
 }
