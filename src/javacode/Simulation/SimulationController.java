@@ -29,6 +29,12 @@ public class SimulationController {
         }
     }
 
+    public void testMovement() {
+        for (LivingCreature curr: getBoard().getLivingCreatues()) {
+            curr.move(new BoardObject.Location(0,0));
+        }
+    }
+
     public Statistics getStats() {
         return stats;
     }

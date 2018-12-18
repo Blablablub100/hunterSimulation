@@ -12,7 +12,7 @@ public abstract class LivingCreature implements BoardObject {
     int maxMovementSpeed;
     int strength;
     int sightDistance;
-    int hunger;
+    int energy;
     String direction; // can be north, south, east, west
 
     public abstract void react();
@@ -33,8 +33,7 @@ public abstract class LivingCreature implements BoardObject {
 
     public boolean move(BoardObject.Location goalDestination) {
         // TODO TESTING + MAKE MORE READABLE
-        if (myBoard.isOnBoard(goalDestination)) return false;
-
+        if (!myBoard.isOnBoard(goalDestination)) return false;
 
         // only for calculating how many steps to go up, down, left, right
         int stepsX = goalDestination.getX() - loc.getX();
@@ -80,35 +79,32 @@ public abstract class LivingCreature implements BoardObject {
             }
             // move down + left
             else if (stepsSouth > 1 && stepsWest > 1 && possibleSteps >= 1.5 && moveSouthWest()) {
-                loc.moveSouth();
-                loc.moveWest();
                 stepsSouth--;
                 stepsWest--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move straight up
             else if (stepsNorth > 1 && moveNorth()) {
-                loc.moveNorth();
                 stepsNorth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight down
             else if (stepsSouth > 1 && moveSouth()) {
-                loc.moveSouth();
                 stepsSouth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move move straight right
             else if (stepsEast > 1 && moveEast()) {
-                loc.moveEast();
                 stepsEast--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight left
             else if (stepsWest > 1 && moveWest()) {
-                loc.moveWest();
                 stepsWest--;
                 stepsTaken = stepsTaken + 1.0;
+            } else {
+                // no movement possible -> stop trying
+                stepsTaken = maxMovementSpeed;
             }
             possibleSteps = maxMovementSpeed - stepsTaken;
         }
@@ -176,7 +172,8 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveWest();
         direction = "west";
-        return true;    }
+        return true;
+    }
 
     int getStrength() {
         return strength;

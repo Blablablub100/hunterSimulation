@@ -10,14 +10,16 @@ public class Hunter extends LivingCreature {
         this.myBoard = myBoard;
         sightDistance = 5;
         direction = "east";
-        // TODO randomize rest
+        maxMovementSpeed = 2;
+        strength = 1;
+        energy = 10;
+        brain = null;
     }
 
 
     @Override
     public void react() {
         List<BoardObject> tmp = see();
-        System.out.print("a");
     }
 
     @Override
@@ -25,7 +27,7 @@ public class Hunter extends LivingCreature {
         BoardObject tmp = myBoard.getObjectAtLocation(getLocation());
         if (!(tmp instanceof Prey)) return;
         Prey toEat = (Prey) tmp;
-        if (attack(toEat)) hunger = hunger + toEat.getStrength();
+        if (attack(toEat)) energy = energy + toEat.getStrength();
     }
 
     @Override
