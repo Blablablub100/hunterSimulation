@@ -33,7 +33,7 @@ public class Board {
     }
 
     public void spawnPrey(BoardObject.Location loc) {
-        preys.add(new Prey(loc));
+        preys.add(new Prey(loc, this));
     }
 
     public void spawnObstacle(BoardObject.Location loc) {
@@ -47,7 +47,7 @@ public class Board {
     }
 
     private void spawnPrey() {
-        preys.add(new Prey(generateRandomLoc()));
+        preys.add(new Prey(generateRandomLoc(), this));
     }
 
     private void spawnObstacle() {

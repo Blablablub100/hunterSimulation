@@ -13,7 +13,9 @@ public abstract class LivingCreature implements BoardObject {
     int strength;
     int sightDistance;
     int hunger;
-    String direction; // can be left, right, up, down
+
+    // TODO save viewing direction in moves
+    String direction; // can be north, south, west, east
 
     public abstract void react();
 
