@@ -18,22 +18,22 @@ public interface BoardObject {
             return y;
         }
 
-        public Location moveRight() {
+        public Location moveEast() {
             x++;
             return this;
         }
 
-        public Location moveLeft() {
+        public Location moveWest() {
             x--;
             return this;
         }
 
-        public Location moveUp() {
+        public Location moveNorth() {
             y--;
             return this;
         }
 
-        public Location moveDown() {
+        public Location moveSouth() {
             y++;
             return this;
         }
