@@ -32,7 +32,7 @@ public abstract class LivingCreature implements BoardObject {
     }
 
     public boolean move(BoardObject.Location goalDestination) {
-        // TODO TESTING + MAKE MORE READABLE
+        // TODO MAKE MORE READABLE
         if (!myBoard.isOnBoard(goalDestination)) return false;
 
         // only for calculating how many steps to go up, down, left, right
@@ -60,46 +60,46 @@ public abstract class LivingCreature implements BoardObject {
                     && stepsEast == 0) return true;
 
             // move up + right
-            if (stepsNorth > 1 && stepsEast > 1 && possibleSteps >= 1.5 && moveNorthEast()) {
+            if (stepsNorth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveNorthEast()) {
                 stepsNorth--;
                 stepsEast--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move up + left
-            else if (stepsNorth > 1 && stepsWest > 1 && possibleSteps >= 1.5 && moveNorthWest()) {
+            else if (stepsNorth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveNorthWest()) {
                 stepsNorth--;
-                stepsEast--;
+                stepsWest--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move down + right
-            else if (stepsSouth > 1 && stepsEast > 1 && possibleSteps >= 1.5 && moveSouthEast()) {
+            else if (stepsSouth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveSouthEast()) {
                 stepsSouth--;
                 stepsEast--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move down + left
-            else if (stepsSouth > 1 && stepsWest > 1 && possibleSteps >= 1.5 && moveSouthWest()) {
+            else if (stepsSouth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveSouthWest()) {
                 stepsSouth--;
                 stepsWest--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move straight up
-            else if (stepsNorth > 1 && moveNorth()) {
+            else if (stepsNorth >= 1 && moveNorth()) {
                 stepsNorth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight down
-            else if (stepsSouth > 1 && moveSouth()) {
+            else if (stepsSouth >= 1 && moveSouth()) {
                 stepsSouth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move move straight right
-            else if (stepsEast > 1 && moveEast()) {
+            else if (stepsEast >= 1 && moveEast()) {
                 stepsEast--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight left
-            else if (stepsWest > 1 && moveWest()) {
+            else if (stepsWest >= 1 && moveWest()) {
                 stepsWest--;
                 stepsTaken = stepsTaken + 1.0;
             } else {
