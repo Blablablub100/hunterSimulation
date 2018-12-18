@@ -13,7 +13,7 @@ public abstract class LivingCreature implements BoardObject {
     int strength;
     int sightDistance;
     int hunger;
-    String direction; // can be left, right, up, down
+    String direction; // can be north, south, east, west
 
     public abstract void react();
 
@@ -40,74 +40,74 @@ public abstract class LivingCreature implements BoardObject {
         int stepsX = goalDestination.getX() - loc.getX();
         int stepsY = goalDestination.getY() - loc.getY();
         // needed for loop
-        int stepsUp = 0;
-        int stepsDown = 0;
-        int stepsLeft = 0;
-        int stepsRight = 0;
+        int stepsNorth = 0;
+        int stepsSouth = 0;
+        int stepsWest = 0;
+        int stepsEast = 0;
 
-        if (stepsY < 0) stepsUp = stepsY * (-1);
-        else if (stepsY > 0) stepsDown = stepsY;
-        else if (stepsX < 0) stepsLeft = stepsX * (-1);
-        else if (stepsX > 0) stepsRight = stepsX;
+        if (stepsY < 0) stepsNorth = stepsY * (-1);
+        else if (stepsY > 0) stepsSouth = stepsY;
+        if (stepsX < 0) stepsWest = stepsX * (-1);
+        else if (stepsX > 0) stepsEast = stepsX;
 
 
         double stepsTaken = 0.0;
         double possibleSteps = maxMovementSpeed - stepsTaken;
 
         while (possibleSteps >= 1) {
-            if (stepsUp == 0
-                    && stepsDown == 0
-                    && stepsLeft == 0
-                    && stepsRight == 0) return true;
+            if (stepsNorth == 0
+                    && stepsSouth == 0
+                    && stepsWest == 0
+                    && stepsEast == 0) return true;
 
             // move up + right
-            if (stepsUp > 1 && stepsRight > 1 && possibleSteps >= 1.5 && moveUpRight()) {
-                stepsUp--;
-                stepsRight--;
+            if (stepsNorth > 1 && stepsEast > 1 && possibleSteps >= 1.5 && moveNorthEast()) {
+                stepsNorth--;
+                stepsEast--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move up + left
-            else if (stepsUp > 1 && stepsLeft > 1 && possibleSteps >= 1.5 && moveUpLeft()) {
-                stepsUp--;
-                stepsRight--;
+            else if (stepsNorth > 1 && stepsWest > 1 && possibleSteps >= 1.5 && moveNorthWest()) {
+                stepsNorth--;
+                stepsEast--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move down + right
-            else if (stepsDown > 1 && stepsRight > 1 && possibleSteps >= 1.5 && moveDownRight()) {
-                stepsDown--;
-                stepsRight--;
+            else if (stepsSouth > 1 && stepsEast > 1 && possibleSteps >= 1.5 && moveSouthEast()) {
+                stepsSouth--;
+                stepsEast--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move down + left
-            else if (stepsDown > 1 && stepsLeft > 1 && possibleSteps >= 1.5 && moveDownLeft()) {
-                loc.moveDown();
-                loc.moveLeft();
-                stepsDown--;
-                stepsLeft--;
+            else if (stepsSouth > 1 && stepsWest > 1 && possibleSteps >= 1.5 && moveSouthWest()) {
+                loc.moveSouth();
+                loc.moveWest();
+                stepsSouth--;
+                stepsWest--;
                 stepsTaken = stepsTaken + 1.5;
             }
             // move straight up
-            else if (stepsUp > 1 && moveUp()) {
-                loc.moveUp();
-                stepsUp--;
+            else if (stepsNorth > 1 && moveNorth()) {
+                loc.moveNorth();
+                stepsNorth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight down
-            else if (stepsDown > 1 && moveDown()) {
-                loc.moveDown();
-                stepsDown--;
+            else if (stepsSouth > 1 && moveSouth()) {
+                loc.moveSouth();
+                stepsSouth--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move move straight right
-            else if (stepsRight > 1 && moveRight()) {
-                loc.moveRight();
-                stepsRight--;
+            else if (stepsEast > 1 && moveEast()) {
+                loc.moveEast();
+                stepsEast--;
                 stepsTaken = stepsTaken + 1.0;
             }
             // move straight left
-            else if (stepsLeft > 1 && moveLeft()) {
-                loc.moveLeft();
-                stepsLeft--;
+            else if (stepsWest > 1 && moveWest()) {
+                loc.moveWest();
+                stepsWest--;
                 stepsTaken = stepsTaken + 1.0;
             }
             possibleSteps = maxMovementSpeed - stepsTaken;
@@ -115,59 +115,67 @@ public abstract class LivingCreature implements BoardObject {
         return false;
     }
 
-    private boolean moveUpRight() {
-        Location tmp = ((Location)getLocation().clone()).moveUp().moveRight();
+    private boolean moveNorthEast() {
+        Location tmp = ((Location)getLocation().clone()).moveNorth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveUp().moveRight();
+        getLocation().moveNorth().moveEast();
+        direction = "north";
         return true;
     }
 
-    private boolean moveUpLeft() {
-        Location tmp = ((Location)getLocation().clone()).moveUp().moveLeft();
+    private boolean moveNorthWest() {
+        Location tmp = ((Location)getLocation().clone()).moveNorth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveUp().moveLeft();
+        getLocation().moveNorth().moveWest();
+        direction = "north";
         return true;
     }
 
-    private boolean moveDownRight() {
-        Location tmp = ((Location)getLocation().clone()).moveDown().moveRight();
+    private boolean moveSouthEast() {
+        Location tmp = ((Location)getLocation().clone()).moveSouth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveDown().moveRight();
+        getLocation().moveSouth().moveEast();
+        direction = "south";
         return true;
     }
 
-     private boolean moveDownLeft() {
-        Location tmp = ((Location)getLocation().clone()).moveDown().moveLeft();
+     private boolean moveSouthWest() {
+        Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveDown().moveLeft();
+        getLocation().moveSouth().moveWest();
+        direction = "south";
         return true;
     }
 
-    private boolean moveDown() {
-        Location tmp = ((Location)getLocation().clone()).moveDown();
+    private boolean moveSouth() {
+        Location tmp = ((Location)getLocation().clone()).moveSouth();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveDown();
+        getLocation().moveSouth();
+        direction = "south";
         return true;
     }
 
-    private boolean moveUp() {
-        Location tmp = ((Location)getLocation().clone()).moveUp();
+    private boolean moveNorth() {
+        Location tmp = ((Location)getLocation().clone()).moveNorth();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveUp();
+        getLocation().moveNorth();
+        direction = "north";
         return true;
     }
 
-    private boolean moveRight() {
-        Location tmp = ((Location)getLocation().clone()).moveRight();
+    private boolean moveEast() {
+        Location tmp = ((Location)getLocation().clone()).moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveRight();
+        getLocation().moveEast();
+        direction = "east";
         return true;
     }
 
-    private boolean moveLeft() {
-        Location tmp = ((Location)getLocation().clone()).moveLeft();
+    private boolean moveWest() {
+        Location tmp = ((Location)getLocation().clone()).moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
-        getLocation().moveLeft();
+        getLocation().moveWest();
+        direction = "west";
         return true;    }
 
     int getStrength() {
