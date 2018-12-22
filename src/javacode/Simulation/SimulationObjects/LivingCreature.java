@@ -17,7 +17,7 @@ public abstract class LivingCreature implements BoardObject {
 
     public abstract void react();
 
-    abstract List<BoardObject> see();
+    public abstract List<BoardObject> see();
 
     abstract void eat();
 

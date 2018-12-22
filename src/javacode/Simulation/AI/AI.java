@@ -3,17 +3,13 @@ package javacode.Simulation.AI;
 import javacode.Simulation.SimulationObjects.BoardObject;
 import javacode.Simulation.SimulationObjects.LivingCreature;
 
-import java.util.HashMap;
-import java.util.List;
-
 public abstract class AI {
 
-    HashMap<Integer, String> status = new HashMap<Integer, String>();
-    int statusDuration;
-    Memory[] longTermMemory;
-    LivingCreature owner;
+    private Memory[] longTermMemory;
+    private Status status;
+    private LivingCreature owner;
 
-    public abstract void react(
+    abstract void react(
             // 1. see
             // 2. does seen stuff change status?
             // 3. act according to status
@@ -22,19 +18,14 @@ public abstract class AI {
 
     public AI(LivingCreature owner) {
         this.owner = owner;
-        initStatus();
     }
 
-    private void initStatus() {
-        status.put(1, "calm");
-        status.put(2, "attacking");
-        status.put(3, "alarmed");
-        status.put(4, "seaching group");
-        status.put(5, "fleeing");
+    void notifyNextRound() {
+        for (Memory memory: longTermMemory) {
+            memory.notifyNewRound();
+        }
+        status.notifyNextRound();
     }
-
-
-
 
 
     public class Memory {
@@ -46,16 +37,81 @@ public abstract class AI {
             return thingMemorized;
         }
 
-        public void setThingMemorized(BoardObject thingMemorized) {
-            this.thingMemorized = thingMemorized;
+        public void memorize(BoardObject memory) {
+            this.thingMemorized = memory;
         }
 
         public int getTime() {
             return time;
         }
 
-        public void setTime(int time) {
-            this.time = time;
+        public void notifyNewRound() {
+            time++;
+        }
+    }
+
+
+
+    public class Status {
+
+        private final String[] statuses = {
+                "calm"
+                , "attacking"
+                , "alarmed"
+                , "searching group"
+                , "fleeing"
+        };
+        private int currentStatus;
+        private int time;
+
+
+        public boolean setStatus(int newStatus) {
+            if (!this.contains(newStatus)) return false;
+            if (currentStatus != newStatus) time = 0;
+            currentStatus = newStatus;
+            return true;
+        }
+
+
+        public boolean setStatus(String newStatus) {
+            int i = search(newStatus);
+            if (i == -1) return false;
+            if (!getStatus().equals(newStatus)) time = 0;
+            currentStatus = i;
+            return true;
+        }
+
+
+        public String getStatus() {
+            return statuses[currentStatus];
+        }
+
+
+        public int getStatusIndex() {
+            return currentStatus;
+        }
+
+
+        public int getTime() {
+            return time;
+        }
+
+
+        public void notifyNextRound() {
+            time++;
+        }
+
+
+        // private helping methods
+        private boolean contains(int i) {
+            return (i >= 0 && i < statuses.length);
+        }
+
+        private int search(String s) {
+            for (int i = 0; i < statuses.length; i++) {
+                if (statuses[i].equals(s)) return i;
+            }
+            return -1;
         }
     }
 }

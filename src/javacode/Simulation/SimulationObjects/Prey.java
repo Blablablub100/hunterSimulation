@@ -19,7 +19,7 @@ public class Prey extends LivingCreature {
     }
 
     @Override
-    List<BoardObject> see() {
+    public List<BoardObject> see() {
 
         sightDistance = 5;
         List<BoardObject> objectsSeen = new ArrayList<>();

@@ -42,7 +42,7 @@ public class Hunter extends LivingCreature {
 
     // seeing logic starting from here
     @Override
-    List<BoardObject> see() {
+    public List<BoardObject> see() {
         // things that the hunter is able to see
         switch (direction) {
             case "north":

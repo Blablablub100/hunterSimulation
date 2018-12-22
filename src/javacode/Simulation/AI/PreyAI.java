@@ -10,6 +10,6 @@ public class PreyAI extends AI {
 
     @Override
     public void react() {
-
+        notifyNextRound();
     }
 }
