@@ -5,11 +5,12 @@ import javacode.Simulation.SimulationObjects.LivingCreature;
 
 public abstract class AI {
 
-    private Memory[] longTermMemory;
+    Memory[] longTermMemory;
     private Status status;
-    private LivingCreature owner;
+    LivingCreature owner;
 
-    abstract void react(
+    public abstract void react(
+            // call notifyNextRound() at beginning!
             // 1. see
             // 2. does seen stuff change status?
             // 3. act according to status
@@ -28,17 +29,19 @@ public abstract class AI {
     }
 
 
+
     public class Memory {
+
+        public Memory(BoardObject memory) {
+            thingMemorized = memory;
+            time = 0;
+        }
 
         private BoardObject thingMemorized;
         private int time;
 
         public BoardObject getThingMemorized() {
             return thingMemorized;
-        }
-
-        public void memorize(BoardObject memory) {
-            this.thingMemorized = memory;
         }
 
         public int getTime() {
@@ -49,6 +52,7 @@ public abstract class AI {
             time++;
         }
     }
+
 
 
 
@@ -64,14 +68,12 @@ public abstract class AI {
         private int currentStatus;
         private int time;
 
-
         public boolean setStatus(int newStatus) {
             if (!this.contains(newStatus)) return false;
             if (currentStatus != newStatus) time = 0;
             currentStatus = newStatus;
             return true;
         }
-
 
         public boolean setStatus(String newStatus) {
             int i = search(newStatus);
@@ -81,26 +83,21 @@ public abstract class AI {
             return true;
         }
 
-
         public String getStatus() {
             return statuses[currentStatus];
         }
-
 
         public int getStatusIndex() {
             return currentStatus;
         }
 
-
         public int getTime() {
             return time;
         }
 
-
         public void notifyNextRound() {
             time++;
         }
-
 
         // private helping methods
         private boolean contains(int i) {

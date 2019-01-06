@@ -19,7 +19,7 @@ public class Hunter extends LivingCreature {
 
     @Override
     public void react() {
-        List<BoardObject> tmp = see();
+        brain.react();
     }
 
     @Override

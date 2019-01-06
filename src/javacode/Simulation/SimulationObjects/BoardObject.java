@@ -41,6 +41,12 @@ public interface BoardObject {
         private int x;
         private int y;
 
+        public int getDistance(Location goalLocation) {
+            int distance = Math.abs(this.x - goalLocation.x);
+            distance = distance + Math.abs(this.y - goalLocation.y);
+            return distance;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof Location)) return false;

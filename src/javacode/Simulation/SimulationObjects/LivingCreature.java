@@ -175,7 +175,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    int getStrength() {
+    public int getStrength() {
         return strength;
     }
 }
