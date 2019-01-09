@@ -14,6 +14,7 @@ public abstract class LivingCreature implements BoardObject {
     int sightDistance;
     int energy;
     String direction; // can be north, south, east, west
+    double stepsTaken;
 
     public abstract void react();
 
@@ -50,7 +51,6 @@ public abstract class LivingCreature implements BoardObject {
         else if (stepsX > 0) stepsEast = stepsX;
 
 
-        double stepsTaken = 0.0;
         double possibleSteps = maxMovementSpeed - stepsTaken;
 
         while (possibleSteps >= 1) {
@@ -63,45 +63,37 @@ public abstract class LivingCreature implements BoardObject {
             if (stepsNorth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveNorthEast()) {
                 stepsNorth--;
                 stepsEast--;
-                stepsTaken = stepsTaken + 1.5;
             }
             // move up + left
             else if (stepsNorth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveNorthWest()) {
                 stepsNorth--;
                 stepsWest--;
-                stepsTaken = stepsTaken + 1.5;
             }
             // move down + right
             else if (stepsSouth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveSouthEast()) {
                 stepsSouth--;
                 stepsEast--;
-                stepsTaken = stepsTaken + 1.5;
             }
             // move down + left
             else if (stepsSouth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveSouthWest()) {
                 stepsSouth--;
                 stepsWest--;
-                stepsTaken = stepsTaken + 1.5;
             }
             // move straight up
             else if (stepsNorth >= 1 && moveNorth()) {
                 stepsNorth--;
-                stepsTaken = stepsTaken + 1.0;
             }
             // move straight down
             else if (stepsSouth >= 1 && moveSouth()) {
                 stepsSouth--;
-                stepsTaken = stepsTaken + 1.0;
             }
             // move move straight right
             else if (stepsEast >= 1 && moveEast()) {
                 stepsEast--;
-                stepsTaken = stepsTaken + 1.0;
             }
             // move straight left
             else if (stepsWest >= 1 && moveWest()) {
                 stepsWest--;
-                stepsTaken = stepsTaken + 1.0;
             } else {
                 // no movement possible -> stop trying
                 stepsTaken = maxMovementSpeed;
@@ -116,6 +108,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveNorth().moveEast();
         direction = "north";
+        stepsTaken += 1.5;
         return true;
     }
 
@@ -124,6 +117,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveNorth().moveWest();
         direction = "north";
+        stepsTaken += 1.5;
         return true;
     }
 
@@ -132,6 +126,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveSouth().moveEast();
         direction = "south";
+        stepsTaken += 1.5;
         return true;
     }
 
@@ -140,7 +135,8 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveSouth().moveWest();
         direction = "south";
-        return true;
+         stepsTaken += 1.5;
+         return true;
     }
 
     private boolean moveSouth() {
@@ -148,6 +144,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveSouth();
         direction = "south";
+        stepsTaken += 1.0;
         return true;
     }
 
@@ -156,6 +153,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveNorth();
         direction = "north";
+        stepsTaken += 1.0;
         return true;
     }
 
@@ -164,6 +162,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveEast();
         direction = "east";
+        stepsTaken += 1.0;
         return true;
     }
 
@@ -172,6 +171,7 @@ public abstract class LivingCreature implements BoardObject {
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveWest();
         direction = "west";
+        stepsTaken += 1.0;
         return true;
     }
 

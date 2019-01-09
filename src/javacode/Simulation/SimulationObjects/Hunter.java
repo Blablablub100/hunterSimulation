@@ -21,6 +21,7 @@ public class Hunter extends LivingCreature {
 
     @Override
     public void react() {
+        stepsTaken = 0.0;
         brain.react();
     }
 

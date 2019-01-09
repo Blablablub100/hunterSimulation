@@ -5,6 +5,8 @@ import javacode.Simulation.SimulationObjects.BoardObject;
 import javacode.Simulation.SimulationObjects.LivingCreature;
 import javacode.UI.UserInput;
 
+import java.util.List;
+
 public class SimulationController {
 
     private Board board;
@@ -26,12 +28,6 @@ public class SimulationController {
     public void simulateNextStep() {
         for (LivingCreature curr: getBoard().getLivingCreatues()) {
             curr.react();
-        }
-    }
-
-    public void testMovement() {
-        for (LivingCreature curr: getBoard().getLivingCreatues()) {
-            curr.move(new BoardObject.Location(0,0));
         }
     }
 
