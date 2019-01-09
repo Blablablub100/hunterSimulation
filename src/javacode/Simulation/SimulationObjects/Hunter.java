@@ -1,5 +1,7 @@
 package javacode.Simulation.SimulationObjects;
 
+import javacode.Simulation.AI.HunterAI;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class Hunter extends LivingCreature {
         maxMovementSpeed = 2;
         strength = 1;
         energy = 10;
-        brain = null;
+        brain = new HunterAI(this);
     }
 
 

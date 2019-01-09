@@ -12,6 +12,7 @@ public class HunterAI extends AI {
     public HunterAI(LivingCreature owner) {
         super(owner);
         longTermMemory = new Memory[3];
+        status.setStatus(1);
     }
 
 
@@ -21,8 +22,15 @@ public class HunterAI extends AI {
         List<BoardObject> thingsSeen = owner.see();
         List<HunterMemory> shortTermMemory = getShortTermMemory(thingsSeen);
         filterToLongTermMemory(shortTermMemory);
-        // first 4 finished
+        System.out.println("memory for hunter finished");
+        // first 4 finished -> MemoryManagement done
 
+        // What to do:
+        // 1. Prio: Am I near a Prey that would kill me
+        // 2. Prio: Am I near a Prey that I could kill
+        // 3. Prio: Does somebody want to group with me
+        // 4. Prio: Is there a big Prey and a Hunter nearby? Search for group
+        // 5. Prio:
     }
 
 
@@ -32,6 +40,7 @@ public class HunterAI extends AI {
         for (BoardObject thing: thingsSeen) {
             shortTermMemory.add(new HunterMemory(thing));
         }
+        Collections.sort(shortTermMemory);
         return shortTermMemory;
     }
 
@@ -41,19 +50,15 @@ public class HunterAI extends AI {
         // second highest priority memory: Hunter near me
         // third highest priority memory: Prey bigger then me
         // memory gets filled, first with highest priority memories, then second and then third
-        Collections.sort(shortTermMemory);
-        for (HunterMemory shortTerm: shortTermMemory) {
-            boolean run = true;
-            for (int i = 0; i < longTermMemory.length; i++) {
-                HunterMemory longTerm = (HunterMemory) longTermMemory[i];
+        for (int i = 0; (i<shortTermMemory.size()) && (i<longTermMemory.length); i++) {
+            HunterMemory shortTerm = shortTermMemory.get(i);
 
-                if(shortTerm.getPriority() > longTerm.getPriority()) {
+            for (Memory longTerm: longTermMemory) {
+                if((longTerm == null) || (shortTerm.getPriority() > ((HunterMemory) longTerm).getPriority())) {
                     longTermMemory[i] = shortTerm;
                     break;
                 }
-                if (i == longTermMemory.length-1) run = false;
             }
-            if (!run) break;
         }
     }
 
@@ -77,14 +82,17 @@ public class HunterAI extends AI {
             BoardObject thing = getThingMemorized();
             int prio = 0;
 
-            if (thing instanceof Prey && ((Prey)thing).getStrength() < owner.getStrength()) {
-                prio = 1;
+            if (thing instanceof Prey && ((Prey)thing).getStrength() >= owner.getStrength()) {
+                prio = 5;
+            }
+            else if (thing instanceof Prey && ((Prey)thing).getStrength() < owner.getStrength()) {
+                prio = 4;
+            }
+            else if (thing instanceof Hunter && ((Hunter)thing).getStrength() > owner.getStrength()) {
+                prio = 3;
             }
             else if (thing instanceof Hunter) {
                 prio = 2;
-            }
-            else if (thing instanceof Prey) {
-                prio = 3;
             }
             return prio;
         }
@@ -99,8 +107,8 @@ public class HunterAI extends AI {
         public int compareTo(Object o) {
             if (!(o instanceof HunterMemory)) return 0;
             int otherPrio = ((HunterMemory) o).getPriority();
-            if (prio > otherPrio) return 1;
-            else if (prio < otherPrio) return -1;
+            if (prio > otherPrio) return -1;
+            else if (prio < otherPrio) return 1;
             return 0;
         }
     }

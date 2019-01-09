@@ -6,7 +6,7 @@ import javacode.Simulation.SimulationObjects.LivingCreature;
 public abstract class AI {
 
     Memory[] longTermMemory;
-    private Status status;
+    Status status = new Status();
     LivingCreature owner;
 
     public abstract void react(
@@ -23,7 +23,7 @@ public abstract class AI {
 
     void notifyNextRound() {
         for (Memory memory: longTermMemory) {
-            memory.notifyNewRound();
+            if (memory != null) memory.notifyNewRound();
         }
         status.notifyNextRound();
     }
@@ -57,6 +57,10 @@ public abstract class AI {
 
 
     public class Status {
+
+        public Status() {
+            setStatus(0);
+        }
 
         private final String[] statuses = {
                 "calm"
