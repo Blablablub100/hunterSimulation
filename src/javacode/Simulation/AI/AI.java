@@ -3,6 +3,8 @@ package javacode.Simulation.AI;
 import javacode.Simulation.SimulationObjects.BoardObject;
 import javacode.Simulation.SimulationObjects.LivingCreature;
 
+import java.util.List;
+
 public abstract class AI {
 
     Memory[] longTermMemory;
@@ -20,6 +22,16 @@ public abstract class AI {
     public AI(LivingCreature owner) {
         this.owner = owner;
     }
+
+
+    void flee(List<LivingCreature> threads) {
+        System.out.println("fleeing");
+        // TODO NIKO mach das hier bitte
+        // Hier wird eine Liste übergeben an BaordObject die der LivingCreature gefährlich werden
+        // -> Du sollst einen algo schireben, der sich möglichst weit von den threads wegbewegt
+    }
+
+
 
     void notifyNextRound() {
         for (Memory memory: longTermMemory) {
@@ -68,6 +80,7 @@ public abstract class AI {
                 , "alarmed"
                 , "searching group"
                 , "fleeing"
+                , "hunting"
         };
         private int currentStatus;
         private int time;
