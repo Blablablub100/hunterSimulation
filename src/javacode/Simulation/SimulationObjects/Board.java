@@ -147,7 +147,7 @@ public class Board {
     public boolean isOnBoard(BoardObject.Location loc) {
         int x = loc.getX();
         int y = loc.getY();
-        return ((x>0 && x<width)  &&  (y>0 && y<height));
+        return ((x>=0 && x<width)  &&  (y>=0 && y<height));
     }
 
 }

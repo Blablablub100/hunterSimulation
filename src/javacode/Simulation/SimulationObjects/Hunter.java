@@ -1,5 +1,7 @@
 package javacode.Simulation.SimulationObjects;
 
+import javacode.Simulation.AI.HunterAI;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,38 +22,35 @@ public class Hunter extends LivingCreature {
         }
         maxMovementSpeed = getRandom(1, 10);
         strength = getRandom(1, 10);
-        hunger = getRandom(1, 10);
+        energy = getRandom(1, 10);
         sightDistance = getRandom(1, 10);
+        brain = new HunterAI(this);
     }
 
 
     @Override
     public void react() {
-        List<BoardObject> tmp = see();
-        System.out.print("a");
+        stepsTaken = 0.0;
+        brain.react();
     }
 
-    @Override
-    void eat() {
-        BoardObject tmp = myBoard.getObjectAtLocation(getLocation());
-        if (!(tmp instanceof Prey)) return;
-        Prey toEat = (Prey) tmp;
-        if (attack(toEat)) hunger = hunger + toEat.getStrength();
-    }
 
     @Override
-    boolean attack(LivingCreature opponent) {
-        if (!getLocation().equals(opponent.getLocation())) return false;
-        if (opponent.getStrength() < getStrength()) return false;
+    public boolean attack(LivingCreature opponent) {
+        if (getLocation().getDistance(opponent.getLocation()) > 1) return false;
+        if (opponent.getStrength() > getStrength()) return false;
         if (!(opponent instanceof Prey)) return false;
+        Location tmp = opponent.getLocation();
+        eat(opponent.getStrength());
         opponent.die();
+        move(tmp);
         return true;
     }
 
 
     // seeing logic starting from here
     @Override
-    List<BoardObject> see() {
+    public List<BoardObject> see() {
         // things that the hunter is able to see
         switch (direction) {
             case "north":

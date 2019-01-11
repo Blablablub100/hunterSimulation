@@ -5,6 +5,8 @@ import javacode.Simulation.SimulationObjects.BoardObject;
 import javacode.Simulation.SimulationObjects.LivingCreature;
 import javacode.UI.UserInput;
 
+import java.util.List;
+
 public class SimulationController {
 
     private Board board;

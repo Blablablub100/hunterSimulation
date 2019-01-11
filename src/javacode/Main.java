@@ -12,6 +12,17 @@ public class Main {
         test.printBoard(sim.getBoard());
         sim.simulateNextStep();
 
+        for (int i = 0; i < 5; i++) {
+            sim.simulateNextStep();
+            System.out.println("=============================================");
+            test.printBoard(sim.getBoard());
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+
+            }
+        }
+
         System.out.println("END");
     }
 }
