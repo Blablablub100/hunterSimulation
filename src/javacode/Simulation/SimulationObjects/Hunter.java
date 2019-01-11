@@ -12,7 +12,7 @@ public class Hunter extends LivingCreature {
         this.myBoard = myBoard;
         sightDistance = 5;
         direction = "east";
-        maxMovementSpeed = 2;
+        maxMovementSpeed = 1;
         strength = 1;
         energy = 10;
         brain = new HunterAI(this);
@@ -25,20 +25,16 @@ public class Hunter extends LivingCreature {
         brain.react();
     }
 
-    @Override
-    void eat() {
-        BoardObject tmp = myBoard.getObjectAtLocation(getLocation());
-        if (!(tmp instanceof Prey)) return;
-        Prey toEat = (Prey) tmp;
-        if (attack(toEat)) energy = energy + toEat.getStrength();
-    }
 
     @Override
-    boolean attack(LivingCreature opponent) {
-        if (!getLocation().equals(opponent.getLocation())) return false;
-        if (opponent.getStrength() < getStrength()) return false;
+    public boolean attack(LivingCreature opponent) {
+        if (getLocation().getDistance(opponent.getLocation()) > 1) return false;
+        if (opponent.getStrength() > getStrength()) return false;
         if (!(opponent instanceof Prey)) return false;
+        Location tmp = opponent.getLocation();
+        eat(opponent.getStrength());
         opponent.die();
+        move(tmp);
         return true;
     }
 

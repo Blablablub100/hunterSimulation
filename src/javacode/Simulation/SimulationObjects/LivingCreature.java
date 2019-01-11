@@ -20,12 +20,14 @@ public abstract class LivingCreature implements BoardObject {
 
     public abstract List<BoardObject> see();
 
-    abstract void eat();
-
-    abstract boolean attack(LivingCreature opponent);
+    public abstract boolean attack(LivingCreature opponent);
 
     void die() {
         myBoard.removeFromBoard(this);
+    }
+
+    void eat(int calories) {
+        energy = energy + calories;
     }
 
     public Location getLocation() {
@@ -95,8 +97,7 @@ public abstract class LivingCreature implements BoardObject {
             else if (stepsWest >= 1 && moveWest()) {
                 stepsWest--;
             } else {
-                // no movement possible -> stop trying
-                stepsTaken = maxMovementSpeed;
+                break;
             }
             possibleSteps = maxMovementSpeed - stepsTaken;
         }
@@ -106,6 +107,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveNorthEast() {
         Location tmp = ((Location)getLocation().clone()).moveNorth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.5) return false;
         getLocation().moveNorth().moveEast();
         direction = "north";
         stepsTaken += 1.5;
@@ -115,6 +117,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveNorthWest() {
         Location tmp = ((Location)getLocation().clone()).moveNorth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.5) return false;
         getLocation().moveNorth().moveWest();
         direction = "north";
         stepsTaken += 1.5;
@@ -124,6 +127,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveSouthEast() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.5) return false;
         getLocation().moveSouth().moveEast();
         direction = "south";
         stepsTaken += 1.5;
@@ -133,6 +137,7 @@ public abstract class LivingCreature implements BoardObject {
      private boolean moveSouthWest() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
+         if (getPossibleSteps() < 1.5) return false;
         getLocation().moveSouth().moveWest();
         direction = "south";
          stepsTaken += 1.5;
@@ -142,6 +147,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveSouth() {
         Location tmp = ((Location)getLocation().clone()).moveSouth();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.0) return false;
         getLocation().moveSouth();
         direction = "south";
         stepsTaken += 1.0;
@@ -151,6 +157,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveNorth() {
         Location tmp = ((Location)getLocation().clone()).moveNorth();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.0) return false;
         getLocation().moveNorth();
         direction = "north";
         stepsTaken += 1.0;
@@ -160,6 +167,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveEast() {
         Location tmp = ((Location)getLocation().clone()).moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.0) return false;
         getLocation().moveEast();
         direction = "east";
         stepsTaken += 1.0;
@@ -169,6 +177,7 @@ public abstract class LivingCreature implements BoardObject {
     private boolean moveWest() {
         Location tmp = ((Location)getLocation().clone()).moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
+        if (getPossibleSteps() < 1.0) return false;
         getLocation().moveWest();
         direction = "west";
         stepsTaken += 1.0;
@@ -177,5 +186,9 @@ public abstract class LivingCreature implements BoardObject {
 
     public int getStrength() {
         return strength;
+    }
+
+    public double getPossibleSteps() {
+        return maxMovementSpeed-stepsTaken;
     }
 }

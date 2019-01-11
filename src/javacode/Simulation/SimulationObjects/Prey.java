@@ -283,12 +283,7 @@ public class Prey extends LivingCreature {
     }
 
     @Override
-    void eat() {
-
-    }
-
-    @Override
-    boolean attack(LivingCreature opponent) {
+    public boolean attack(LivingCreature opponent) {
         return false;
     }
 }

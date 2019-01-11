@@ -15,7 +15,7 @@ public class Main {
         test.printBoard(sim.getBoard());
         sim.simulateNextStep();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             sim.simulateNextStep();
             System.out.println("=============================================");
             test.printBoard(sim.getBoard());
