@@ -20,7 +20,7 @@ public class Prey extends LivingCreature {
         }
         maxMovementSpeed = getRandom(1, 10);
         strength = getRandom(1, 10);
-        hunger = getRandom(1, 10);
+        energy = getRandom(1, 10);
         sightDistance = getRandom(1, 10);
     }
 
