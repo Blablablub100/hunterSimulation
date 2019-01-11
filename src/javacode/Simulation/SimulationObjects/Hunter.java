@@ -8,9 +8,20 @@ public class Hunter extends LivingCreature {
     Hunter(Location loc, Board myBoard) {
         this.loc = loc;
         this.myBoard = myBoard;
-        sightDistance = 5;
-        direction = "east";
-        // TODO randomize rest
+        int random = getRandom(1, 4);
+        if(random == 1){
+            direction = "north";
+        } else if(random == 2){
+            direction = "east";
+        } else if(random == 3){
+            direction = "south";
+        } else if(random == 4){
+            direction = "west";
+        }
+        maxMovementSpeed = getRandom(1, 10);
+        strength = getRandom(1, 10);
+        hunger = getRandom(1, 10);
+        sightDistance = getRandom(1, 10);
     }
 
 

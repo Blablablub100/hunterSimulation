@@ -139,7 +139,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-     private boolean moveSouthWest() {
+    private boolean moveSouthWest() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
         getLocation().moveSouth().moveWest();
@@ -180,5 +180,11 @@ public abstract class LivingCreature implements BoardObject {
 
     int getStrength() {
         return strength;
+    }
+
+    int getRandom(int lowerBound, int upperBound) {
+        int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
+        System.out.println(randomNumber);
+        return randomNumber;
     }
 }
