@@ -295,6 +295,11 @@ public class Prey extends LivingCreature {
 
     @Override
     public boolean attack(LivingCreature opponent) {
-        return false;
+        if (getLocation().getDistance(opponent.getLocation()) > 1) return false;
+        if (opponent.getStrength() > getStrength()) return false;
+        if (!(opponent instanceof Hunter)) return false;
+        Location tmp = opponent.getLocation();
+        move(tmp);
+        return true;
     }
 }

@@ -56,7 +56,7 @@ public interface BoardObject {
         }
 
         @Override
-        protected Object clone() {
+        public Object clone() {
             return new BoardObject.Location(x, y);
         }
     }
