@@ -8,7 +8,7 @@ import java.util.List;
 
 public class HunterAI extends AI {
 
-    public List<HunterMemory> shortTermMemory;
+    private List<HunterMemory> shortTermMemory;
 
     public HunterAI(LivingCreature owner) {
         super(owner);
@@ -32,7 +32,7 @@ public class HunterAI extends AI {
         // 4. Prio: Am I near a Prey that I could kill
         //     -> hunt, walk in the direction of the small prey
         // 3. Prio: Does somebody want to group with me
-        //     -> group with him, let him take control
+        //     -> group with him, let
         // 2. Prio: Big Prey nearby
         //     -> search for group
         // 1. Prop: Nothing to do
@@ -57,7 +57,7 @@ public class HunterAI extends AI {
 
 
         // nothing to do
-        // TODO basiert auf getRandom- muss auf niko warten
+        moveRandomly();
     }
 
 
@@ -104,8 +104,8 @@ public class HunterAI extends AI {
             Prey curr = huntablePrey.get(i);
 
             // no huntable is set
-            if (toHunt == null && isHuntable(curr, threats)) {
-                toHunt = curr;
+            if (toHunt == null) {
+                if (isHuntable(curr, threats)) toHunt = curr;
             }
             // if current Prey is nearer then toHunt
             else if (curr.getLocation().getDistance(owner.getLocation())
@@ -179,6 +179,25 @@ public class HunterAI extends AI {
         owner.move(p.getLocation());
         if (owner.getLocation().getDistance(p.getLocation()) == 1 && owner.getPossibleSteps() >= 1.0) {
             owner.attack(p);
+        }
+    }
+
+
+    private void moveRandomly() {
+        int direction = owner.getRandom(1, 4);
+        switch (direction) {
+            case 1:
+                owner.moveNorth();
+                break;
+            case 2:
+                owner.moveSouth();
+                break;
+            case 3:
+                owner.moveWest();
+                break;
+            case 4:
+                owner.moveEast();
+                break;
         }
     }
 

@@ -137,6 +137,7 @@ public class Board {
     }
 
     public boolean isEmpty(BoardObject.Location loc) {
+        if (!isOnBoard(loc)) return false;
         List<BoardObject> temp = getBoardObjects();
         for (BoardObject curr: temp) {
             if (curr.getLocation().equals(loc)) return false;

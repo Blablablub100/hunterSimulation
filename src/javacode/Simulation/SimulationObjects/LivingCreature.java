@@ -104,7 +104,7 @@ public abstract class LivingCreature implements BoardObject {
         return false;
     }
 
-    private boolean moveNorthEast() {
+    public boolean moveNorthEast() {
         Location tmp = ((Location)getLocation().clone()).moveNorth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.5) return false;
@@ -114,7 +114,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    private boolean moveNorthWest() {
+    public boolean moveNorthWest() {
         Location tmp = ((Location)getLocation().clone()).moveNorth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.5) return false;
@@ -124,7 +124,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    private boolean moveSouthEast() {
+    public boolean moveSouthEast() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.5) return false;
@@ -134,7 +134,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-     private boolean moveSouthWest() {
+    public boolean moveSouthWest() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
          if (getPossibleSteps() < 1.5) return false;
@@ -144,7 +144,7 @@ public abstract class LivingCreature implements BoardObject {
          return true;
     }
 
-    private boolean moveSouth() {
+    public boolean moveSouth() {
         Location tmp = ((Location)getLocation().clone()).moveSouth();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.0) return false;
@@ -154,7 +154,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    private boolean moveNorth() {
+    public boolean moveNorth() {
         Location tmp = ((Location)getLocation().clone()).moveNorth();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.0) return false;
@@ -164,7 +164,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    private boolean moveEast() {
+    public boolean moveEast() {
         Location tmp = ((Location)getLocation().clone()).moveEast();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.0) return false;
@@ -174,7 +174,7 @@ public abstract class LivingCreature implements BoardObject {
         return true;
     }
 
-    private boolean moveWest() {
+    public boolean moveWest() {
         Location tmp = ((Location)getLocation().clone()).moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
         if (getPossibleSteps() < 1.0) return false;
@@ -192,9 +192,8 @@ public abstract class LivingCreature implements BoardObject {
         return maxMovementSpeed-stepsTaken;
     }
 
-    int getRandom(int lowerBound, int upperBound) {
+    public int getRandom(int lowerBound, int upperBound) {
         int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
-        System.out.println(randomNumber);
         return randomNumber;
     }
 }
