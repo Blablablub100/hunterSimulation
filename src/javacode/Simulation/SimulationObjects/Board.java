@@ -9,7 +9,7 @@ public class Board {
     private int height;
     private List<Hunter> hunters = new ArrayList<>();
     private List<Prey> preys = new ArrayList<>();
-    private List<Obstacle> obstacles = new ArrayList<>();
+    private List<BoardObject> obstacles = new ArrayList<>();
 
 
     public Board(int width, int height, int hunterCount, int preyCount, int obstacleCount) {
@@ -40,6 +40,10 @@ public class Board {
         obstacles.add(new Obstacle(loc));
     }
 
+    public void spawn(BoardObject boardObject) {
+        obstacles.add(boardObject);
+    }
+
 
     // spawn at random positions
     private void spawnHunter() {
@@ -56,7 +60,7 @@ public class Board {
 
 
     // remove Object
-    void removeFromBoard(BoardObject b) {
+    public void removeFromBoard(BoardObject b) {
         if (b instanceof Hunter) {
             removeHunter((Hunter) b);
         } else if (b instanceof Prey) {
@@ -78,6 +82,12 @@ public class Board {
         obstacles.remove(o);
     }
 
+    void removeBoardObject(BoardObject o) {
+        obstacles.remove(o);
+        hunters.remove(o);
+        preys.remove(o);
+    }
+
 
     // getters
     public List<Hunter> getHunters() {
@@ -88,7 +98,7 @@ public class Board {
         return preys;
     }
 
-    public List<Obstacle> getObstacles() {
+    public List<BoardObject> getObstacles() {
         return obstacles;
     }
 
@@ -146,6 +156,7 @@ public class Board {
     }
 
     public boolean isOnBoard(BoardObject.Location loc) {
+        if (loc == null) return false;
         int x = loc.getX();
         int y = loc.getY();
         return ((x>=0 && x<width)  &&  (y>=0 && y<height));

@@ -22,11 +22,11 @@ public abstract class LivingCreature implements BoardObject {
 
     public abstract boolean attack(LivingCreature opponent);
 
-    void die() {
+    public void die() {
         myBoard.removeFromBoard(this);
     }
 
-    void eat(int calories) {
+    public void eat(int calories) {
         energy = energy + calories;
     }
 
@@ -195,5 +195,32 @@ public abstract class LivingCreature implements BoardObject {
     public int getRandom(int lowerBound, int upperBound) {
         int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
         return randomNumber;
+    }
+
+    public boolean setDirection(int dir) {
+        if (dir == 1) direction = "north";
+        else if (dir == 2) direction = "east";
+        else if (dir == 3) direction = "south";
+        else if (dir == 4) direction = "west";
+        else return false;
+        return true;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public int getDirectionNum() {
+        switch (direction) {
+            case "north":
+                return 1;
+            case "east":
+                return 2;
+            case "south":
+                return 3;
+            case "west":
+                return 4;
+        }
+        return 0;
     }
 }

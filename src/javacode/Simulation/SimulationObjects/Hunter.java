@@ -1,5 +1,6 @@
 package javacode.Simulation.SimulationObjects;
 
+import javacode.Simulation.AI.GroupAI;
 import javacode.Simulation.AI.HunterAI;
 
 import java.util.ArrayList;
@@ -45,6 +46,19 @@ public class Hunter extends LivingCreature {
         opponent.die();
         move(tmp);
         return true;
+    }
+
+    @Override
+    public void die() {
+        ((HunterAI)brain).leaveGroup();
+    }
+
+    public Board getBoard() {
+        return myBoard;
+    }
+
+    public boolean receiveGroupInvitation(GroupAI group) {
+        return ((HunterAI)brain).joinGroup(group);
     }
 
 

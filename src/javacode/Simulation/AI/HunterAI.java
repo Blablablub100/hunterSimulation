@@ -9,6 +9,7 @@ import java.util.List;
 public class HunterAI extends AI {
 
     private List<HunterMemory> shortTermMemory;
+    private GroupAI groupIntellingence = null;
 
     public HunterAI(LivingCreature owner) {
         super(owner);
@@ -23,6 +24,7 @@ public class HunterAI extends AI {
         List<BoardObject> thingsSeen = owner.see();
         shortTermMemory = getShortTermMemory(thingsSeen);
         filterToLongTermMemory();
+        if (isGroupmember()) groupIntellingence.steerGroup(this);
 
         // first 4 finished -> MemoryManagement done
 
@@ -32,7 +34,7 @@ public class HunterAI extends AI {
         // 4. Prio: Am I near a Prey that I could kill
         //     -> hunt, walk in the direction of the small prey
         // 3. Prio: Does somebody want to group with me
-        //     -> group with him, let
+        //     -> group with him
         // 2. Prio: Big Prey nearby
         //     -> search for group
         // 1. Prop: Nothing to do
@@ -52,9 +54,12 @@ public class HunterAI extends AI {
         Prey toHunt = identifyPreyToHunt(threats);
         if (toHunt != null) hunt(toHunt);
 
-        // group logic going here
-
-
+        // check if there is  a big Prey I can groupHunt
+        Prey biggest = getBiggestPrey();
+        if (biggest != null && !isGroupmember()) {
+            groupIntellingence = new GroupAI(this, biggest);
+            searchForGroupMembers();
+        }
 
         // nothing to do
         moveRandomly();
@@ -174,6 +179,71 @@ public class HunterAI extends AI {
     }
 
 
+    private Prey getBiggestPrey() {
+        Prey temp1 = getBiggest(longTermMemory);
+        Prey temp2 = getBiggest(shortTermMemory.toArray(new Memory[0]));
+        if (temp1 == null) return temp2;
+        if (temp2 == null) return temp1;
+        if (temp1.getStrength() > temp2.getStrength()) return temp1;
+        if (temp2.getStrength() > temp1.getStrength()) return temp2;
+        return temp1;
+    }
+    private Prey getBiggest(Memory[] memories) {
+        Prey biggest = null;
+        for (Memory memory: memories) {
+            if (memory != null && memory.getThingMemorized() instanceof Prey) {
+                Prey curr = (Prey)memory.getThingMemorized();
+                if (biggest == null
+                        || curr.getStrength() > biggest.getStrength()) {
+                    biggest = curr;
+                }
+            }
+        }
+        return biggest;
+    }
+
+
+    void searchForGroupMembers() {
+        Hunter strongest = null;
+        for (Memory shortTerm: shortTermMemory) {
+            if (shortTerm.getThingMemorized() instanceof Hunter) {
+                Hunter curr = (Hunter)(shortTerm.getThingMemorized());
+                inviteToGroup(curr);
+                if (strongest == null
+                        || strongest.getStrength() < curr.getStrength()) {
+                    strongest = curr;
+                }
+            }
+        }
+        for (Memory longTerm: longTermMemory) {
+            if (longTerm != null && (longTerm.getThingMemorized() instanceof Hunter)) {
+                Hunter curr = (Hunter)longTerm.getThingMemorized();
+                if (strongest == null
+                        || strongest.getStrength() < curr.getStrength()) {
+                    strongest = curr;
+                }
+            }
+        }
+        if (strongest != null) {
+            owner.move(strongest.getLocation());
+        } else {
+            moveRandomly();
+        }
+    }
+
+
+    private boolean inviteToGroup(Hunter h) {
+        int groupRadius = 3;
+        if (owner.getLocation().getDistance(h.getLocation()) < groupRadius) {
+            if (groupIntellingence == null) {
+                System.out.println("WTFFFFF");
+            }
+            return h.receiveGroupInvitation(groupIntellingence);
+        }
+        return false;
+    }
+
+
     private void hunt(Prey p) {
         status.setStatus("hunting");
         owner.move(p.getLocation());
@@ -201,6 +271,28 @@ public class HunterAI extends AI {
         }
     }
 
+
+    public boolean joinGroup(GroupAI group) {
+        if (isGroupmember() && group.getGroupSize() <= groupIntellingence.getGroupSize()) return false;
+        this.groupIntellingence = group;
+        groupIntellingence.add(this);
+        return true;
+    }
+
+    public void leaveGroup() {
+        if (groupIntellingence == null) return;
+        GroupAI tmp = groupIntellingence;
+        groupIntellingence = null;
+        tmp.remove(this);
+    }
+
+    private boolean isGroupmember() {
+        return (groupIntellingence != null);
+    }
+
+    Hunter getBody() {
+        return (Hunter) owner;
+    }
 
     public class HunterMemory extends AI.Memory implements Comparable {
         private int prio;

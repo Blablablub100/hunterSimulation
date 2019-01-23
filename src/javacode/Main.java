@@ -12,12 +12,13 @@ public class Main {
         test.printBoard(sim.getBoard());
         sim.simulateNextStep();
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10000; i++) {
             sim.simulateNextStep();
             System.out.println("=============================================");
             test.printBoard(sim.getBoard());
+            if (i == 999) System.out.println(i);
             try {
-                Thread.sleep(1000);
+                //Thread.sleep(100);
             } catch (Exception e) {
 
             }

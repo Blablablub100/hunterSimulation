@@ -47,16 +47,46 @@ public interface BoardObject {
             return distance;
         }
 
+        public BoardObject.Location move(String direction) {
+            if (direction.contains("north")) moveNorth();
+            if (direction.contains("south")) moveSouth();
+            if (direction.contains("west")) moveWest();
+            if (direction.contains("east")) moveEast();
+            return this;
+        }
+
+        // returns a string with "north", "south", "west" or "east" depending on how to get to Loc
+        // null if both are the same
+        public String wayTo(Location destination) {
+            if (destination.x > x && destination.y > y) {
+                return "southeast";
+            } else if (destination.x > x && destination.y < y) {
+                return "northeast";
+            } else if (destination.x < x && destination.y > y) {
+                return "southwest";
+            } else if (destination.x < x && destination.y < y) {
+                return "northwest";
+            } else if (destination.x < x) {
+                return "west";
+            } else if (destination.x > x) {
+                return "east";
+            } else if (destination.y < y) {
+                return "north";
+            } else if (destination.y > y) {
+                return "south";
+            }
+            return null;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof Location)) return false;
             Location loc = (Location) obj;
-            if (!(loc.x == x && loc.y == y)) return false;
-            return true;
+            return (loc.x == x && loc.y == y);
         }
 
         @Override
-        protected Object clone() {
+        public Object clone() {
             return new BoardObject.Location(x, y);
         }
     }
