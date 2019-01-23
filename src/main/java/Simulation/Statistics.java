@@ -1,4 +1,4 @@
-package javacode.Simulation;
+package Simulation;
 
 public class Statistics {
 

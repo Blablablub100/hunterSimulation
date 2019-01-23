@@ -1,7 +1,7 @@
-package javacode.Simulation.AI;
+package Simulation.AI;
 
-import javacode.Simulation.SimulationObjects.BoardObject;
-import javacode.Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.BoardObject;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public abstract class AI {
 
 
     void flee(List<LivingCreature> threats) {
-        System.out.println("fleeing");
+        /*System.out.println("fleeing");
         // TODO NIKO mach das hier bitte
         // Hier wird eine Liste übergeben an BaordObject die der LivingCreature gefährlich werden
         // -> Du sollst einen algo schireben, der sich möglichst weit von den threads wegbewegt
@@ -232,6 +232,7 @@ public abstract class AI {
                     stepsLeft -= 1.5;
             }
         }
+        */
     }
 
 

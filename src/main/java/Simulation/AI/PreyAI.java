@@ -1,14 +1,10 @@
-package javacode.Simulation.AI;
+package Simulation.AI;
 
-import javacode.Simulation.SimulationObjects.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import Simulation.SimulationObjects.LivingCreature;
 
 public class PreyAI extends AI {
 
-    public List<PreyMemory> shortTermMemory;
+    //public List<PreyMemory> shortTermMemory;
 
     public PreyAI(LivingCreature owner) {
         super(owner);
@@ -19,13 +15,13 @@ public class PreyAI extends AI {
 
     @Override
     public void react() {
-        notifyNextRound();
-        List<BoardObject> thingsSeen = owner.see();
-        shortTermMemory = getShortTermMemory(thingsSeen);
-        filterToLongTermMemory();
+        //notifyNextRound();
+        //List<BoardObject> thingsSeen = owner.see();
+        //shortTermMemory = getShortTermMemory(thingsSeen);
+        //filterToLongTermMemory();
     }
 
-
+/*
 
     private List<PreyAI.PreyMemory> getShortTermMemory(List<BoardObject> thingsSeen) {
 
@@ -166,7 +162,7 @@ public class PreyAI extends AI {
             if (thing instanceof Hunter && ((Hunter)thing).getStrength() >= owner.getStrength()) {
                 prio = 5;
             }
-            else if (thing instanceof Hunter && ((((Hunter)thing).getStrength()) =< (owner.getStrength()))
+            else if (thing instanceof Hunter && ((((Hunter)thing).getStrength()) <= (owner.getStrength()))
                     && ((Hunter))thing.getLocation().getDistance(owner.getLocation()) <= 3) {
                 prio = 4;
             }
@@ -205,4 +201,5 @@ public class PreyAI extends AI {
             return 0;
         }
     }
+    */
 }

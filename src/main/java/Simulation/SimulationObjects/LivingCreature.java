@@ -1,6 +1,6 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
-import javacode.Simulation.AI.AI;
+import Simulation.AI.AI;
 
 import java.util.List;
 

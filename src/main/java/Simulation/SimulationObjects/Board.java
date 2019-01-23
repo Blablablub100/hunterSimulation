@@ -1,4 +1,4 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
 import java.util.ArrayList;
 import java.util.List;

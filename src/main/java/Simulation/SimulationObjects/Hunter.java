@@ -1,7 +1,7 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
-import javacode.Simulation.AI.GroupAI;
-import javacode.Simulation.AI.HunterAI;
+import Simulation.AI.GroupAI;
+import Simulation.AI.HunterAI;
 
 import java.util.ArrayList;
 import java.util.List;

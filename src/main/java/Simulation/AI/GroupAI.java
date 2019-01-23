@@ -1,6 +1,8 @@
-package javacode.Simulation.AI;
+package Simulation.AI;
 
-import javacode.Simulation.SimulationObjects.*;
+import Simulation.SimulationObjects.BoardObject;
+import Simulation.SimulationObjects.DeadCorpse;
+import Simulation.SimulationObjects.Prey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +61,7 @@ public class GroupAI {
     private void steer(HunterAI h) {
         if (corpse != null) {
             h.getBody().move(corpse.getLocation());
+            System.out.println("Distance to Corpse: "+h.getBody().getLocation().getDistance(corpse.getLocation()));
             if (h.getBody().getLocation().getDistance(corpse.getLocation()) == 1) {
                 h.getBody().eat(corpse.eat());
                 h.leaveGroup();
@@ -109,8 +112,8 @@ public class GroupAI {
     private BoardObject.Location[] calcGoals(BoardObject.Location nearestGoal) {
         BoardObject.Location[] goals = new BoardObject.Location[members.size()-1];
         String direction = target.getLocation().wayTo(nearestGoal);
-        String dir1 = "";
-        String dir2 = "";
+        String dir1;
+        String dir2;
 
         if (direction.contains("north") || direction.contains("south")) {
             dir1 = "east";
@@ -193,13 +196,14 @@ public class GroupAI {
     }
 
     void remove(HunterAI h) {
-        h.leaveGroup();
+        if (!members.contains(h)) return;
         members.remove(h);
         if (members.size() == 0) {
-            h.getBody().getBoard().removeFromBoard(corpse);
+            if (corpse != null) corpse.rot();
             return;
         }
         if (h == leader) leader = members.get(0);
+        h.leaveGroup();
     }
 
     private int getGroupStrength() {
@@ -216,9 +220,14 @@ public class GroupAI {
             tmp.leaveGroup();
             remove(tmp);
         }
+        if (corpse != null) {
+            System.out.println("ROOOOOTTING");
+            corpse.rot();
+        }
     }
 
     public int getGroupSize() {
+        if (corpse != null) return Integer.MAX_VALUE;
         return members.size();
     }
 }

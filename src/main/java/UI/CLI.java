@@ -1,6 +1,9 @@
-package javacode.UI;
+package UI;
 
-import javacode.Simulation.SimulationObjects.*;
+import Simulation.SimulationObjects.Board;
+import Simulation.SimulationObjects.BoardObject;
+import Simulation.SimulationObjects.Hunter;
+import Simulation.SimulationObjects.Prey;
 
 import java.util.List;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
 public class DeadCorpse implements BoardObject {
 
@@ -9,6 +9,7 @@ public class DeadCorpse implements BoardObject {
     private int pieces;
 
     public DeadCorpse(Board board, Location loc, int size, int groupSize) {
+        timesEaten = 0;
         this.board = board;
         this.loc = loc;
         this.pieces = groupSize;

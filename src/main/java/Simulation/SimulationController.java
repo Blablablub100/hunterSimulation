@@ -1,11 +1,8 @@
-package javacode.Simulation;
+package Simulation;
 
-import javacode.Simulation.SimulationObjects.Board;
-import javacode.Simulation.SimulationObjects.BoardObject;
-import javacode.Simulation.SimulationObjects.LivingCreature;
-import javacode.UI.UserInput;
-
-import java.util.List;
+import Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.Board;
+import UI.UserInput;
 
 public class SimulationController {
 

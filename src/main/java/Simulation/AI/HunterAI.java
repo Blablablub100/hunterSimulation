@@ -1,6 +1,9 @@
-package javacode.Simulation.AI;
+package Simulation.AI;
 
-import javacode.Simulation.SimulationObjects.*;
+import Simulation.SimulationObjects.BoardObject;
+import Simulation.SimulationObjects.Hunter;
+import Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.Prey;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -273,7 +276,9 @@ public class HunterAI extends AI {
 
 
     public boolean joinGroup(GroupAI group) {
-        if (isGroupmember() && group.getGroupSize() <= groupIntellingence.getGroupSize()) return false;
+        if (group == groupIntellingence) return true;
+        if (isGroupmember() && group.getGroupSize() < groupIntellingence.getGroupSize()) return false;
+        else if (isGroupmember()) leaveGroup();
         this.groupIntellingence = group;
         groupIntellingence.add(this);
         return true;
@@ -281,9 +286,8 @@ public class HunterAI extends AI {
 
     public void leaveGroup() {
         if (groupIntellingence == null) return;
-        GroupAI tmp = groupIntellingence;
+        groupIntellingence.remove(this);
         groupIntellingence = null;
-        tmp.remove(this);
     }
 
     private boolean isGroupmember() {

@@ -1,7 +1,5 @@
-package javacode;
-
-import javacode.Simulation.SimulationController;
-import javacode.UI.CLI;
+import Simulation.SimulationController;
+import UI.CLI;
 
 public class Main {
 
@@ -12,11 +10,12 @@ public class Main {
         test.printBoard(sim.getBoard());
         sim.simulateNextStep();
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 500; i++) {
             sim.simulateNextStep();
             System.out.println("=============================================");
             test.printBoard(sim.getBoard());
-            if (i == 999) System.out.println(i);
+            if (i == 499)
+                System.out.println(i);
             try {
                 //Thread.sleep(100);
             } catch (Exception e) {
