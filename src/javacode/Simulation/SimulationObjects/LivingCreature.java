@@ -192,6 +192,10 @@ public abstract class LivingCreature implements BoardObject {
         return maxMovementSpeed-stepsTaken;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     public int getRandom(int lowerBound, int upperBound) {
         int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
         return randomNumber;
