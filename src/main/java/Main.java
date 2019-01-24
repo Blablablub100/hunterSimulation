@@ -3,6 +3,15 @@ import UI.CLI;
 
 public class Main {
 
+    /* TODO
+    1. finish PreyAI
+    2. check statuses
+    3. do a class diagram/ find flaws
+    4. think of Statistics
+     */
+
+
+
     public static void main(String[] args) {
 
         CLI test = new CLI();

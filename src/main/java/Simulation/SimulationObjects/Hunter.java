@@ -23,7 +23,7 @@ public class Hunter extends LivingCreature {
         }
         maxMovementSpeed = getRandom(1, 10);
         strength = getRandom(1, 10);
-        energy = getRandom(1, 10);
+        energy = 490;
         sightDistance = getRandom(1, 10);
         brain = new HunterAI(this);
     }
@@ -31,6 +31,12 @@ public class Hunter extends LivingCreature {
 
     @Override
     public void react() {
+        if (energy <= 0) {
+            System.out.println("STARVING");
+            ((HunterAI) brain).leaveGroup();
+            die();
+            return;
+        }
         stepsTaken = 0.0;
         brain.react();
     }
@@ -51,6 +57,7 @@ public class Hunter extends LivingCreature {
     @Override
     public void die() {
         ((HunterAI)brain).leaveGroup();
+        super.die();
     }
 
     public Board getBoard() {

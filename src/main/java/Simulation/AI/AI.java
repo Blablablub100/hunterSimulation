@@ -25,7 +25,7 @@ public abstract class AI {
 
 
     void flee(List<LivingCreature> threats) {
-        /*System.out.println("fleeing");
+        /*
         // TODO NIKO mach das hier bitte
         // Hier wird eine Liste übergeben an BaordObject die der LivingCreature gefährlich werden
         // -> Du sollst einen algo schireben, der sich möglichst weit von den threads wegbewegt

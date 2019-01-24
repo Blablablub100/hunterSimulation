@@ -19,7 +19,6 @@ public class DeadCorpse implements BoardObject {
     public int eat() {
         timesEaten++;
         if (timesEaten == pieces) board.removeBoardObject(this);
-        System.out.println("EATEN"+timesEaten +" / "+pieces);
         return share;
     }
 

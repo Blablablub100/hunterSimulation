@@ -4,6 +4,7 @@ import Simulation.SimulationObjects.BoardObject;
 import Simulation.SimulationObjects.DeadCorpse;
 import Simulation.SimulationObjects.Prey;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class GroupAI {
     }
 
     void steerGroup(HunterAI h) {
-        if (time > 50) {
+        if (time > 1000) {
             if (corpse != null) corpse.rot();
             ungroup();
             return;
@@ -61,7 +62,6 @@ public class GroupAI {
     private void steer(HunterAI h) {
         if (corpse != null) {
             h.getBody().move(corpse.getLocation());
-            System.out.println("Distance to Corpse: "+h.getBody().getLocation().getDistance(corpse.getLocation()));
             if (h.getBody().getLocation().getDistance(corpse.getLocation()) == 1) {
                 h.getBody().eat(corpse.eat());
                 h.leaveGroup();
@@ -70,7 +70,8 @@ public class GroupAI {
             ungroup();
         } else if (hunting && goals.containsKey(h)) {
             h.getBody().move(goals.get(h));
-            if (h.getBody().getLocation().getDistance(target.getLocation()) == 1) {
+            if (h.getBody().getLocation().getDistance(target.getLocation()) == 1
+                    && (isMemberNearMe(h) || twoMembersNearTarget())) {
                 DeadCorpse tmp = new DeadCorpse(
                         h.getBody().getBoard()
                         , target.getLocation()
@@ -85,6 +86,27 @@ public class GroupAI {
         } else {
             h.searchForGroupMembers();
         }
+    }
+
+    private boolean twoMembersNearTarget() {
+        boolean oneNear = false;
+        BoardObject.Location targetLoc = target.getLocation();
+        for (HunterAI member: members) {
+            if (member.getBody().getLocation().getDistance(targetLoc) == 1) {
+                if (oneNear) return true;
+                oneNear = true;
+            }
+        }
+        return false;
+    }
+    private boolean isMemberNearMe(HunterAI h) {
+        return (isMemberNeaby(h.getBody().getLocation()));
+    }
+    private boolean isMemberNeaby(BoardObject.Location startLoc) {
+        for (HunterAI member: members) {
+            if (member.getBody().getLocation().getDistance(startLoc) == 1) return true;
+        }
+        return false;
     }
 
 
@@ -221,7 +243,6 @@ public class GroupAI {
             remove(tmp);
         }
         if (corpse != null) {
-            System.out.println("ROOOOOTTING");
             corpse.rot();
         }
     }

@@ -238,9 +238,7 @@ public class HunterAI extends AI {
     private boolean inviteToGroup(Hunter h) {
         int groupRadius = 3;
         if (owner.getLocation().getDistance(h.getLocation()) < groupRadius) {
-            if (groupIntellingence == null) {
-                System.out.println("WTFFFFF");
-            }
+            if (groupIntellingence == null) return false;
             return h.receiveGroupInvitation(groupIntellingence);
         }
         return false;

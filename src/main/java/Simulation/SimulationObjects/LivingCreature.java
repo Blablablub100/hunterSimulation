@@ -111,6 +111,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth().moveEast();
         direction = "north";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
@@ -121,6 +122,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth().moveWest();
         direction = "north";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
@@ -131,17 +133,19 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveSouth().moveEast();
         direction = "south";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
     public boolean moveSouthWest() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
-         if (getPossibleSteps() < 1.5) return false;
+        if (getPossibleSteps() < 1.5) return false;
         getLocation().moveSouth().moveWest();
         direction = "south";
-         stepsTaken += 1.5;
-         return true;
+        stepsTaken += 1.5;
+        energy -= 1.5;
+        return true;
     }
 
     public boolean moveSouth() {
@@ -151,6 +155,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveSouth();
         direction = "south";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -161,6 +166,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth();
         direction = "north";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -171,6 +177,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveEast();
         direction = "east";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -181,6 +188,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveWest();
         direction = "west";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
