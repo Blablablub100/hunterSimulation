@@ -1,7 +1,7 @@
-package javacode.Simulation.AI;
+package Simulation.AI;
 
-import javacode.Simulation.SimulationObjects.BoardObject;
-import javacode.Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.LivingCreature;
+import Simulation.SimulationObjects.BoardObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,6 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
+
+import Simulation.AI.PreyAI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +8,7 @@ import java.util.List;
 public class Prey extends LivingCreature {
 
     Prey(Location loc, Board myBoard) {
+        brain = new PreyAI(this);
         this.loc = loc;
         this.myBoard = myBoard;
         int random = getRandom(1, 4);
@@ -20,6 +23,7 @@ public class Prey extends LivingCreature {
         }
         maxMovementSpeed = getRandom(1, 10);
         strength = getRandom(1, 10);
+        strength = 10; // TODO remove just for testing
         energy = getRandom(1, 10);
         sightDistance = getRandom(1, 10);
     }
@@ -27,7 +31,12 @@ public class Prey extends LivingCreature {
     // methods from LivingCreature
     @Override
     public void react() {
-        see();
+        if (energy <= 0) {
+            die();
+            return;
+        }
+        stepsTaken = 0.0;
+        brain.react();
     }
 
     @Override
@@ -299,6 +308,7 @@ public class Prey extends LivingCreature {
         if (opponent.getStrength() > getStrength()) return false;
         if (!(opponent instanceof Hunter)) return false;
         Location tmp = opponent.getLocation();
+        opponent.die();
         move(tmp);
         return true;
     }

@@ -1,6 +1,7 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
-import javacode.Simulation.AI.HunterAI;
+import Simulation.AI.GroupAI;
+import Simulation.AI.HunterAI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Hunter extends LivingCreature {
         }
         maxMovementSpeed = getRandom(1, 10);
         strength = getRandom(1, 10);
-        energy = getRandom(1, 10);
+        energy = 490;
         sightDistance = getRandom(1, 10);
         brain = new HunterAI(this);
     }
@@ -30,6 +31,12 @@ public class Hunter extends LivingCreature {
 
     @Override
     public void react() {
+        if (energy <= 0) {
+            System.out.println("STARVING");
+            ((HunterAI) brain).leaveGroup();
+            die();
+            return;
+        }
         stepsTaken = 0.0;
         brain.react();
     }
@@ -45,6 +52,20 @@ public class Hunter extends LivingCreature {
         opponent.die();
         move(tmp);
         return true;
+    }
+
+    @Override
+    public void die() {
+        ((HunterAI)brain).leaveGroup();
+        super.die();
+    }
+
+    public Board getBoard() {
+        return myBoard;
+    }
+
+    public boolean receiveGroupInvitation(GroupAI group) {
+        return ((HunterAI)brain).joinGroup(group);
     }
 
 

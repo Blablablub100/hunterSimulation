@@ -1,4 +1,4 @@
-package javacode.UI;
+package UI;
 
 public class UserInput {
 

@@ -1,6 +1,6 @@
-package javacode.Simulation.SimulationObjects;
+package Simulation.SimulationObjects;
 
-import javacode.Simulation.AI.AI;
+import Simulation.AI.AI;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ public abstract class LivingCreature implements BoardObject {
 
     public abstract boolean attack(LivingCreature opponent);
 
-    void die() {
+    public void die() {
         myBoard.removeFromBoard(this);
     }
 
-    void eat(int calories) {
+    public void eat(int calories) {
         energy = energy + calories;
     }
 
@@ -111,6 +111,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth().moveEast();
         direction = "north";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
@@ -121,6 +122,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth().moveWest();
         direction = "north";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
@@ -131,17 +133,19 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveSouth().moveEast();
         direction = "south";
         stepsTaken += 1.5;
+        energy -= 1.5;
         return true;
     }
 
     public boolean moveSouthWest() {
         Location tmp = ((Location)getLocation().clone()).moveSouth().moveWest();
         if (!myBoard.isEmpty(tmp)) return false;
-         if (getPossibleSteps() < 1.5) return false;
+        if (getPossibleSteps() < 1.5) return false;
         getLocation().moveSouth().moveWest();
         direction = "south";
-         stepsTaken += 1.5;
-         return true;
+        stepsTaken += 1.5;
+        energy -= 1.5;
+        return true;
     }
 
     public boolean moveSouth() {
@@ -151,6 +155,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveSouth();
         direction = "south";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -161,6 +166,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveNorth();
         direction = "north";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -171,6 +177,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveEast();
         direction = "east";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -181,6 +188,7 @@ public abstract class LivingCreature implements BoardObject {
         getLocation().moveWest();
         direction = "west";
         stepsTaken += 1.0;
+        energy--;
         return true;
     }
 
@@ -199,5 +207,32 @@ public abstract class LivingCreature implements BoardObject {
     public int getRandom(int lowerBound, int upperBound) {
         int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
         return randomNumber;
+    }
+
+    public boolean setDirection(int dir) {
+        if (dir == 1) direction = "north";
+        else if (dir == 2) direction = "east";
+        else if (dir == 3) direction = "south";
+        else if (dir == 4) direction = "west";
+        else return false;
+        return true;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public int getDirectionNum() {
+        switch (direction) {
+            case "north":
+                return 1;
+            case "east":
+                return 2;
+            case "south":
+                return 3;
+            case "west":
+                return 4;
+        }
+        return 0;
     }
 }

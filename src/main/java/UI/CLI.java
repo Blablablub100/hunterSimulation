@@ -1,6 +1,9 @@
-package javacode.UI;
+package UI;
 
-import javacode.Simulation.SimulationObjects.*;
+import Simulation.SimulationObjects.Board;
+import Simulation.SimulationObjects.BoardObject;
+import Simulation.SimulationObjects.Hunter;
+import Simulation.SimulationObjects.Prey;
 
 import java.util.List;
 import java.util.Scanner;
@@ -45,7 +48,7 @@ public class CLI {
 
         List<Hunter> hunters;
         List<Prey> preys;
-        List<Obstacle> obstacles;
+        List<BoardObject> obstacles;
 
         hunters = b.getHunters();
         preys = b.getPreys();
@@ -53,7 +56,7 @@ public class CLI {
 
         for (Hunter hunter : hunters) setElement(boardOutputCLI, hunter);
         for (Prey prey : preys) setElement(boardOutputCLI, prey);
-        for (Obstacle obstacle : obstacles) setElement(boardOutputCLI, obstacle);
+        for (BoardObject obstacle : obstacles) setElement(boardOutputCLI, obstacle);
 
         outputBoard(boardOutputCLI);
     }
@@ -64,7 +67,7 @@ public class CLI {
             board[loc.getX()][loc.getY()] = 'h';
         } else if (o instanceof Prey) {
             board[loc.getX()][loc.getY()] = 'p';
-        } else if (o instanceof Obstacle) {
+        } else if (o instanceof BoardObject) {
             board[loc.getX()][loc.getY()] = 'o';
         }
     }
