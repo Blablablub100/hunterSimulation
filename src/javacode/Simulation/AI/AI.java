@@ -3,6 +3,7 @@ package javacode.Simulation.AI;
 import javacode.Simulation.SimulationObjects.BoardObject;
 import javacode.Simulation.SimulationObjects.LivingCreature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AI {
@@ -26,212 +27,103 @@ public abstract class AI {
 
     void flee(List<LivingCreature> threats) {
         System.out.println("fleeing");
-        // TODO NIKO mach das hier bitte
-        // Hier wird eine Liste übergeben an BaordObject die der LivingCreature gefährlich werden
-        // -> Du sollst einen algo schireben, der sich möglichst weit von den threads wegbewegt
 
-        int smallestDistance;
-        int smallestDistanceCache;
-        int distanceSum;
-        int distanceSumCheck;
+        BoardObject.Location loc = (BoardObject.Location) owner.getLocation().clone();
 
-        LivingCreature ownerCopy = (LivingCreature)owner.getLocation().clone();
-        int random = owner.getRandom(1, 8);
-        int randomCopy = random;
-        int caseSave;
-        boolean check;
-        boolean steps;      // steps true straight      false diagonally
-        boolean stepsCheck = true;
-        double stepsLeft = owner.getPossibleSteps();
+        while(owner.getPossibleSteps() > 1) {
+            int[] distanceSums = getDistanceSums(threats, loc);
+            List<Integer> orderedDistance = new ArrayList<>();
+            int max = distanceSums[0];
+            int picked = 0;
 
-        while(stepsLeft >= 1) {
-            randomCopy = random;
-            check = true;
-            caseSave = 0;
-            smallestDistanceCache = 9999;
-            distanceSumCheck = 0;
+            for (int j = 0; j < 8; j++) {
+                for (int i = 0; i < 8; i++) {
+                    if (distanceSums[i] > max) {
+                            max = distanceSums[i];
+                            picked = i;
+                    }
+                }
+                distanceSums[picked] = -1;
+                orderedDistance.add(picked);
+            }
 
+            int x = 0;
+            boolean check = false;
 
             do {
-                switch (random) {
+                switch (orderedDistance.get(x)) {
+                    case 0:
+                        if (!(owner.moveNorth())) x++;
+                        else check = true;
+                        break;
+
                     case 1:
-                        ownerCopy().moveNorth;
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = true;
-
-                        // calculates the distanceSum to all threats
-                        for (int i = 0; i < threats.size(); i++) {
-                            distanceSum += threats.get(i).getLocation().getDistance(ownerCopy);
-
-                            // saves the smallest distance
-                            if (smallestDistance > threats.get(i).getLocation().getDistance(ownerCopy)) {
-                                smallestDistance = threats.get(i).getLocation().getDistance(ownerCopy);
-                            }
-                        }
-
-                        // marks this move as excecutable
-                        if (distanceSum > distanceSumCheck) {
-                            distanceSumCheck = distanceSum;
-                            smallestDistanceCache = smallestDistance;
-                            caseSave = random;
-                            stepsCheck = steps;
-
-                        } else if (distanceSum == distanceSumCheck && smallestDistanceCache > smallestDistance &&
-                                smallestDistance != 1 && !stepsCheck) {
-                            smallestDistanceCache = smallestDistance;
-                            caseSave = random;
-                            stepsCheck = steps;
-                        }
-
-                        ownerCopy.moveSouth();
-
+                        if (!(owner.moveNorthEast())) x++;
+                        else check = true;
+                        break;
 
                     case 2:
-                        ownerCopy.moveNorth();
-                        ownerCopy.moveEast();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = false;
-
-                        // excludes this move if too less steps  are available
-                        if(stepsLeft < 1.5) break;
-
-                        for (int i = 0; i < threats.size(); i++) {
-                            distanceSum += threats.get(i).getLocation().getDistance(ownerCopy);
-
-                            if (smallestDistance > threats.get(i).getLocation().getDistance(ownerCopy)) {
-                                smallestDistance = threats.get(i).getLocation().getDistance(ownerCopy);
-                            }
-                        }
-                        if (distanceSum > distanceSumCheck) {
-                            distanceSumCheck = distanceSum;
-                            smallestDistanceCache = smallestDistance;
-                            caseSave = random;
-
-                        } else if (distanceSum == distanceSumCheck && smallestDistanceCache > smallestDistance &&
-                                smallestDistance != 1) {
-                            smallestDistanceCache = smallestDistance;
-                            caseSave = random;
-                        }
-
-                        ownerCopy.moveSouth();
-                        ownerCopy.moveWest();
+                        if (!(owner.moveEast())) x++;
+                        else check = true;
+                        break;
 
                     case 3:
-                        ownerCopy.moveEast();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = true;
-
-
-
-                        ownerCopy.moveWest();
+                        if (!(owner.moveSouthEast())) x++;
+                        else check = true;
+                        break;
 
                     case 4:
-                        ownerCopy.moveEast();
-                        ownerCopy.moveSouth();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = false;
-
-                        if(stepsLeft < 1.5) break;
-
-
-
-                        ownerCopy.moveWest();
-                        ownerCopy.moveNorth();
+                        if (!(owner.moveSouth())) x++;
+                        else check = true;
+                        break;
 
                     case 5:
-                        ownerCopy.moveSouth();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = true;
-
-
-
-                        ownerCopy.moveNorth();
+                        if (!(owner.moveSouthWest())) x++;
+                        else check = true;
+                        break;
 
                     case 6:
-                        ownerCopy.moveSouth();
-                        ownerCopy.moveWest();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = false;
-
-                        if(stepsLeft < 1.5) break;
-
-
-
-                        ownerCopy.moveNorth();
-                        ownerCopy.moveEast();
+                        if (!(owner.moveWest())) x++;
+                        else check = true;
+                        break;
 
                     case 7:
-                        ownerCopy.moveWest();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = true;
-
-
-
-                        ownerCopy.moveEast();
-
-                    case 8:
-                        ownerCopy.moveWest();
-                        ownerCopy.moveNorth();
-                        distanceSum = 0;
-                        smallestDistance = 9999;
-                        steps = false;
-
-                        if(stepsLeft < 1.5) break;
-
-
-
-                        ownerCopy.moveEast();
-                        ownerCopy.moveSouth();
+                        if (!(owner.moveNorthWest())) x++;
+                        else check = true;
+                        break;
                 }
-
-                if (random == randomCopy) {
-                    if (check) check = false;
-                    else random = 10;
-                }
-
-                if (random < 8) random++;
-                else random = 1;
-
-            } while (random != 10);
-
-            switch (caseSave) {
-                case 1:
-                    owner.getLocation().moveNorth();
-                    stepsLeft -= 1.0;
-                case 2:
-                    owner.getLocation().moveNorth();
-                    owner.getLocation().moveEast();
-                    stepsLeft -= 1.5;
-                case 3:
-                    owner.getLocation().moveEast();
-                    stepsLeft -= 1.0;
-                case 4:
-                    owner.getLocation().moveEast();
-                    owner.getLocation().moveSouth();
-                    stepsLeft -= 1.5;
-                case 5:
-                    owner.getLocation().moveSouth();
-                    stepsLeft -= 1.0;
-                case 6:
-                    owner.getLocation().moveSouth();
-                    owner.getLocation().moveWest();
-                    stepsLeft -= 1.5;
-                case 7:
-                    owner.getLocation().moveWest();
-                    stepsLeft -= 1.0;
-                case 8:
-                    owner.getLocation().moveWest();
-                    owner.getLocation().moveNorth();
-                    stepsLeft -= 1.5;
-            }
+            } while (!check);
         }
+    }
+
+    int[] getDistanceSums(List<LivingCreature> threats, BoardObject.Location loc) {
+        int[] distanceSums = new int[8];
+        loc.moveNorth();
+        distanceSums[0] = checkDistanceSum(threats, loc);
+        loc.moveEast();
+        distanceSums[1] = checkDistanceSum(threats, loc);
+        loc.moveSouth();
+        distanceSums[2] = checkDistanceSum(threats, loc);
+        loc.moveSouth();
+        distanceSums[3] = checkDistanceSum(threats, loc);
+        loc.moveWest();
+        distanceSums[4] = checkDistanceSum(threats, loc);
+        loc.moveWest();
+        distanceSums[5] = checkDistanceSum(threats, loc);
+        loc.moveNorth();
+        distanceSums[6] = checkDistanceSum(threats, loc);
+        loc.moveNorth();
+        distanceSums[7] = checkDistanceSum(threats, loc);
+
+        return distanceSums;
+    }
+
+    int checkDistanceSum(List<LivingCreature> threats, BoardObject.Location loc) {
+        int distanceSum = 0;
+        for (int i = 0; i < threats.size(); i++) {
+            distanceSum += threats.get(i).getLocation().getDistance(loc);
+        }
+        return distanceSum;
     }
 
 
