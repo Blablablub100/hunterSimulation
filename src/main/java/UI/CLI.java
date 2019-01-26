@@ -52,7 +52,7 @@ public class CLI {
 
         hunters = b.getHunters();
         preys = b.getPreys();
-        obstacles = b.getObstacles();
+        obstacles = b.getBoardObjects();
 
         for (Hunter hunter : hunters) setElement(boardOutputCLI, hunter);
         for (Prey prey : preys) setElement(boardOutputCLI, prey);

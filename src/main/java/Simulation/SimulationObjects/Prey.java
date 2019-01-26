@@ -4,6 +4,7 @@ import Simulation.AI.PreyAI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Prey extends LivingCreature {
 
@@ -11,7 +12,7 @@ public class Prey extends LivingCreature {
         brain = new PreyAI(this);
         this.loc = loc;
         this.myBoard = myBoard;
-        int random = getRandom(1, 4);
+        int random = ThreadLocalRandom.current().nextInt(1, 4 + 1);
         if(random == 1){
             direction = "north";
         } else if(random == 2){
@@ -21,11 +22,11 @@ public class Prey extends LivingCreature {
         } else if(random == 4){
             direction = "west";
         }
-        maxMovementSpeed = getRandom(1, 10);
-        strength = getRandom(1, 10);
+        maxMovementSpeed = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        strength = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         strength = 10; // TODO remove just for testing
-        energy = getRandom(1, 10);
-        sightDistance = getRandom(1, 10);
+        energy = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        sightDistance = ThreadLocalRandom.current().nextInt(1, 10 + 1);
     }
 
     // methods from LivingCreature
@@ -33,6 +34,7 @@ public class Prey extends LivingCreature {
     public void react() {
         if (energy <= 0) {
             die();
+            myBoard.getStats().incPreyStarved();
             return;
         }
         stepsTaken = 0.0;
@@ -310,6 +312,7 @@ public class Prey extends LivingCreature {
         Location tmp = opponent.getLocation();
         opponent.die();
         move(tmp);
+        myBoard.getStats().incHunterKilledByPrey();
         return true;
     }
 }

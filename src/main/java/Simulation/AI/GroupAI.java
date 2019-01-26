@@ -4,13 +4,10 @@ import Simulation.SimulationObjects.BoardObject;
 import Simulation.SimulationObjects.DeadCorpse;
 import Simulation.SimulationObjects.Prey;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-// TODO ALLES FUNKTIONIERT NUR DAS FRESSEN NICHT
 
 public class GroupAI {
 
@@ -62,13 +59,16 @@ public class GroupAI {
     private void steer(HunterAI h) {
         if (corpse != null) {
             h.getBody().move(corpse.getLocation());
+            h.getStatus().setStatus("reaching carrion");
             if (h.getBody().getLocation().getDistance(corpse.getLocation()) == 1) {
                 h.getBody().eat(corpse.eat());
                 h.leaveGroup();
+                h.getStatus().setStatus("calm");
             }
         } else if (!h.getBody().getBoard().getPreys().contains(target)) {
             ungroup();
         } else if (hunting && goals.containsKey(h)) {
+            h.getStatus().setStatus("hunting");
             h.getBody().move(goals.get(h));
             if (h.getBody().getLocation().getDistance(target.getLocation()) == 1
                     && (isMemberNearMe(h) || twoMembersNearTarget())) {
@@ -84,6 +84,7 @@ public class GroupAI {
                 corpse = tmp;
             }
         } else {
+            h.getStatus().setStatus("searching group members");
             h.searchForGroupMembers();
         }
     }
@@ -117,16 +118,15 @@ public class GroupAI {
         BoardObject.Location nearestGoal = getNearestLocByTarget(nearest, target.getLocation());
         BoardObject.Location[] goalLocations = calcGoals(nearestGoal);
 
-        for (int i = 0; i < members.size(); i++) {
-            if (members.get(i) == nearest) goals.put(nearest, nearestGoal);
+        for (HunterAI member : members) {
+            if (member == nearest) goals.put(nearest, nearestGoal);
             else {
-                BoardObject.Location currGoal = getNearestLocation(members.get(i), goalLocations);
+                BoardObject.Location currGoal = getNearestLocation(member, goalLocations);
                 if (currGoal != null) {
-                    goals.put(members.get(i), (BoardObject.Location) currGoal.clone());
+                    goals.put(member, (BoardObject.Location) currGoal.clone());
                     int index = Arrays.asList(goalLocations).indexOf(currGoal);
                     goalLocations[index] = null;
-                }
-                else goals.put(members.get(i), (BoardObject.Location) nearestGoal.clone());
+                } else goals.put(member, (BoardObject.Location) nearestGoal.clone());
             }
         }
     }
@@ -180,11 +180,11 @@ public class GroupAI {
         BoardObject.Location nearest = null;
         int nearestDist = Integer.MAX_VALUE;
 
-        for (int i = 0; i < locs.length; i++) {
-            if (locs[i] != null) {
-                int tmpDist = getDistance(h, locs[i]);
+        for (BoardObject.Location loc : locs) {
+            if (loc != null) {
+                int tmpDist = getDistance(h, loc);
                 if (tmpDist < nearestDist) {
-                    nearest = locs[i];
+                    nearest = loc;
                     nearestDist = tmpDist;
                 }
             }
@@ -230,17 +230,18 @@ public class GroupAI {
 
     private int getGroupStrength() {
         int groupStrength = 0;
-        for (int i = 0; i < members.size(); i++) {
-            groupStrength = groupStrength + members.get(i).owner.getStrength();
+        for (HunterAI member : members) {
+            groupStrength = groupStrength + member.owner.getStrength();
         }
         return groupStrength;
     }
 
     private void ungroup() {
-        for (int i = 0; i < members.size(); i++) {
-            HunterAI tmp = members.get(i);
-            tmp.leaveGroup();
-            remove(tmp);
+        for (HunterAI tmp : members) {
+            if (tmp != null) {
+                tmp.leaveGroup();
+                remove(tmp);
+            }
         }
         if (corpse != null) {
             corpse.rot();

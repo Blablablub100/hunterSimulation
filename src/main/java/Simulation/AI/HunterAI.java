@@ -8,6 +8,7 @@ import Simulation.SimulationObjects.Prey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HunterAI extends AI {
 
@@ -55,17 +56,22 @@ public class HunterAI extends AI {
 
         // check if I am able to hunt
         Prey toHunt = identifyPreyToHunt(threats);
-        if (toHunt != null) hunt(toHunt);
+        if (toHunt != null) {
+            hunt(toHunt);
+            status.setStatus("hunting");
+        }
 
         // check if there is  a big Prey I can groupHunt
         Prey biggest = getBiggestPrey();
         if (biggest != null && !isGroupmember()) {
             groupIntellingence = new GroupAI(this, biggest);
             searchForGroupMembers();
+            status.setStatus("searching group members");
+        } else {
+            // nothing to do
+            moveRandomly();
+            status.setStatus("calm");
         }
-
-        // nothing to do
-        moveRandomly();
     }
 
 
@@ -108,9 +114,7 @@ public class HunterAI extends AI {
         // 3. Prio: biggest Prey
         List<Prey> huntablePrey = identifyHuntablePrey();
         Prey toHunt = null;
-        for (int i = 0; i < huntablePrey.size(); i++) {
-            Prey curr = huntablePrey.get(i);
-
+        for (Prey curr : huntablePrey) {
             // no huntable is set
             if (toHunt == null) {
                 if (isHuntable(curr, threats)) toHunt = curr;
@@ -155,7 +159,7 @@ public class HunterAI extends AI {
 
 
     private List<Prey> identifyHuntablePrey() {
-        List<Prey> huntablePrey = new ArrayList<Prey>();
+        List<Prey> huntablePrey = new ArrayList<>();
         for (Memory longTerm: longTermMemory) {
             if (longTerm != null && ((HunterMemory) longTerm).getPriority() == 4)
                 huntablePrey.add((Prey) longTerm.getThingMemorized());
@@ -169,7 +173,7 @@ public class HunterAI extends AI {
 
 
     private List<LivingCreature> identifyThreats() {
-        List<LivingCreature> threats = new ArrayList<LivingCreature>();
+        List<LivingCreature> threats = new ArrayList<>();
         for (Memory longTerm: longTermMemory) {
             if (longTerm != null && ((HunterMemory) longTerm).getPriority() == 5)
                 threats.add((LivingCreature) longTerm.getThingMemorized());
@@ -255,7 +259,7 @@ public class HunterAI extends AI {
 
 
     private void moveRandomly() {
-        int direction = owner.getRandom(1, 4);
+        int direction = ThreadLocalRandom.current().nextInt(1, 4 + 1);
         switch (direction) {
             case 1:
                 owner.moveNorth();
@@ -272,6 +276,9 @@ public class HunterAI extends AI {
         }
     }
 
+    public Status getStatus() {
+        return status;
+    }
 
     public boolean joinGroup(GroupAI group) {
         if (group == groupIntellingence) return true;
@@ -317,9 +324,6 @@ public class HunterAI extends AI {
             }
             else if (thing instanceof Prey && ((Prey)thing).getStrength() < owner.getStrength()) {
                 prio = 4;
-            }
-            else if (false/*somebody wants to group with me*/) {
-                prio = 3;
             }
             else if (thing instanceof Hunter && ((Hunter)thing).getStrength() > owner.getStrength()) {
                 prio = 2;

@@ -1,5 +1,8 @@
 package Simulation.SimulationObjects;
 
+import Simulation.SimulationController;
+import Simulation.Statistics;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +12,11 @@ public class Board {
     private int height;
     private List<Hunter> hunters = new ArrayList<>();
     private List<Prey> preys = new ArrayList<>();
-    private List<BoardObject> obstacles = new ArrayList<>();
+    private List<BoardObject> boardObjects = new ArrayList<>();
+    private SimulationController sim;
 
-
-    public Board(int width, int height, int hunterCount, int preyCount, int obstacleCount) {
+    public Board(int width, int height, int hunterCount, int preyCount, int obstacleCount, SimulationController sim) {
+        this.sim = sim;
         this.width = width;
         this.height = height;
         for (int i = 0; i < hunterCount; i++) {
@@ -37,11 +41,17 @@ public class Board {
     }
 
     public void spawnObstacle(BoardObject.Location loc) {
-        obstacles.add(new Obstacle(loc));
+        boardObjects.add(new Obstacle(loc));
     }
 
     public void spawn(BoardObject boardObject) {
-        obstacles.add(boardObject);
+        if (boardObject instanceof Hunter) {
+            hunters.add((Hunter) boardObject);
+        } else if (boardObject instanceof Prey) {
+            preys.add((Prey) boardObject);
+        } else {
+            boardObjects.add(boardObject);
+        }
     }
 
 
@@ -55,7 +65,7 @@ public class Board {
     }
 
     private void spawnObstacle() {
-        obstacles.add(new Obstacle(generateRandomLoc()));
+        boardObjects.add(new Obstacle(generateRandomLoc()));
     }
 
 
@@ -65,8 +75,8 @@ public class Board {
             removeHunter((Hunter) b);
         } else if (b instanceof Prey) {
             removePrey((Prey) b);
-        } else if (b instanceof Obstacle) {
-            removeObstacle((Obstacle) b);
+        } else {
+            removeObstacle((BoardObject) b);
         }
     }
 
@@ -78,18 +88,16 @@ public class Board {
         preys.remove(p);
     }
 
-    void removeObstacle(Obstacle o) {
-        obstacles.remove(o);
-    }
-
-    void removeBoardObject(BoardObject o) {
-        obstacles.remove(o);
-        hunters.remove(o);
-        preys.remove(o);
+    void removeObstacle(BoardObject b) {
+        boardObjects.remove(b);
     }
 
 
     // getters
+    public Statistics getStats() {
+        return sim.getStats();
+    }
+
     public List<Hunter> getHunters() {
         return hunters;
     }
@@ -98,8 +106,8 @@ public class Board {
         return preys;
     }
 
-    public List<BoardObject> getObstacles() {
-        return obstacles;
+    public List<BoardObject> getNonLivingBoardObjects() {
+        return boardObjects;
     }
 
     public int getWidth() {
@@ -114,7 +122,7 @@ public class Board {
         List<BoardObject> res = new ArrayList<>();
         res.addAll((List<BoardObject>)(List<?>) hunters);
         res.addAll((List<BoardObject>)(List<?>) preys);
-        res.addAll((List<BoardObject>)(List<?>) obstacles);
+        res.addAll((List<BoardObject>)(List<?>) boardObjects);
         return res;
     }
 
@@ -137,7 +145,7 @@ public class Board {
 
     // helping methods
     private BoardObject.Location generateRandomLoc() {
-        BoardObject.Location res = null;
+        BoardObject.Location res;
         do {
             int x = (int) (Math.random() * width);
             int y = (int) (Math.random() * height);

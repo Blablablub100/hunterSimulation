@@ -8,5 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: eu.lestard:advanced-bindings:0.4.0" level="project" />
   </component>
 </module>

@@ -280,11 +280,12 @@ public abstract class AI {
 
         private final String[] statuses = {
                 "calm"
-                , "grazing"         //attacking -> grazing weil attack == hunt
-                , "alarmed"
-                , "searching group"
+                , "grazing"
+                , "attacking"
+                , "searching group members"
                 , "fleeing"
                 , "hunting"
+                , "reaching carrion"
         };
         private int currentStatus;
         private int time;

@@ -4,10 +4,10 @@ import UI.CLI;
 public class Main {
 
     /* TODO
-    1. finish PreyAI
-    2. check statuses
-    3. do a class diagram/ find flaws
-    4. think of Statistics
+    1. [X] fix AI statuses
+    2. [X] code cleanup
+    3. [X] implement Statistics
+    4. [] design UI
      */
 
 

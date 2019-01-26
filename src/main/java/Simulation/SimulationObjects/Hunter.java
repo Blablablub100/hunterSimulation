@@ -5,13 +5,14 @@ import Simulation.AI.HunterAI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Hunter extends LivingCreature {
 
     Hunter(Location loc, Board myBoard) {
         this.loc = loc;
         this.myBoard = myBoard;
-        int random = getRandom(1, 4);
+        int random = ThreadLocalRandom.current().nextInt(1, 4 + 1);
         if(random == 1){
             direction = "north";
         } else if(random == 2){
@@ -21,10 +22,10 @@ public class Hunter extends LivingCreature {
         } else if(random == 4){
             direction = "west";
         }
-        maxMovementSpeed = getRandom(1, 10);
-        strength = getRandom(1, 10);
+        maxMovementSpeed = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        strength = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         energy = 490;
-        sightDistance = getRandom(1, 10);
+        sightDistance = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         brain = new HunterAI(this);
     }
 
@@ -32,9 +33,9 @@ public class Hunter extends LivingCreature {
     @Override
     public void react() {
         if (energy <= 0) {
-            System.out.println("STARVING");
             ((HunterAI) brain).leaveGroup();
             die();
+            myBoard.getStats().incHunterStarved();
             return;
         }
         stepsTaken = 0.0;
@@ -51,6 +52,7 @@ public class Hunter extends LivingCreature {
         eat(opponent.getStrength());
         opponent.die();
         move(tmp);
+        getBoard().getStats().incPreyKilledByHunter();
         return true;
     }
 
@@ -178,8 +180,8 @@ public class Hunter extends LivingCreature {
 
     private List<BoardObject> scan(List<BoardObject.Location> toCheck) {
         List<BoardObject> res = new ArrayList<>();
-        for (int i = 0; i < toCheck.size(); i++) {
-            BoardObject tmp = myBoard.getObjectAtLocation(toCheck.get(i));
+        for (Location location : toCheck) {
+            BoardObject tmp = myBoard.getObjectAtLocation(location);
             if (tmp != null) res.add(tmp);
         }
         return res;

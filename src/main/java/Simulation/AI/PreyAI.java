@@ -1,6 +1,5 @@
 package Simulation.AI;
 
-import Simulation.SimulationObjects.Board;
 import Simulation.SimulationObjects.BoardObject;
 import Simulation.SimulationObjects.Hunter;
 import Simulation.SimulationObjects.LivingCreature;
@@ -31,9 +30,18 @@ public class PreyAI extends AI {
         List<LivingCreature> threats = getNearbyThreats(thingsSeen);
         Hunter weakHunter = getNearestWeakHunter(thingsSeen);
 
-        if (hasToFlee(threats)) flee(threats);
-        else if (weakHunter != null) attackWeakHunter(weakHunter);
-        else grass();
+        if (hasToFlee(threats)) {
+            flee(threats);
+            status.setStatus("fleeing");
+        }
+        else if (weakHunter != null){
+            attackWeakHunter(weakHunter);
+            status.setStatus("attacking");
+        }
+        else {
+            grass();
+            status.setStatus("grazing");
+        }
 
     }
 
@@ -101,7 +109,10 @@ public class PreyAI extends AI {
 
         for (int i = 0; i < longTermMemory.length; i++) {
             Memory mem = longTermMemory[i];
-            if (mem == null) longTermMemory[i] = new Memory(h);
+            if (mem == null) {
+                longTermMemory[i] = new Memory(h);
+                return;
+            }
 
             int currDist = mem.getThingMemorized().getLocation().getDistance(owner.getLocation());
             int newDist = h.getLocation().getDistance(owner.getLocation());

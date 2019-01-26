@@ -27,6 +27,11 @@ public abstract class LivingCreature implements BoardObject {
     }
 
     public void eat(int calories) {
+        if (this instanceof Prey) {
+            myBoard.getStats().addFoodGainPrey(calories);
+        } else if (this instanceof Hunter) {
+            myBoard.getStats().addFoodGainHunter(calories);
+        }
         energy = energy + calories;
     }
 
@@ -67,34 +72,34 @@ public abstract class LivingCreature implements BoardObject {
                 stepsEast--;
             }
             // move up + left
-            else if (stepsNorth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveNorthWest()) {
+            if (stepsNorth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveNorthWest()) {
                 stepsNorth--;
                 stepsWest--;
             }
             // move down + right
-            else if (stepsSouth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveSouthEast()) {
+            if (stepsSouth >= 1 && stepsEast >= 1 && possibleSteps >= 1.5 && moveSouthEast()) {
                 stepsSouth--;
                 stepsEast--;
             }
             // move down + left
-            else if (stepsSouth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveSouthWest()) {
+            if (stepsSouth >= 1 && stepsWest >= 1 && possibleSteps >= 1.5 && moveSouthWest()) {
                 stepsSouth--;
                 stepsWest--;
             }
             // move straight up
-            else if (stepsNorth >= 1 && moveNorth()) {
+            if (stepsNorth >= 1 && moveNorth()) {
                 stepsNorth--;
             }
             // move straight down
-            else if (stepsSouth >= 1 && moveSouth()) {
+            if (stepsSouth >= 1 && moveSouth()) {
                 stepsSouth--;
             }
             // move move straight right
-            else if (stepsEast >= 1 && moveEast()) {
+            if (stepsEast >= 1 && moveEast()) {
                 stepsEast--;
             }
             // move straight left
-            else if (stepsWest >= 1 && moveWest()) {
+            if (stepsWest >= 1 && moveWest()) {
                 stepsWest--;
             } else {
                 break;
@@ -196,6 +201,10 @@ public abstract class LivingCreature implements BoardObject {
         return strength;
     }
 
+    public int getMaxMovementSpeed() {
+        return maxMovementSpeed;
+    }
+
     public double getPossibleSteps() {
         return maxMovementSpeed-stepsTaken;
     }
@@ -204,9 +213,8 @@ public abstract class LivingCreature implements BoardObject {
         return energy;
     }
 
-    public int getRandom(int lowerBound, int upperBound) {
-        int randomNumber = lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
-        return randomNumber;
+    private int getRandom(int lowerBound, int upperBound) {
+        return lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
     }
 
     public boolean setDirection(int dir) {

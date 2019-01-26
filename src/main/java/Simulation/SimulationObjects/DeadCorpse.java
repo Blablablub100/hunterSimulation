@@ -18,12 +18,12 @@ public class DeadCorpse implements BoardObject {
 
     public int eat() {
         timesEaten++;
-        if (timesEaten == pieces) board.removeBoardObject(this);
+        if (timesEaten == pieces) board.removeFromBoard(this);
         return share;
     }
 
     public void rot() {
-        board.removeBoardObject(this);
+        board.removeFromBoard(this);
     }
 
     @Override
