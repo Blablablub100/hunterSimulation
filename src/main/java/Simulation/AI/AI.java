@@ -43,6 +43,7 @@ public abstract class AI {
                             picked = i;
                     }
                 }
+                max = distanceSums[0];
                 distanceSums[picked] = -1;
                 orderedDistance.add(picked);
             }
@@ -90,6 +91,10 @@ public abstract class AI {
                     case 7:
                         if (!(owner.moveNorthWest())) x++;
                         else check = true;
+                        break;
+
+                    default:
+                        check = true;
                         break;
                 }
             } while (!check);
