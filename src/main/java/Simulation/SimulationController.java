@@ -8,6 +8,18 @@ public class SimulationController {
 
     //TODO !!!! WENN HUNTER GLEICH GROß PREY KLEBT ER DIE GANZE ZEIT DRAN
 
+    // TODO
+    /*
+    [] Do Simulation Control
+
+    Bug fixes:
+    - Avg Hunter killed by Prey not working
+    - Avg Prey killed by Hunter not working
+    - Amount Prey killed not working
+    - Draw Group Radius
+    - if hunter strengths equals prey strength, hunter will stand in front of it for ever
+     */
+
     private Board board;
     private Statistics stats;
     private int simSteps;

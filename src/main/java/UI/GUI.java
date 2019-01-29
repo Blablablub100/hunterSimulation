@@ -2,11 +2,10 @@ package UI;
 
 import Simulation.SimulationController;
 import Simulation.SimulationObjects.*;
+import UI.RangeSlider.RangeSlider;
 import UI.grid.Cell;
 import UI.grid.GridModel;
 import UI.grid.GridView;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -21,16 +20,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
-import static jdk.nashorn.internal.objects.NativeMath.round;
 
 public class GUI extends Application{
 
@@ -64,11 +60,29 @@ public class GUI extends Application{
     private SimpleDoubleProperty hpRatio = new SimpleDoubleProperty(0.0);
     private SimpleDoubleProperty avgFoodGainH = new SimpleDoubleProperty(0.0);
     private SimpleDoubleProperty avgFoodGainP = new SimpleDoubleProperty(0.0);
-    private IntegerProperty deadPrey = new SimpleIntegerProperty(0);
-    private IntegerProperty deadHunter = new SimpleIntegerProperty(0);
+    private SimpleDoubleProperty avgPkilledByH = new SimpleDoubleProperty(0.0);
+    private SimpleDoubleProperty avgHkilledByP = new SimpleDoubleProperty(0.0);
 
+    private IntegerProperty deadHunter = new SimpleIntegerProperty(0);
+    private IntegerProperty deadPrey = new SimpleIntegerProperty(0);
+    private IntegerProperty amtHunterStarved = new SimpleIntegerProperty(0);
+    private IntegerProperty amtPreyStarved = new SimpleIntegerProperty(0);
+    private IntegerProperty amtHunterKilled = new SimpleIntegerProperty(0);
+    private IntegerProperty amtPreyKilled = new SimpleIntegerProperty(0);
+    private IntegerProperty amtCarrion = new SimpleIntegerProperty(0);
 
     private IntegerProperty cellBorderWidth = new SimpleIntegerProperty(1);
+
+    private IntegerProperty hunterMinSpeed = new SimpleIntegerProperty(2);
+    private IntegerProperty hunterMaxSpeed = new SimpleIntegerProperty(9);
+    private IntegerProperty hunterMinStrength = new SimpleIntegerProperty(2);
+    private IntegerProperty hunterMaxStrength = new SimpleIntegerProperty(9);
+    private IntegerProperty hunterMinSight = new SimpleIntegerProperty(2);
+    private IntegerProperty hunterMaxSight = new SimpleIntegerProperty(9);
+    private IntegerProperty hunterMinEnergy = new SimpleIntegerProperty(2);
+    private IntegerProperty hunterMaxEnergy = new SimpleIntegerProperty(9);
+
+
 
     public void printSim(SimulationController sim) {
         clear();
@@ -163,10 +177,11 @@ public class GUI extends Application{
 
         gridView.cellBorderWidthProperty().bind(cellBorderWidth);
 
-        VBox right = createGridControls();
-        right.getChildren().addAll(createQuickStatistics().getChildren());
+        VBox left = createGridControls();
+        VBox right = createQuickStatistics();
 
         root.setRight(right);
+        root.setLeft(left);
 
         stage.setScene(new Scene(root, 800,600));
         stage.show();
@@ -215,19 +230,30 @@ public class GUI extends Application{
         controlsBox.setPadding(new Insets(5));
 
         HBox headerBox = createHeader("Simulation Control");
-        HBox numberOfRowsBox = createNumberControl("Rows:\t\t\n", numberOfRows, 3, 99);
-        HBox numberOfColumnsBox = createNumberControl("Columns:\t\n", numberOfColumns, 3, 99);
+        HBox numberOfRowsBox = createNumberControl("Rows\t\n", numberOfRows, 3, 99);
+        HBox numberOfColumnsBox = createNumberControl("Columns\t\n", numberOfColumns, 3, 99);
         //HBox cellBorderWidthBox = createNumberControl("Cell Border Width:", cellBorderWidth, 0, 5);
-        HBox numberOfHunterBox = createNumberControl("Hunters:\t\t\n", numberOfHunter, 0, 999);
-        HBox numberOfPreyBox = createNumberControl("Preys:\t\t\n", numberOfPrey, 0, 999);
-        HBox numberOfObstacleBox = createNumberControl("Obstacles:\t\n", numberOfObstacles, 0, 999);
+        HBox numberOfHunterBox = createNumberControl("Hunters\t\n", numberOfHunter, 0, 999);
+        HBox numberOfPreyBox = createNumberControl("Preys\t\n", numberOfPrey, 0, 999);
+        HBox numberOfObstacleBox = createNumberControl("Obstacle\t\n", numberOfObstacles, 0, 999);
+
+        HBox hunterHeaderBox = createHeader("Hunter Control");
+        HBox hunterSpeedBox = createRangeControl("Speed\t", hunterMinSpeed, hunterMaxSpeed, 1, 10);
+        HBox hunterStrengthBox = createRangeControl("Strength\t", hunterMinStrength, hunterMaxStrength, 1, 10);
+        HBox hunterSightBox = createRangeControl("Speed\t", hunterMinSight, hunterMaxSight, 1, 10);
+        HBox hunterEnergyBox = createRangeControl("Speed\t", hunterMinEnergy, hunterMaxEnergy, 1, 10);
 
         controlsBox.getChildren().addAll(headerBox
                 , numberOfRowsBox
                 , numberOfColumnsBox
                 , numberOfHunterBox
                 , numberOfPreyBox
-                , numberOfObstacleBox);
+                , numberOfObstacleBox
+                , hunterHeaderBox
+                , hunterSpeedBox
+                , hunterStrengthBox
+                , hunterSightBox
+                , hunterEnergyBox);
 
         return controlsBox;
     }
@@ -238,35 +264,33 @@ public class GUI extends Application{
         controlsBox.setPadding(new Insets(5));
 
         HBox headerBox = createHeader("Quick Statistics");
-        HBox hpRatioBox = createStatistics("H/P Ratio\t\t", hpRatio);
-        HBox avgFoodGainHBox = createStatistics("Avg Food Gain H\t", avgFoodGainH);
-        HBox avgFoodGainPBox = createStatistics("Avg Food Gain P\t", avgFoodGainP);
-        HBox hunterDeadBox = createStatistics("Hunter died\t\t", deadHunter);
-        HBox preyDeadBox = createStatistics("Prey died\t\t", deadPrey);
+        HBox hpRatioBox = createStatistics("H/P Ratio\t\t\t", hpRatio);
+        HBox avgFoodGainHBox = createStatistics("Avg Food Gain H\t\t", avgFoodGainH);
+        HBox avgFoodGainPBox = createStatistics("Avg Food Gain P\t\t", avgFoodGainP);
+        HBox avgPkilledByHBox = createStatistics("Avg P killed by H\t\t", avgPkilledByH);
+        HBox avgHkilledByPBox = createStatistics("Avg H killed by P\t\t", avgHkilledByP);
+
+        HBox hunterDeadBox = createStatistics("Hunter died\t\t\t", deadHunter);
+        HBox preyDeadBox = createStatistics("Prey died\t\t\t", deadPrey);
+        HBox hunterStarvedBox = createStatistics("Hunter starved\t\t", amtHunterStarved);
+        HBox preyStarvedBox = createStatistics("Prey starved\t\t\t", amtPreyStarved);
+        HBox hunterKilledBox = createStatistics("Amount Hunter killed\t", amtHunterKilled);
+        HBox preyKilledBox = createStatistics("Amount Prey killed\t", amtPreyKilled);
+        HBox amtCarrionBox = createStatistics("Amount Carrion\t\t", amtCarrion);
 
         controlsBox.getChildren().addAll(headerBox
                 , hpRatioBox
                 , avgFoodGainHBox
                 , avgFoodGainPBox
+                , avgHkilledByPBox
+                , avgPkilledByHBox
                 , hunterDeadBox
-                , preyDeadBox);
-        return controlsBox;
-    }
-
-    private VBox createSimulationControls() {
-        VBox controlsBox = new VBox();
-        controlsBox.setSpacing(5);
-        controlsBox.setPadding(new Insets(5));
-
-        HBox headerBox = createHeader("Simulation Control");
-        HBox widthBox = createNumberTextControl("width\t");
-        HBox heightBox = createNumberTextControl("height\t");
-        HBox hunterBox = createNumberTextControl("hunter\t");
-        HBox preyBox = createNumberTextControl("prey\t\t");
-        HBox obstacleBox = createNumberTextControl("obstacle\t");
-
-        controlsBox.getChildren().addAll(headerBox, widthBox, heightBox, hunterBox, preyBox, obstacleBox);
-
+                , preyDeadBox
+                , hunterStarvedBox
+                , preyStarvedBox
+                , hunterKilledBox
+                , preyKilledBox
+                , amtCarrionBox);
         return controlsBox;
     }
 
@@ -277,7 +301,7 @@ public class GUI extends Application{
         Label labelVal = new Label ();
         stat.getChildren().addAll(labelName, labelVal);
 
-        labelVal.textProperty().bind(Bindings.concat(val));
+        labelVal.textProperty().bind(Bindings.concat(val, "\t"));
 
         return stat;
     }
@@ -291,18 +315,30 @@ public class GUI extends Application{
         return header;
     }
 
-    private HBox createNumberTextControl(String labelString) {
+    private HBox createRangeControl(String labelString, Property<Number> lo, Property<Number> hi, int min, int max) {
+        labelString = labelString+"\n";
         HBox control = new HBox();
         control.setSpacing(5);
-        Label label = new Label(labelString);
-        NumberTextField numberTextField = new NumberTextField();
-        control.getChildren().addAll(label, numberTextField);
+        RangeSlider multiRange = new RangeSlider(min, max);
+        multiRange.setMajorTickUnit(1);
+        multiRange.setMinorTickCount(10);
+        multiRange.setSnapToTicks(true);
+        multiRange.lowValueProperty().bindBidirectional(lo);
+        multiRange.highValueProperty().bindBidirectional(hi);
+        multiRange.setLowRangeValue(lo.getValue().intValue());
+        multiRange.setHighRangeValue(hi.getValue().intValue());
+
+        Label label = new Label();
+        String spacer = " - ";
+        label.textProperty().bind(Bindings.concat(labelString, lo, spacer, hi));
+        control.getChildren().addAll(label, multiRange);
+
+
         return control;
     }
 
     private HBox createNumberControl(String labelString, Property<Number> numberValue, double min, double max){
         HBox control = new HBox();
-
         control.setSpacing(5);
 
         Label label = new Label();
@@ -341,40 +377,27 @@ public class GUI extends Application{
 
         private void updateStats() {
             hpRatio.set(sim.getStats().getHunterPreyRatio());
-            avgFoodGainH.set(round(sim.getStats().getAvgFoodGainPerIterationHunter(), 2));
-            avgFoodGainP.set(round(sim.getStats().getAvgFoodGainPerIterationPrey(), 2));
+            avgFoodGainH.set(roundTo2(sim.getStats().getAvgFoodGainPerIterationHunter()));
+            avgFoodGainP.set(roundTo2(sim.getStats().getAvgFoodGainPerIterationPrey()));
+            avgPkilledByH.set(roundTo2(sim.getStats().getAvgHunterKilledByPrey()));
+            avgHkilledByP.set(roundTo2(sim.getStats().getAvgPreyKilledByHunter()));
+
             deadHunter.set(sim.getStats().getAmtHunterDead());
             deadPrey.set(sim.getStats().getAmtPreyDead());
+            amtHunterStarved.set(sim.getStats().getAmtHunterStarved());
+            amtPreyStarved.set(sim.getStats().getAmtPreyStarved());
+            amtHunterKilled.set(sim.getStats().getAmountHunterKilledByPrey());
+            amtPreyKilled.set(sim.getStats().getAmountPreyKilledByHunter());
+            amtCarrion.set(sim.getStats().getAmtDeadCorpse());
         }
 
-        public double round(double value, int places) {
-            if (places < 0) throw new IllegalArgumentException();
+        public double roundTo2(double value) {
+            int intVal = (int) (value*100.0);
+            String stringVal = Integer.toString(intVal);
+            if (stringVal.endsWith("0")) stringVal = stringVal.substring(0, stringVal.length() - 1) + "1";
+            if (stringVal.endsWith("00")) stringVal = stringVal.substring(0, stringVal.length() - 2) + "01";
+            return ((double) Integer.valueOf(stringVal)) / 100.0;
 
-            BigDecimal bd = new BigDecimal(value);
-            bd = bd.setScale(places, RoundingMode.HALF_UP);
-            return bd.doubleValue();
-        }    }
-}
-
-
-// https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
-class NumberTextField extends TextField {
-
-    @Override
-    public void replaceText(int start, int end, String text) {
-        if (validate(text)) {
-            super.replaceText(start, end, text);
         }
-    }
-
-    @Override
-    public void replaceSelection(String text) {
-        if (validate(text)) {
-            super.replaceSelection(text);
-        }
-    }
-
-    private boolean validate(String text) {
-        return text.matches("[0-9]*");
     }
 }

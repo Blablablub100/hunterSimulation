@@ -95,6 +95,7 @@ public class Statistics {
 
     public int getAvgHunterSpeed() {
         List<Hunter> hunters = simulation.getBoard().getHunters();
+        if (hunters.size() == 0) return 0;
         int sum = 0;
         for (Hunter hunter: hunters) {
             sum = sum + hunter.getMaxMovementSpeed();
@@ -104,6 +105,7 @@ public class Statistics {
 
     public int getAvgPreySpeed() {
         List<Prey> preys = simulation.getBoard().getPreys();
+        if (preys.size() == 0) return 0;
         int sum = 0;
         for (Prey prey: preys) {
             sum = sum + prey.getMaxMovementSpeed();
@@ -112,10 +114,12 @@ public class Statistics {
     }
 
     public int getAvgPreyKilledByHunter() {
+        if (amountPreyKilledByHunter == 0) return 0;
         return getInitialHunterCount() / amountPreyKilledByHunter;
     }
 
     public int getAvgHunterKilledByPrey() {
+        if (amountHunterKilledByPrey == 0) return 0;
         return getInitialPreyCount() / amountHunterKilledByPrey;
     }
 
@@ -128,10 +132,20 @@ public class Statistics {
     }
 
     public double getAvgFoodGainPerIterationHunter() {
+        if (simulation.getSimSteps() == 0) return 0;
         return (double)amountFoodGainHunter / (double)simulation.getSimSteps();
     }
 
     public double getAvgFoodGainPerIterationPrey() {
+        if (simulation.getSimSteps() == 0) return 0;
         return (double)amountFoodGainPrey / (double)simulation.getSimSteps();
+    }
+
+    public int getAmountPreyKilledByHunter() {
+        return amountPreyKilledByHunter;
+    }
+
+    public int getAmountHunterKilledByPrey() {
+        return amountHunterKilledByPrey;
     }
 }
