@@ -26,7 +26,7 @@ public abstract class AI {
 
 
     void flee(List<LivingCreature> threats) {
-        System.out.println("fleeing");
+        /*System.out.println("fleeing");
 
         BoardObject.Location loc = (BoardObject.Location) owner.getLocation().clone();
 
@@ -98,7 +98,7 @@ public abstract class AI {
                         break;
                 }
             } while (!check);
-        }
+        }*/
     }
 
     int[] getDistanceSums(List<LivingCreature> threats, BoardObject.Location loc) {

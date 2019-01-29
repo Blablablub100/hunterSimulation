@@ -6,6 +6,8 @@ import UI.UserInput;
 
 public class SimulationController {
 
+    //TODO !!!! WENN HUNTER GLEICH GROß PREY KLEBT ER DIE GANZE ZEIT DRAN
+
     private Board board;
     private Statistics stats;
     private int simSteps;
@@ -16,13 +18,13 @@ public class SimulationController {
 
     // musst be called to create the initial state of the simulation
     private void initSimulation(UserInput input) {
-        this.stats = new Statistics(this);
         board = new Board(input.getBoardWidth()
                 , input.getBoardHeight()
                 , input.getInitialHunterCount()
                 , input.getInitialPreyCount()
                 , input.getInitialObstacleCount()
                 , this);
+        this.stats = new Statistics(this);
     }
 
     public void simulateNextStep() {

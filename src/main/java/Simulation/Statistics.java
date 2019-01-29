@@ -27,6 +27,9 @@ public class Statistics {
         amountHunterStarved = 0;
         amountFoodGainPrey = 0;
         amountFoodGainHunter = 0;
+        initialHunterCount = simulation.getBoard().getHunters().size();
+        initialPreyCount = simulation.getBoard().getPreys().size();
+        initialObstacleCount = simulation.getBoard().getBoardObjects().size();
     }
 
     public void incPreyKilledByHunter() {
@@ -66,6 +69,7 @@ public class Statistics {
     }
 
     public int getHunterPreyRatio() {
+        if (getPreyCount() == 0) return 0;
         return getHunterCount() / getPreyCount();
     }
 
@@ -123,11 +127,11 @@ public class Statistics {
         return amountPreyStarved;
     }
 
-    public int getAvgFoodGainPerIterationHunter() {
-        return amountFoodGainHunter / simulation.getSimSteps();
+    public double getAvgFoodGainPerIterationHunter() {
+        return (double)amountFoodGainHunter / (double)simulation.getSimSteps();
     }
 
-    public int getAvgFoodGainPerIterationPrey() {
-        return amountFoodGainPrey / simulation.getSimSteps();
+    public double getAvgFoodGainPerIterationPrey() {
+        return (double)amountFoodGainPrey / (double)simulation.getSimSteps();
     }
 }

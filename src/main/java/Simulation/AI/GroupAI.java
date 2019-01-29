@@ -237,7 +237,8 @@ public class GroupAI {
     }
 
     private void ungroup() {
-        for (HunterAI tmp : members) {
+        for (int i = 0; i < members.size(); i++) {
+            HunterAI tmp = members.get(i);
             if (tmp != null) {
                 tmp.leaveGroup();
                 remove(tmp);
