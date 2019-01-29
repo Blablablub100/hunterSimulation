@@ -26,7 +26,7 @@ public abstract class AI {
 
 
     void flee(List<LivingCreature> threats) {
-        /*System.out.println("fleeing");
+        System.out.println("fleeing");
 
         BoardObject.Location loc = (BoardObject.Location) owner.getLocation().clone();
 
@@ -43,62 +43,62 @@ public abstract class AI {
                             picked = i;
                     }
                 }
-                max = distanceSums[0];
+
                 distanceSums[picked] = -1;
+                max = distanceSums[0];
                 orderedDistance.add(picked);
+                picked = 0;
             }
 
             int x = 0;
             boolean check = false;
 
             do {
-                switch (orderedDistance.get(x)) {
-                    case 0:
-                        if (!(owner.moveNorth())) x++;
-                        else check = true;
-                        break;
+                if(x < 8) {
+                    switch (orderedDistance.get(x)) {
+                        case 0:
+                            if (!(owner.moveNorth())) x++;
+                            else check = true;
+                            break;
 
-                    case 1:
-                        if (!(owner.moveNorthEast())) x++;
-                        else check = true;
-                        break;
+                        case 1:
+                            if (!(owner.moveNorthEast())) x++;
+                            else check = true;
+                            break;
 
-                    case 2:
-                        if (!(owner.moveEast())) x++;
-                        else check = true;
-                        break;
+                        case 2:
+                            if (!(owner.moveEast())) x++;
+                            else check = true;
+                            break;
 
-                    case 3:
-                        if (!(owner.moveSouthEast())) x++;
-                        else check = true;
-                        break;
+                        case 3:
+                            if (!(owner.moveSouthEast())) x++;
+                            else check = true;
+                            break;
 
-                    case 4:
-                        if (!(owner.moveSouth())) x++;
-                        else check = true;
-                        break;
+                        case 4:
+                            if (!(owner.moveSouth())) x++;
+                            else check = true;
+                            break;
 
-                    case 5:
-                        if (!(owner.moveSouthWest())) x++;
-                        else check = true;
-                        break;
+                        case 5:
+                            if (!(owner.moveSouthWest())) x++;
+                            else check = true;
+                            break;
 
-                    case 6:
-                        if (!(owner.moveWest())) x++;
-                        else check = true;
-                        break;
+                        case 6:
+                            if (!(owner.moveWest())) x++;
+                            else check = true;
+                            break;
 
-                    case 7:
-                        if (!(owner.moveNorthWest())) x++;
-                        else check = true;
-                        break;
-
-                    default:
-                        check = true;
-                        break;
-                }
+                        case 7:
+                            if (!(owner.moveNorthWest())) x++;
+                            else check = true;
+                            break;
+                    }
+                } else return;
             } while (!check);
-        }*/
+        }
     }
 
     int[] getDistanceSums(List<LivingCreature> threats, BoardObject.Location loc) {
