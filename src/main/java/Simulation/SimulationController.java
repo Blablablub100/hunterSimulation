@@ -2,6 +2,7 @@ package Simulation;
 
 import Simulation.SimulationObjects.LivingCreature;
 import Simulation.SimulationObjects.Board;
+import UI.FullUserInput;
 import UI.UserInput;
 
 public class SimulationController {
@@ -26,6 +27,12 @@ public class SimulationController {
 
     public SimulationController(UserInput input) {
         initSimulation(input);
+        this.stats = new Statistics(this);
+    }
+
+    public SimulationController(FullUserInput input) {
+        initSimulation(input);
+        this.stats = new Statistics(this);
     }
 
     // musst be called to create the initial state of the simulation
@@ -36,7 +43,16 @@ public class SimulationController {
                 , input.getInitialPreyCount()
                 , input.getInitialObstacleCount()
                 , this);
-        this.stats = new Statistics(this);
+    }
+
+    private void initSimulation(FullUserInput input) {
+        board = new Board(input.getBoardWidth(), input.getBoardHeight(), 0, 0, input.getInitialObstacleCount(),this);
+        for (int i = 0; i < input.getInitialHunterCount(); i++) {
+            board.spawnHunter(input.getHunterSpeed(), input.getHunterStrength(), input.getHunterSight(), input.getHunterEnergy());
+        }
+        for (int i = 0; i < input.getInitialPreyCount(); i++) {
+            board.spawnPrey(input.getPreySpeed(), input.getPreyStrength(), input.getPreySight(), input.getPreyEnergy());
+        }
     }
 
     public void simulateNextStep() {

@@ -2,6 +2,7 @@ package Simulation.SimulationObjects;
 
 import Simulation.AI.GroupAI;
 import Simulation.AI.HunterAI;
+import UI.FullUserInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,26 @@ public class Hunter extends LivingCreature {
         strength = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         energy = 490;
         sightDistance = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+        brain = new HunterAI(this);
+    }
+
+    Hunter(Location loc, Board myBoard, int speed, int strength, int sight, int energy) {
+        this.loc = loc;
+        this.myBoard = myBoard;
+        int random = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+        if(random == 1){
+            direction = "north";
+        } else if(random == 2){
+            direction = "east";
+        } else if(random == 3){
+            direction = "south";
+        } else if(random == 4){
+            direction = "west";
+        }
+        maxMovementSpeed = speed;
+        this.strength = strength;
+        this.energy = energy;
+        this.sightDistance = sight;
         brain = new HunterAI(this);
     }
 
@@ -54,6 +75,18 @@ public class Hunter extends LivingCreature {
         move(tmp);
         getBoard().getStats().incPreyKilledByHunter();
         return true;
+    }
+
+    public int getIndividualStrength() {
+        return super.getStrength();
+    }
+
+    @Override
+    public int getStrength() {
+        if (((HunterAI) brain).isGroupmember()) {
+            return ((HunterAI) brain).getGroupStrength();
+        }
+        return super.getStrength();
     }
 
     @Override

@@ -30,14 +30,13 @@ public class Board {
         }
     }
 
-
-    // spawn at specific position
-    public void spawnHunter(BoardObject.Location loc) {
-        hunters.add(new Hunter(loc, this));
+    // spawn with attributes
+    public void spawnHunter(int speed, int strength, int sight, int energy) {
+        hunters.add(new Hunter(generateRandomLoc(), this, speed, strength, sight, energy));
     }
 
-    public void spawnPrey(BoardObject.Location loc) {
-        preys.add(new Prey(loc, this));
+    public void spawnPrey(int speed, int strength, int sight, int energy) {
+        preys.add(new Prey(generateRandomLoc(), this, speed, strength, sight, energy));
     }
 
     public void spawnObstacle(BoardObject.Location loc) {

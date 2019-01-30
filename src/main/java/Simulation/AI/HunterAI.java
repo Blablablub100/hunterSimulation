@@ -295,8 +295,12 @@ public class HunterAI extends AI {
         groupIntellingence = null;
     }
 
-    private boolean isGroupmember() {
+    public boolean isGroupmember() {
         return (groupIntellingence != null);
+    }
+
+    public int getGroupStrength() {
+        return groupIntellingence.getGroupStrength();
     }
 
     Hunter getBody() {

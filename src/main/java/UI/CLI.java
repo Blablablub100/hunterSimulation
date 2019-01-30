@@ -1,9 +1,6 @@
 package UI;
 
-import Simulation.SimulationObjects.Board;
-import Simulation.SimulationObjects.BoardObject;
-import Simulation.SimulationObjects.Hunter;
-import Simulation.SimulationObjects.Prey;
+import Simulation.SimulationObjects.*;
 
 import java.util.List;
 import java.util.Scanner;
@@ -67,7 +64,9 @@ public class CLI {
             board[loc.getX()][loc.getY()] = 'h';
         } else if (o instanceof Prey) {
             board[loc.getX()][loc.getY()] = 'p';
-        } else if (o instanceof BoardObject) {
+        } else if (o instanceof DeadCorpse) {
+            board[loc.getX()][loc.getY()] = 'c';
+        } else {
             board[loc.getX()][loc.getY()] = 'o';
         }
     }

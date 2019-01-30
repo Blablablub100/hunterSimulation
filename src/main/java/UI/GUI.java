@@ -10,23 +10,23 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class GUI extends Application{
 
@@ -49,6 +49,9 @@ public class GUI extends Application{
     }
 
     private SimulationController sim;
+    private Thread simulationThread;
+    private boolean run = false;
+    private BorderPane root;
 
     private GridModel<States> gridModel;
     private IntegerProperty numberOfRows = new SimpleIntegerProperty(30);
@@ -80,8 +83,18 @@ public class GUI extends Application{
     private IntegerProperty hunterMinSight = new SimpleIntegerProperty(2);
     private IntegerProperty hunterMaxSight = new SimpleIntegerProperty(9);
     private IntegerProperty hunterMinEnergy = new SimpleIntegerProperty(2);
-    private IntegerProperty hunterMaxEnergy = new SimpleIntegerProperty(9);
+    private IntegerProperty hunterMaxEnergy = new SimpleIntegerProperty(99);
 
+    private IntegerProperty preyMinSpeed = new SimpleIntegerProperty(2);
+    private IntegerProperty preyMaxSpeed = new SimpleIntegerProperty(9);
+    private IntegerProperty preyMinStrength = new SimpleIntegerProperty(2);
+    private IntegerProperty preyMaxStrength = new SimpleIntegerProperty(9);
+    private IntegerProperty preyMinSight = new SimpleIntegerProperty(2);
+    private IntegerProperty preyMaxSight = new SimpleIntegerProperty(9);
+    private IntegerProperty preyMinEnergy = new SimpleIntegerProperty(2);
+    private IntegerProperty preyMaxEnergy = new SimpleIntegerProperty(99);
+
+    private IntegerProperty simSpeed = new SimpleIntegerProperty(100);
 
 
     public void printSim(SimulationController sim) {
@@ -102,13 +115,12 @@ public class GUI extends Application{
                 c.changeState(States.CARRION);
             }
         }
-
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Hunter Simulation");
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.setMinSize(0,0);
 
         gridModel = new GridModel<>();
@@ -179,31 +191,58 @@ public class GUI extends Application{
 
         VBox left = createGridControls();
         VBox right = createQuickStatistics();
+        right.getChildren().addAll(createSimulationControls().getChildren());
+        right.setPrefWidth(200);
 
         root.setRight(right);
         root.setLeft(left);
 
         stage.setScene(new Scene(root, 800,600));
         stage.show();
-        startSim();
     }
 
     private void startSim() {
+        root.getLeft().setMouseTransparent(true);
+        if (simulationThread != null) return;
         try {
-            sim = new SimulationController(new UserInput(
-                    30
-                    , 30
-                    , 60
-                    , 30
-                    , 0
+            sim = new SimulationController(new FullUserInput(
+                    numberOfColumns.getValue().intValue()
+                    , numberOfRows.getValue().intValue()
+                    , numberOfHunter.getValue().intValue()
+                    , numberOfPrey.getValue().intValue()
+                    , numberOfObstacles.getValue().intValue()
+                    , hunterMinSpeed.getValue().intValue()
+                    , hunterMaxSpeed.getValue().intValue()
+                    , hunterMinStrength.getValue().intValue()
+                    , hunterMaxStrength.getValue().intValue()
+                    , hunterMinSight.getValue().intValue()
+                    , hunterMaxSight.getValue().intValue()
+                    , hunterMinEnergy.getValue().intValue()
+                    , hunterMaxEnergy.getValue().intValue()
+                    , preyMinSpeed.getValue().intValue()
+                    , preyMaxSpeed.getValue().intValue()
+                    , preyMinStrength.getValue().intValue()
+                    , preyMaxStrength.getValue().intValue()
+                    , preyMinSight.getValue().intValue()
+                    , preyMaxSight.getValue().intValue()
+                    , preyMinEnergy.getValue().intValue()
+                    , preyMaxEnergy.getValue().intValue()
             ));
+            simulationThread = new executeStepsThred();
+            run = true;
+            simulationThread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Timer timer = new Timer();
-        timer.schedule(new NextSimulationStep(sim), 0, 100);
     }
 
+    private void cancelSim() {
+        run = false;
+        root.getLeft().setMouseTransparent(false);
+        sim = null;
+        simulationThread = null;
+        clear();
+    }
 
     private void clear() {
         for (Cell cell: gridModel.getCells()) {
@@ -229,7 +268,7 @@ public class GUI extends Application{
         controlsBox.setSpacing(5);
         controlsBox.setPadding(new Insets(5));
 
-        HBox headerBox = createHeader("Simulation Control");
+        HBox headerBox = createHeader("Simulation Arguments");
         HBox numberOfRowsBox = createNumberControl("Rows\t\n", numberOfRows, 3, 99);
         HBox numberOfColumnsBox = createNumberControl("Columns\t\n", numberOfColumns, 3, 99);
         //HBox cellBorderWidthBox = createNumberControl("Cell Border Width:", cellBorderWidth, 0, 5);
@@ -240,8 +279,14 @@ public class GUI extends Application{
         HBox hunterHeaderBox = createHeader("Hunter Control");
         HBox hunterSpeedBox = createRangeControl("Speed\t", hunterMinSpeed, hunterMaxSpeed, 1, 10);
         HBox hunterStrengthBox = createRangeControl("Strength\t", hunterMinStrength, hunterMaxStrength, 1, 10);
-        HBox hunterSightBox = createRangeControl("Speed\t", hunterMinSight, hunterMaxSight, 1, 10);
-        HBox hunterEnergyBox = createRangeControl("Speed\t", hunterMinEnergy, hunterMaxEnergy, 1, 10);
+        HBox hunterSightBox = createRangeControl("Sight\t", hunterMinSight, hunterMaxSight, 1, 10);
+        HBox hunterEnergyBox = createRangeControl("Energy\t", hunterMinEnergy, hunterMaxEnergy, 1, 100);
+
+        HBox preyHeaderBox = createHeader("Prey Control");
+        HBox preySpeedBox = createRangeControl("Speed\t", preyMinSpeed, preyMaxSpeed, 1, 10);
+        HBox preyStrengthBox = createRangeControl("Strength\t", preyMinStrength, preyMaxStrength, 1, 10);
+        HBox preySightBox = createRangeControl("Sight\t", preyMinSight, preyMaxSight, 1, 10);
+        HBox preyEnergyBox = createRangeControl("Energy\t", preyMinEnergy, preyMaxEnergy, 1, 100);
 
         controlsBox.getChildren().addAll(headerBox
                 , numberOfRowsBox
@@ -253,8 +298,37 @@ public class GUI extends Application{
                 , hunterSpeedBox
                 , hunterStrengthBox
                 , hunterSightBox
-                , hunterEnergyBox);
+                , hunterEnergyBox
+                , preyHeaderBox
+                , preySpeedBox
+                , preyStrengthBox
+                , preySightBox
+                , preyEnergyBox);
 
+        return controlsBox;
+    }
+
+    private VBox createSimulationControls() {
+        VBox controlsBox = new VBox();
+        controlsBox.setSpacing(5);
+        controlsBox.setPadding(new Insets(5));
+
+        HBox headerBox = createHeader("\nSimulation Controls");
+        HBox buttonsBox = createSimButtons();
+        VBox speedBox = new VBox();
+        speedBox.setSpacing(5);
+
+        Label label = new Label();
+        Slider slider = new Slider();
+        speedBox.getChildren().addAll(label, slider);
+
+        label.textProperty().bind(Bindings.concat("Simulation Speed\t\t", simSpeed));
+        slider.valueProperty().bindBidirectional(simSpeed);
+
+        slider.setMin(50);
+        slider.setMax(2500);
+
+        controlsBox.getChildren().addAll(headerBox, speedBox, buttonsBox);
         return controlsBox;
     }
 
@@ -264,19 +338,19 @@ public class GUI extends Application{
         controlsBox.setPadding(new Insets(5));
 
         HBox headerBox = createHeader("Quick Statistics");
-        HBox hpRatioBox = createStatistics("H/P Ratio\t\t\t", hpRatio);
-        HBox avgFoodGainHBox = createStatistics("Avg Food Gain H\t\t", avgFoodGainH);
-        HBox avgFoodGainPBox = createStatistics("Avg Food Gain P\t\t", avgFoodGainP);
-        HBox avgPkilledByHBox = createStatistics("Avg P killed by H\t\t", avgPkilledByH);
-        HBox avgHkilledByPBox = createStatistics("Avg H killed by P\t\t", avgHkilledByP);
+        HBox hpRatioBox = createStatisticsBox("H/P Ratio\t\t\t", hpRatio);
+        HBox avgFoodGainHBox = createStatisticsBox("Avg Food Gain H\t\t", avgFoodGainH);
+        HBox avgFoodGainPBox = createStatisticsBox("Avg Food Gain P\t\t", avgFoodGainP);
+        HBox avgPkilledByHBox = createStatisticsBox("Avg P killed by H\t\t", avgPkilledByH);
+        HBox avgHkilledByPBox = createStatisticsBox("Avg H killed by P\t\t", avgHkilledByP);
 
-        HBox hunterDeadBox = createStatistics("Hunter died\t\t\t", deadHunter);
-        HBox preyDeadBox = createStatistics("Prey died\t\t\t", deadPrey);
-        HBox hunterStarvedBox = createStatistics("Hunter starved\t\t", amtHunterStarved);
-        HBox preyStarvedBox = createStatistics("Prey starved\t\t\t", amtPreyStarved);
-        HBox hunterKilledBox = createStatistics("Amount Hunter killed\t", amtHunterKilled);
-        HBox preyKilledBox = createStatistics("Amount Prey killed\t", amtPreyKilled);
-        HBox amtCarrionBox = createStatistics("Amount Carrion\t\t", amtCarrion);
+        HBox hunterDeadBox = createStatisticsBox("Hunter died\t\t\t", deadHunter);
+        HBox preyDeadBox = createStatisticsBox("Prey died\t\t\t", deadPrey);
+        HBox hunterStarvedBox = createStatisticsBox("Hunter starved\t\t", amtHunterStarved);
+        HBox preyStarvedBox = createStatisticsBox("Prey starved\t\t\t", amtPreyStarved);
+        HBox hunterKilledBox = createStatisticsBox("Amount Hunter killed\t", amtHunterKilled);
+        HBox preyKilledBox = createStatisticsBox("Amount Prey killed\t", amtPreyKilled);
+        HBox amtCarrionBox = createStatisticsBox("Amount Carrion\t\t", amtCarrion);
 
         controlsBox.getChildren().addAll(headerBox
                 , hpRatioBox
@@ -294,14 +368,14 @@ public class GUI extends Application{
         return controlsBox;
     }
 
-    private HBox createStatistics(String name, Property<Number> val) {
+    private HBox createStatisticsBox(String name, Property<Number> val) {
         HBox stat = new HBox();
         stat.setSpacing(5);
         Label labelName = new Label (name);
         Label labelVal = new Label ();
         stat.getChildren().addAll(labelName, labelVal);
 
-        labelVal.textProperty().bind(Bindings.concat(val, "\t"));
+        labelVal.textProperty().bind(Bindings.concat(val));
 
         return stat;
     }
@@ -313,6 +387,25 @@ public class GUI extends Application{
         label.setStyle("-fx-font-weight:700");
         header.getChildren().addAll(label);
         return header;
+    }
+
+    private HBox createSimButtons() {
+        Button startButton = new Button("Start");
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                startSim();
+            }
+        });
+        Button stopButton = new Button("Stop");
+        stopButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                cancelSim();
+            }
+        });
+        HBox controls = new HBox();
+        controls.setSpacing(5);
+        controls.getChildren().addAll(startButton, stopButton);
+        return controls;
     }
 
     private HBox createRangeControl(String labelString, Property<Number> lo, Property<Number> hi, int min, int max) {
@@ -345,7 +438,6 @@ public class GUI extends Application{
         Slider slider = new Slider();
         control.getChildren().addAll(label, slider);
 
-
         label.textProperty().bind(Bindings.concat(labelString, numberValue));
         slider.valueProperty().bindBidirectional(numberValue);
 
@@ -355,14 +447,21 @@ public class GUI extends Application{
         return control;
     }
 
-    class NextSimulationStep extends TimerTask {
+    public class executeStepsThred extends Thread {
 
-        SimulationController sim;
-
-
-        public NextSimulationStep(SimulationController sim) {
-            this.sim = sim;
+        public void run() {
+            while (run) {
+                new NextStepThread().start();
+                try {
+                    TimeUnit.MILLISECONDS.sleep(simSpeed.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    public class NextStepThread extends Thread {
 
         public void run() {
             Platform.runLater(() -> {

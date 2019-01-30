@@ -2,6 +2,7 @@ package Simulation.AI;
 
 import Simulation.SimulationObjects.BoardObject;
 import Simulation.SimulationObjects.DeadCorpse;
+import Simulation.SimulationObjects.Hunter;
 import Simulation.SimulationObjects.Prey;
 
 import java.util.ArrayList;
@@ -228,10 +229,11 @@ public class GroupAI {
         h.leaveGroup();
     }
 
-    private int getGroupStrength() {
+    int getGroupStrength() {
         int groupStrength = 0;
         for (HunterAI member : members) {
-            groupStrength = groupStrength + member.owner.getStrength();
+            int memberStrength = ((Hunter) member.owner).getIndividualStrength();
+            groupStrength = groupStrength + memberStrength;
         }
         return groupStrength;
     }

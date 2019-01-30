@@ -1,5 +1,6 @@
 package Simulation.SimulationObjects;
 
+import Simulation.AI.HunterAI;
 import Simulation.AI.PreyAI;
 
 import java.util.ArrayList;
@@ -27,6 +28,26 @@ public class Prey extends LivingCreature {
         strength = 10; // TODO remove just for testing
         energy = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         sightDistance = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+    }
+
+    Prey(Location loc, Board myBoard, int speed, int strength, int sight, int energy) {
+        this.loc = loc;
+        this.myBoard = myBoard;
+        int random = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+        if(random == 1){
+            direction = "north";
+        } else if(random == 2){
+            direction = "east";
+        } else if(random == 3){
+            direction = "south";
+        } else if(random == 4){
+            direction = "west";
+        }
+        maxMovementSpeed = speed;
+        this.strength = strength;
+        this.energy = energy;
+        this.sightDistance = sight;
+        brain = new PreyAI(this);
     }
 
     // methods from LivingCreature
