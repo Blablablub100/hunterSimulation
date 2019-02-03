@@ -44,6 +44,7 @@ public class HunterAI extends AI {
         // 1. Prop: Nothing to do
         //     -> Turn around 90 degree and walk
 
+        status.setStatus("calm");
 
         // check if I have to flee
         List<LivingCreature> threats = identifyThreats();
@@ -67,10 +68,9 @@ public class HunterAI extends AI {
             groupIntellingence = new GroupAI(this, biggest);
             searchForGroupMembers();
             status.setStatus("searching group members");
-        } else {
+        } else if (toHunt == null && !status.getStatus().equals("fleeing")) {
             // nothing to do
             moveRandomly();
-            status.setStatus("calm");
         }
     }
 

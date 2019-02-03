@@ -29,7 +29,7 @@ public class Statistics {
         amountFoodGainHunter = 0;
         initialHunterCount = simulation.getBoard().getHunters().size();
         initialPreyCount = simulation.getBoard().getPreys().size();
-        initialObstacleCount = simulation.getBoard().getBoardObjects().size();
+        initialObstacleCount = simulation.getBoard().getNonLivingBoardObjects().size();
     }
 
     public void incPreyKilledByHunter() {
@@ -68,9 +68,9 @@ public class Statistics {
         return initialObstacleCount;
     }
 
-    public int getHunterPreyRatio() {
+    public double getHunterPreyRatio() {
         if (getPreyCount() == 0) return 0;
-        return getHunterCount() / getPreyCount();
+        return (double)getHunterCount() / (double)getPreyCount();
     }
 
     public int getInitialHunterCount() {
@@ -90,7 +90,7 @@ public class Statistics {
     }
 
     public int getAmtDeadCorpse() {
-        return getObstacleCount() - initialHunterCount;
+        return simulation.getBoard().getNonLivingBoardObjects().size() - getObstacleCount();
     }
 
     public int getAvgHunterSpeed() {
@@ -113,14 +113,14 @@ public class Statistics {
         return sum/preys.size();
     }
 
-    public int getAvgPreyKilledByHunter() {
+    public double getAvgPreyKilledByHunter() {
         if (amountPreyKilledByHunter == 0) return 0;
-        return getInitialHunterCount() / amountPreyKilledByHunter;
+        return (double) amountPreyKilledByHunter / (double) getInitialHunterCount();
     }
 
-    public int getAvgHunterKilledByPrey() {
+    public double getAvgHunterKilledByPrey() {
         if (amountHunterKilledByPrey == 0) return 0;
-        return getInitialPreyCount() / amountHunterKilledByPrey;
+        return (double)amountHunterKilledByPrey / (double)getInitialPreyCount();
     }
 
     public int getAmtHunterStarved() {

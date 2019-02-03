@@ -14,6 +14,8 @@ public class DeadCorpse implements BoardObject {
         this.loc = loc;
         this.pieces = groupSize;
         share = size / groupSize;
+        if (share == 0) share = 1;
+        System.out.println(share);
     }
 
     public int eat() {
@@ -24,6 +26,18 @@ public class DeadCorpse implements BoardObject {
 
     public void rot() {
         board.removeFromBoard(this);
+    }
+
+    public int getPieces() {
+        return pieces;
+    }
+
+    public int getShare() {
+        return share;
+    }
+
+    public int getTimesEaten() {
+        return timesEaten;
     }
 
     @Override

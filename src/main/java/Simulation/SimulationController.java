@@ -11,8 +11,6 @@ public class SimulationController {
 
     // TODO
     /*
-    [] Do Simulation Control
-
     Bug fixes:
     - Avg Hunter killed by Prey not working
     - Avg Prey killed by Hunter not working

@@ -1,5 +1,6 @@
 package Simulation.SimulationObjects;
 
+import Simulation.AI.AI;
 import Simulation.AI.GroupAI;
 import Simulation.AI.HunterAI;
 import UI.FullUserInput;
@@ -79,6 +80,10 @@ public class Hunter extends LivingCreature {
 
     public int getIndividualStrength() {
         return super.getStrength();
+    }
+
+    public boolean isGroupMember() {
+        return ((HunterAI) brain).isGroupmember();
     }
 
     @Override

@@ -5,6 +5,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 /**
  * This class represents a single Cell of the grid. It is created and managed by the {@link eu.lestard.grid.GridModel}.
@@ -104,6 +105,7 @@ public class Cell <State> {
     ObjectProperty<EventHandler<MouseEvent>> onMouseOverProperty(){
         return onMouseOver;
     }
+
 
     @Override
     public String toString() {

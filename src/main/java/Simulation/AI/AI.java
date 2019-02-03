@@ -26,8 +26,6 @@ public abstract class AI {
 
 
     void flee(List<LivingCreature> threats) {
-        System.out.println("fleeing");
-
         BoardObject.Location loc = (BoardObject.Location) owner.getLocation().clone();
 
         while(owner.getPossibleSteps() > 1) {
@@ -132,6 +130,11 @@ public abstract class AI {
     }
 
 
+    public Memory[] getLongTermMemory() {
+        return longTermMemory;
+    }
+
+
 
     void notifyNextRound() {
         for (Memory memory: longTermMemory) {
@@ -140,6 +143,9 @@ public abstract class AI {
         status.notifyNextRound();
     }
 
+    public String getStatusString() {
+        return status.getStatus();
+    }
 
 
     public class Memory {

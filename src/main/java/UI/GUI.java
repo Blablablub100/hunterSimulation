@@ -1,11 +1,13 @@
 package UI;
 
+import Simulation.AI.AI;
 import Simulation.SimulationController;
 import Simulation.SimulationObjects.*;
 import UI.RangeSlider.RangeSlider;
 import UI.grid.Cell;
 import UI.grid.GridModel;
 import UI.grid.GridView;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -23,6 +25,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -38,6 +43,7 @@ public class GUI extends Application{
         EMPTY,
         B,
         HUNTER,
+        GROUPED_HUNTER,
         PREY,
         OBSTACLE,
         CARRION
@@ -51,8 +57,12 @@ public class GUI extends Application{
     private SimulationController sim;
     private Thread simulationThread;
     private boolean run = false;
+    private boolean pause = false;
     private BorderPane root;
 
+    private List<InfoStage> infos = new ArrayList<>();
+
+    private GridView<States> gridView;
     private GridModel<States> gridModel;
     private IntegerProperty numberOfRows = new SimpleIntegerProperty(30);
     private IntegerProperty numberOfColumns = new SimpleIntegerProperty(30);
@@ -130,7 +140,7 @@ public class GUI extends Application{
 
 
         // create the grid view and shunter coloret the grid model
-        GridView<States> gridView = new GridView<>();
+        gridView = new GridView<>();
         gridView.setGridModel(gridModel);
 
         gridView.setMinSize(0,0);
@@ -159,12 +169,6 @@ public class GUI extends Application{
 
         gridView.gridBorderColorProperty().set(Color.BLUE);
         gridView.gridBorderWidthProperty().set(1);
-
-        // setzt einfach nur merkwürdige fette Linien in das Spielfeld
-        /*gridView.horizontalGuidelineUnitProperty().set(3);
-        gridView.verticalGuidelineUnitProperty().set(5);
-        gridView.guidelineColorProperty().set(Color.BLACK);
-        gridView.guidelineStrokeWidth().set(4);*/
 
         root.setCenter(gridView);
 
@@ -228,8 +232,9 @@ public class GUI extends Application{
                     , preyMinEnergy.getValue().intValue()
                     , preyMaxEnergy.getValue().intValue()
             ));
-            simulationThread = new executeStepsThred();
+            simulationThread = new executeStepsThread();
             run = true;
+            printSim(sim);
             simulationThread.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,13 +256,18 @@ public class GUI extends Application{
     }
 
 
-    private void switchStates(Cell<States> cell){
-        final States stateBefore = cell.getState();
+    private void switchStates(Cell<States> cell) {
+        if (sim == null) return;
+        BoardObject clickedObject = sim.getBoard().getObjectAtLocation(new BoardObject.Location(cell.getColumn(), cell.getRow()));
+        if (clickedObject == null) return;
+        infos.add(new InfoStage(clickedObject));
+        /*final States stateBefore = cell.getState();
         if (stateBefore == States.EMPTY) {
             cell.changeState(States.B);
         } else {
             cell.changeState(States.EMPTY);
-        }
+        }*/
+
     }
 
     /**
@@ -369,6 +379,10 @@ public class GUI extends Application{
     }
 
     private HBox createStatisticsBox(String name, Property<Number> val) {
+        return gethBox(name, val);
+    }
+
+    static HBox gethBox(String name, Property<?> val) {
         HBox stat = new HBox();
         stat.setSpacing(5);
         Label labelName = new Label (name);
@@ -402,9 +416,21 @@ public class GUI extends Application{
                 cancelSim();
             }
         });
+        Button pauseButton = new Button("Pause");
+        pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                if (!pause) {
+                    pauseSim();
+                    pauseButton.setText("Resume");
+                } else {
+                    resumeSim();
+                    pauseButton.setText("Pause");
+                }
+            }
+        });
         HBox controls = new HBox();
         controls.setSpacing(5);
-        controls.getChildren().addAll(startButton, stopButton);
+        controls.getChildren().addAll(startButton, stopButton, pauseButton);
         return controls;
     }
 
@@ -447,16 +473,37 @@ public class GUI extends Application{
         return control;
     }
 
-    public class executeStepsThred extends Thread {
+    private void pauseSim() {
+        pause = true;
+    }
+
+
+    private void resumeSim() {
+        pause = false;
+    }
+
+    public class executeStepsThread extends Thread {
 
         public void run() {
             while (run) {
-                new NextStepThread().start();
-                try {
-                    TimeUnit.MILLISECONDS.sleep(simSpeed.get());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while (pause) {
+                    sleep(500);
+                    if (!run) return;
                 }
+                if (sim == null) {
+                    run = false;
+                    return;
+                }
+                sleep(simSpeed.get());
+                if (!pause) new NextStepThread().start();
+            }
+        }
+
+        private void sleep(int ms) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(ms);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -465,21 +512,22 @@ public class GUI extends Application{
 
         public void run() {
             Platform.runLater(() -> {
-                numberOfPrey.setValue(sim.getBoard().getPreys().size());
-                numberOfHunter.setValue(sim.getBoard().getHunters().size());
-                numberOfObstacles.setValue(sim.getStats().getObstacleCount());
-                printSim(sim);
+                if (sim == null) {
+                    run = false;
+                    return;
+                }
                 sim.simulateNextStep();
+                printSim(sim);
                 updateStats();
             });
         }
 
         private void updateStats() {
-            hpRatio.set(sim.getStats().getHunterPreyRatio());
+            hpRatio.set(roundTo2(sim.getStats().getHunterPreyRatio()));
             avgFoodGainH.set(roundTo2(sim.getStats().getAvgFoodGainPerIterationHunter()));
             avgFoodGainP.set(roundTo2(sim.getStats().getAvgFoodGainPerIterationPrey()));
-            avgPkilledByH.set(roundTo2(sim.getStats().getAvgHunterKilledByPrey()));
-            avgHkilledByP.set(roundTo2(sim.getStats().getAvgPreyKilledByHunter()));
+            avgPkilledByH.set(roundTo2(sim.getStats().getAvgPreyKilledByHunter()));
+            avgHkilledByP.set(roundTo2(sim.getStats().getAvgHunterKilledByPrey()));
 
             deadHunter.set(sim.getStats().getAmtHunterDead());
             deadPrey.set(sim.getStats().getAmtPreyDead());
@@ -488,15 +536,15 @@ public class GUI extends Application{
             amtHunterKilled.set(sim.getStats().getAmountHunterKilledByPrey());
             amtPreyKilled.set(sim.getStats().getAmountPreyKilledByHunter());
             amtCarrion.set(sim.getStats().getAmtDeadCorpse());
+
+            for (InfoStage info: infos) info.update();
         }
 
+        // https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
         public double roundTo2(double value) {
-            int intVal = (int) (value*100.0);
-            String stringVal = Integer.toString(intVal);
-            if (stringVal.endsWith("0")) stringVal = stringVal.substring(0, stringVal.length() - 1) + "1";
-            if (stringVal.endsWith("00")) stringVal = stringVal.substring(0, stringVal.length() - 2) + "01";
-            return ((double) Integer.valueOf(stringVal)) / 100.0;
-
+            BigDecimal bd = new BigDecimal(value);
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         }
     }
 }

@@ -1,6 +1,7 @@
 package Simulation.SimulationObjects;
 
 import Simulation.AI.AI;
+import Simulation.AI.HunterAI;
 
 import java.util.List;
 
@@ -37,6 +38,10 @@ public abstract class LivingCreature implements BoardObject {
 
     public Location getLocation() {
         return loc;
+    }
+
+    public AI.Memory[] getLongTermMemory() {
+        return brain.getLongTermMemory();
     }
 
     public boolean move(BoardObject.Location goalDestination) {
@@ -213,10 +218,6 @@ public abstract class LivingCreature implements BoardObject {
         return energy;
     }
 
-    private int getRandom(int lowerBound, int upperBound) {
-        return lowerBound + (int)(Math.random() * ((upperBound - lowerBound) + 1));
-    }
-
     public boolean setDirection(int dir) {
         if (dir == 1) direction = "north";
         else if (dir == 2) direction = "east";
@@ -242,5 +243,13 @@ public abstract class LivingCreature implements BoardObject {
                 return 4;
         }
         return 0;
+    }
+
+    public int getSightDistance() {
+        return sightDistance;
+    }
+
+    public String getStatus() {
+        return brain.getStatusString();
     }
 }
