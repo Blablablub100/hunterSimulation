@@ -1,7 +1,6 @@
 package Simulation.SimulationObjects;
 
 import Simulation.AI.AI;
-import Simulation.AI.HunterAI;
 
 import java.util.List;
 
@@ -46,7 +45,16 @@ public abstract class LivingCreature implements BoardObject {
 
     public boolean move(BoardObject.Location goalDestination) {
         // TODO MAKE MORE READABLE
-        if (!myBoard.isOnBoard(goalDestination)) return false;
+        if (!myBoard.isOnBoard(goalDestination)) {
+            int x = goalDestination.getX();
+            int y = goalDestination.getY();
+            if (goalDestination.getX() < 0) x = 0;
+            if (goalDestination.getY() < 0) y = 0;
+            if (goalDestination.getX() >= myBoard.getWidth()) x = myBoard.getWidth()-1;
+            if (goalDestination.getY() >= myBoard.getHeight()) y = myBoard.getHeight()-1;
+            goalDestination = new Location(x,y);
+            if (!myBoard.isOnBoard(goalDestination)) System.out.println("WTF"+ x + "   "+ y);
+        }
 
         // only for calculating how many steps to go up, down, left, right
         int stepsX = goalDestination.getX() - loc.getX();

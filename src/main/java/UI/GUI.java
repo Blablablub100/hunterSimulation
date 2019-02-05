@@ -24,6 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -104,7 +105,7 @@ public class GUI extends Application{
     private IntegerProperty simSpeed = new SimpleIntegerProperty(100);
 
 
-    public void printSim(SimulationController sim) {
+    private void printSim(SimulationController sim) {
         clear();
         List<BoardObject> things = sim.getBoard().getBoardObjects();
         for (BoardObject thing: things) {
@@ -153,7 +154,7 @@ public class GUI extends Application{
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.setTitle("Hunter Simulation");
         root = new BorderPane();
         root.setMinSize(0,0);
@@ -164,7 +165,7 @@ public class GUI extends Application{
         gridModel.setDefaultState(States.EMPTY);
 
 
-        // create the Grid view and shunter coloret the Grid model
+        // create the Grid view and shunter colored the Grid model
         gridView = new GridView<>();
         gridView.setGridModel(gridModel);
 
@@ -226,6 +227,12 @@ public class GUI extends Application{
         root.setRight(right);
         root.setLeft(left);
 
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.exit(0);
+            }
+        });
+
         stage.setScene(new Scene(root, 800,600));
         stage.show();
     }
@@ -271,6 +278,9 @@ public class GUI extends Application{
         root.getLeft().setMouseTransparent(false);
         sim = null;
         simulationThread = null;
+        for (InfoStage info: infos) {
+            info.close();
+        }
         resetStats();
         clear();
     }
@@ -304,9 +314,9 @@ public class GUI extends Application{
         HBox numberOfRowsBox = createNumberControl("Rows\t\n", numberOfRows, 3, 99);
         HBox numberOfColumnsBox = createNumberControl("Columns\t\n", numberOfColumns, 3, 99);
         //HBox cellBorderWidthBox = createNumberControl("Cell Border Width:", cellBorderWidth, 0, 5);
-        HBox numberOfHunterBox = createNumberControl("Hunters\t\n", numberOfHunter, 0, 999);
-        HBox numberOfPreyBox = createNumberControl("Preys\t\n", numberOfPrey, 0, 999);
-        HBox numberOfObstacleBox = createNumberControl("Obstacle\t\n", numberOfObstacles, 0, 999);
+        HBox numberOfHunterBox = createNumberControl("Hunters\t\n", numberOfHunter, 0, 500);
+        HBox numberOfPreyBox = createNumberControl("Preys\t\n", numberOfPrey, 0, 500);
+        HBox numberOfObstacleBox = createNumberControl("Obstacle\t\n", numberOfObstacles, 0, 500);
 
         HBox hunterHeaderBox = createHeader("Hunter Control");
         HBox hunterSpeedBox = createRangeControl("Speed\t", hunterMinSpeed, hunterMaxSpeed, 1, 10);
@@ -520,7 +530,7 @@ public class GUI extends Application{
         pause = false;
     }
 
-    public class executeStepsThread extends Thread {
+    class executeStepsThread extends Thread {
 
         public void run() {
             while (run) {
@@ -547,7 +557,7 @@ public class GUI extends Application{
         }
     }
 
-    public class NextStepThread extends Thread {
+    class NextStepThread extends Thread {
 
         public void run() {
             Platform.runLater(() -> {
@@ -580,7 +590,7 @@ public class GUI extends Application{
         }
 
         // https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
-        public double roundTo2(double value) {
+        double roundTo2(double value) {
             BigDecimal bd = new BigDecimal(value);
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             return bd.doubleValue();

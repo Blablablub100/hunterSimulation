@@ -4,7 +4,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
 /**
- * Define a new range with an id, a low and a high values.
+ * !!! COPIED FROM: https://github.com/albertoqa/MultiRange/blob/master/src/main/java/multirange/Range.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
  * <p>
  * Created by alberto on 09/01/2017.
  */

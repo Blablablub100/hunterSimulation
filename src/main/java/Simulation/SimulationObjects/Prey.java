@@ -1,6 +1,5 @@
 package Simulation.SimulationObjects;
 
-import Simulation.AI.HunterAI;
 import Simulation.AI.PreyAI;
 
 import java.util.ArrayList;

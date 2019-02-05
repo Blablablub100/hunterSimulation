@@ -26,6 +26,9 @@ import java.util.function.Function;
 
 
 /**
+ * !!! COPIED FROM: https://github.com/lestard/Grid/blob/master/grid/src/main/java/eu/lestard/grid/GridView.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
+ *
  * This class is the UI part of the Grid and defines how the Grid is shown in the view.
  *
  * To use this class you need to first create a {@link eu.lestard.grid.GridModel} and add it to this view class with the {@link #setGridModel} method.
@@ -61,10 +64,10 @@ public class GridView<State> extends StackPane {
 
 
     private IntegerProperty horizontalGuidelineUnit = new SimpleIntegerProperty(0);
-    ObservableList<Integer> horizontalGuidelines = FXCollections.observableArrayList();
+    private ObservableList<Integer> horizontalGuidelines = FXCollections.observableArrayList();
 
     private IntegerProperty verticalGuidelineUnit = new SimpleIntegerProperty(0);
-    ObservableList<Integer> verticalGuidelines = FXCollections.observableArrayList();
+    private ObservableList<Integer> verticalGuidelines = FXCollections.observableArrayList();
     private ObjectProperty<Color> guidelineColor = new SimpleObjectProperty<>(Color.TRANSPARENT);
     private DoubleProperty guidelineStrokeWidth = new SimpleDoubleProperty(5);
 
@@ -343,7 +346,7 @@ public class GridView<State> extends StackPane {
         this.gridModel.set(gridModel);
     }
 
-    public GridModel<State> getGridModel() {
+    private GridModel<State> getGridModel() {
         return gridModel.get();
     }
 

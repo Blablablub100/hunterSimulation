@@ -1,21 +1,16 @@
 package Simulation;
 
-import Simulation.SimulationObjects.Hunter;
-import Simulation.SimulationObjects.Prey;
-
-import java.util.List;
-
 public class Statistics {
 
-    int initialHunterCount;
-    int initialPreyCount;
-    int initialObstacleCount;
-    int amountPreyKilledByHunter;
-    int amountHunterKilledByPrey;
-    int amountPreyStarved;
-    int amountHunterStarved;
-    int amountFoodGainPrey;
-    int amountFoodGainHunter;
+    private int initialHunterCount;
+    private int initialPreyCount;
+    private int initialObstacleCount;
+    private int amountPreyKilledByHunter;
+    private int amountHunterKilledByPrey;
+    private int amountPreyStarved;
+    private int amountHunterStarved;
+    private int amountFoodGainPrey;
+    private int amountFoodGainHunter;
 
     private SimulationController simulation;
 
@@ -56,15 +51,15 @@ public class Statistics {
         amountFoodGainHunter += amt;
     }
 
-    public int getHunterCount() {
+    private int getHunterCount() {
         return (simulation.getBoard().getHunters().size());
     }
 
-    public int getPreyCount() {
+    private int getPreyCount() {
         return (simulation.getBoard().getPreys().size());
     }
 
-    public int getObstacleCount() {
+    private int getObstacleCount() {
         return initialObstacleCount;
     }
 
@@ -73,11 +68,11 @@ public class Statistics {
         return (double)getHunterCount() / (double)getPreyCount();
     }
 
-    public int getInitialHunterCount() {
+    private int getInitialHunterCount() {
         return initialHunterCount;
     }
 
-    public int getInitialPreyCount() {
+    private int getInitialPreyCount() {
         return initialPreyCount;
     }
 

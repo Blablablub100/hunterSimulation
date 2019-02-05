@@ -27,17 +27,17 @@
 package UI.RangeSlider.multirange.behavior;
 
 import UI.RangeSlider.multirange.MultiRange;
-import UI.RangeSlider.multirange.Range;
 import UI.RangeSlider.multirange.Utils;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
-import javafx.geometry.Orientation;
 import javafx.scene.control.Skin;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *  !!! COPIED FROM: https://github.com/albertoqa/MultiRange/blob/master/src/main/java/multirange/behavior/MultiRangeBehavior.java
+ *  !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
  * Created by alberto on 09/01/2017.
  */
 public class MultiRangeBehavior extends BehaviorBase<MultiRange> {

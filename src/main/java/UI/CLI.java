@@ -10,19 +10,19 @@ public class CLI {
     public UserInput getInput() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Width eingeben: ");
+        System.out.print("Type in width: ");
         int tmp0 = sc.nextInt();
 
-        System.out.print("Height eingeben: ");
+        System.out.print("Type in height: ");
         int tmp1 = sc.nextInt();
 
-        System.out.print("HunterCount eingeben: ");
+        System.out.print("Type in HunterCount: ");
         int tmp2 = sc.nextInt();
 
-        System.out.print("PreyCount eingeben: ");
+        System.out.print("Type in PreyCount: ");
         int tmp3 = sc.nextInt();
 
-        System.out.print("ObstacleCount eingeben: ");
+        System.out.print("Type in ObstacleCount: ");
         int tmp4 = sc.nextInt();
 
         UserInput input;

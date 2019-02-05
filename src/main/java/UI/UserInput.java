@@ -22,7 +22,7 @@ public class UserInput {
         checkInput();
     }
 
-    public void checkInput() throws WrongUserInputException {
+    private void checkInput() throws WrongUserInputException {
 
         if(initialObstacleCount + initialPreyCount + initialHunterCount > boardWidth * boardHeight){
             throw new WrongUserInputException("Object count", "Too many Objects placed on the board.\n");

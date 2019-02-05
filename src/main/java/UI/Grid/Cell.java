@@ -7,6 +7,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
 /**
+ * !!! COPIED FROM: https://github.com/lestard/Grid/blob/master/grid/src/main/java/eu/lestard/grid/Cell.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
+ *
  * This class represents a single Cell of the Grid. It is created and managed by the {@link eu.lestard.grid.GridModel}.
  *
  * @param <State> the generic type of states that the cell can have. The state needs to be an enum.

@@ -1,6 +1,6 @@
 package UI;
 
-public class WrongUserInputException extends Exception {
+class WrongUserInputException extends Exception {
 
     private String message;
 

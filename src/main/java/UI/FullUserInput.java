@@ -102,19 +102,19 @@ public class FullUserInput extends UserInput {
             energy = new FullUserInput.Range(vals[6], vals[7]);
         }
 
-        public int getSpeed() {
+        int getSpeed() {
             return speed.getValInRange();
         }
 
-        public int getStrength() {
+        int getStrength() {
             return strength.getValInRange();
         }
 
-        public int getSight() {
+        int getSight() {
             return sight.getValInRange();
         }
 
-        public int getEnergy() {
+        int getEnergy() {
             return energy.getValInRange();
         }
     }

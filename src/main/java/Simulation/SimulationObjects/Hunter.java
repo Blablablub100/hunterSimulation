@@ -1,16 +1,23 @@
 package Simulation.SimulationObjects;
 
-import Simulation.AI.AI;
 import Simulation.AI.GroupAI;
 import Simulation.AI.HunterAI;
-import UI.FullUserInput;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Class representing a hunter in a simulation. Provides core functionality of a hunter.
+ */
 public class Hunter extends LivingCreature {
 
+    /**
+     * Constructor for creating a new Hunter. Every attribute despite of the location and the board will be assigned
+     * randomly.
+     * @param loc location where the hunter is going to start.
+     * @param myBoard board the hunter will be upon.
+     */
     Hunter(Location loc, Board myBoard) {
         this.loc = loc;
         this.myBoard = myBoard;
@@ -31,6 +38,15 @@ public class Hunter extends LivingCreature {
         brain = new HunterAI(this);
     }
 
+    /**
+     * Constructor for creating a new Hunter.
+     * @param loc location where the hunter is going to start.
+     * @param myBoard board the hunter will be upon.
+     * @param speed the speed corresponds to the maximum amount of steps a hunter can make in one iteration.
+     * @param strength the strength of the hunter.
+     * @param sight the sight corresponds to the viewing distance of the hunter.
+     * @param energy initial energy of the hunter. If this value is lower then zero the hunter will starve immediately.
+     */
     Hunter(Location loc, Board myBoard, int speed, int strength, int sight, int energy) {
         this.loc = loc;
         this.myBoard = myBoard;
@@ -51,7 +67,9 @@ public class Hunter extends LivingCreature {
         brain = new HunterAI(this);
     }
 
-
+    /**
+     * Reacts to the current situation. This method is only called by the SimulationController.
+     */
     @Override
     public void react() {
         if (energy <= 0) {
@@ -64,7 +82,11 @@ public class Hunter extends LivingCreature {
         brain.react();
     }
 
-
+    /**
+     * Attacks another LivingCreature and eats it if the attack was successful.
+     * @param opponent LivingCreature that is going to be attack.
+     * @return true if the attack was successful.
+     */
     @Override
     public boolean attack(LivingCreature opponent) {
         if (getLocation().getDistance(opponent.getLocation()) > 1) return false;
@@ -79,14 +101,26 @@ public class Hunter extends LivingCreature {
         return true;
     }
 
+    /**
+     * Get the strength of this specific individual hunter.
+     * @return strength value of this hunter.
+     */
     public int getIndividualStrength() {
         return super.getStrength();
     }
 
+    /**
+     * checks whether the hunter is a group member.
+     * @return true if hunter is a group member.
+     */
     public boolean isGroupMember() {
         return ((HunterAI) brain).isGroupmember();
     }
 
+    /**
+     * Gets the current strength of the hunter. If the hunter is a group member the gorup strength will be returned.
+     * @return strength or group strength of the hunter.
+     */
     @Override
     public int getStrength() {
         if (((HunterAI) brain).isGroupmember()) {
@@ -95,12 +129,19 @@ public class Hunter extends LivingCreature {
         return super.getStrength();
     }
 
+    /**
+     * Will remove the hunter from the simulation.
+     */
     @Override
     public void die() {
         ((HunterAI)brain).leaveGroup();
         super.die();
     }
 
+    /**
+     * Generic 
+     * @return
+     */
     public GroupAI getGroup() {
         return ((HunterAI) brain).getGroup();
     }

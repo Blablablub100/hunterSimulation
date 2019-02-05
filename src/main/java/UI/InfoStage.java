@@ -10,11 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
+class InfoStage {
 
-public class InfoStage {
-
+    private Stage infoStage;
     private BoardObject object;
     private StringProperty title;
     private StringProperty status = new SimpleStringProperty();
@@ -43,7 +41,7 @@ public class InfoStage {
     }
 
     private void launch() {
-        Stage infoStage = new Stage();
+        infoStage = new Stage();
         infoStage.titleProperty().bind(title);
         BorderPane infoRoot = new BorderPane();
 
@@ -59,6 +57,10 @@ public class InfoStage {
         infoRoot.setCenter(memoryBox);
         infoStage.setScene(new Scene(infoRoot));
         infoStage.show();
+    }
+
+    void close() {
+        infoStage.close();
     }
 
     void update() {
@@ -109,7 +111,9 @@ public class InfoStage {
             } else {
                 memoryString = memoryString + "Obstacle ";
             }
-            memoryString = memoryString + "at " + x.getValue() + "," + y.getValue();
+            memoryString = memoryString + "at "
+                    + mem.getThingMemorized().getLocation().getX() + ","
+                    + mem.getThingMemorized().getLocation().getY();
             if (mem.getThingMemorized() instanceof LivingCreature) {
                 memoryString = memoryString + " , strength of " +
                         ((LivingCreature) mem.getThingMemorized()).getStrength();
@@ -166,6 +170,7 @@ public class InfoStage {
             HBox timesEatenBox = GUI.gethBox("Times Eaten \t\t", timesEaten);
             HBox shareSizeBox = createAttributeBox("Share size\t\t", ((DeadCorpse) object).getShare());
             attributesBox.getChildren().addAll(piecesBox, timesEatenBox, shareSizeBox);
+            attributesBox.setPrefWidth(300);
         }
         return attributesBox;
     }

@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * !!! COPIED FROM: https://github.com/albertoqa/MultiRange/blob/master/src/main/java/multirange/skin/MultiRangeSkin.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
  * Created by alberto on 09/01/2017.
  */
 public class MultiRangeSkin extends BehaviorSkinBase<MultiRange, MultiRangeBehavior> {

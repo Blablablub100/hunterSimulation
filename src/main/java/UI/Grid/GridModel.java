@@ -13,6 +13,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * !!! COPIED FROM: https://github.com/lestard/Grid/blob/master/grid/src/main/java/eu/lestard/grid/GridModel.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
+ */
 public class GridModel<State> {
 
     private final ObservableList<Cell<State>> cells = FXCollections.observableArrayList();
@@ -104,7 +108,7 @@ public class GridModel<State> {
      * @param row the column no. of the reference cell
      * @return a collection of neighbour cells. This can be up to 4.
      */
-    public List<Cell<State>> getNeighbours(int column, int row) {
+    private List<Cell<State>> getNeighbours(int column, int row) {
         List<Cell<State>> result = new ArrayList<>();
 
         addIfNotNull(result, getCell(column + 1, row));
@@ -140,7 +144,7 @@ public class GridModel<State> {
      * @param state the state that should be used as filter
      * @return a collection of cells with the given state.
      */
-    public List<Cell<State>> getCellsWithState(State state){
+    private List<Cell<State>> getCellsWithState(State state){
         return cells.stream().filter(c->c.getState() == state).collect(Collectors.toList());
     }
 

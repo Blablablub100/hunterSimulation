@@ -10,22 +10,51 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * This class provides the AI for any hunter object.
+ */
 public class HunterAI extends AI {
 
+    /**
+     * This list provides the short term memory for the hunter. It gets renewed every iteration.
+     */
     private List<HunterMemory> shortTermMemory;
+    /**
+     * This attribute saves the current group. Null if the Hunter is not a group member.
+     */
     private GroupAI groupIntellingence = null;
 
-    public HunterAI(LivingCreature owner) {
-        super(owner);
+    /**
+     * The only constructor for creating a new HunterAI.
+     * @param body the body this AI is going to control.
+     */
+    public HunterAI(LivingCreature body) {
+        super(body);
         longTermMemory = new Memory[3];
         status.setStatus(1);
     }
 
 
+    /**
+     * Reacts to the current situation based on prios:
+     * What to do:<br>
+     * 6. Prio: Group member<br>
+     *  -> do what the group tells me to do.<br>
+     * 5. Prio: Am I near  a Prey that would kill me<br>
+     *  -> flee, walk on the other side of large preys<br>
+     * 4. Prio: Am I near a Prey that I could kill<br>
+     *  -> hunt, walk in the direction of the small prey<br>
+     * 3. Prio: Does somebody want to group with me<br>
+     *  -> group with <br>
+     * 2. Prio: Big Prey nearby<br>
+     *  -> search for group<br>
+     * 1. Prio: Nothing to do<br>
+     *  -> Move randomly around<br>
+     */
     @Override
     public void react() {
         notifyNextRound();
-        List<BoardObject> thingsSeen = owner.see();
+        List<BoardObject> thingsSeen = body.see();
         shortTermMemory = getShortTermMemory(thingsSeen);
         filterToLongTermMemory();
         if (isGroupmember()) {
@@ -33,26 +62,12 @@ public class HunterAI extends AI {
             return;
         }
 
-        // first 4 finished -> MemoryManagement done
-
-        // What to do:
-        // 5. Prio: Am I near  a Prey that would kill me
-        //     -> flee, walk on the other side of large preys
-        // 4. Prio: Am I near a Prey that I could kill
-        //     -> hunt, walk in the direction of the small prey
-        // 3. Prio: Does somebody want to group with me
-        //     -> group with him
-        // 2. Prio: Big Prey nearby
-        //     -> search for group
-        // 1. Prop: Nothing to do
-        //     -> Turn around 90 degree and walk
-
         status.setStatus("calm");
 
         // check if I have to flee
         List<LivingCreature> threats = identifyThreats();
         for (LivingCreature threat: threats) {
-            if (threat.getLocation().getDistance(owner.getLocation()) < 3) {
+            if (threat.getLocation().getDistance(body.getLocation()) < 3) {
                 status.setStatus("fleeing");
                 flee(threats);
             }
@@ -78,7 +93,11 @@ public class HunterAI extends AI {
     }
 
 
-
+    /**
+     * Creates the hunters short term memory out of a list of seen things.
+     * @param thingsSeen BoardObjects the hunter has seen.
+     * @return short term memory.
+     */
     private List<HunterMemory> getShortTermMemory(List<BoardObject> thingsSeen) {
 
         List<HunterMemory> shortTermMemory = new ArrayList<>();
@@ -89,12 +108,15 @@ public class HunterAI extends AI {
         return shortTermMemory;
     }
 
-
+    /**
+     * filters the short term memory and saves the important stuff to long term memory.<br>
+     * highest priority memory: Prey smaller me<br>
+     * second highest priority memory: Hunter near me<br>
+     * third highest priority memory: Prey bigger then me<br>
+     * gets filled, first with highest priority memories, then second and then third<br>
+     */
     private void filterToLongTermMemory() {
-        // highest priority memory: Prey smaller me
-        // second highest priority memory: Hunter near me
-        // third highest priority memory: Prey bigger then me
-        //   gets filled, first with highest priority memories, then second and then third
+
         for (int i = 0; (i<shortTermMemory.size()) && (i<longTermMemory.length); i++) {
             HunterMemory shortTerm = shortTermMemory.get(i);
 
@@ -113,12 +135,15 @@ public class HunterAI extends AI {
         }
     }
 
-
+    /**
+     * Identifies which prey out of possible preys to hunter out of these criteria:<br>
+     * 1. Prio: no Threat nearby<br>
+     * 2. Prio: nearest Prey<br>
+     * 3. Prio: biggest Prey<br>
+     * @param threats List of threats that are dangerous to the hunter.
+     * @return best possible prey to hunt.
+     */
     private Prey identifyPreyToHunt(List<LivingCreature> threats) {
-        // prioritize what to hunt:
-        // 1. Prio: no Threat nearby
-        // 2. Prio: nearest Prey
-        // 3. Prio: biggest Prey
         List<Prey> huntablePrey = identifyHuntablePrey();
         Prey toHunt = null;
         for (Prey curr : huntablePrey) {
@@ -127,14 +152,14 @@ public class HunterAI extends AI {
                 if (isHuntable(curr, threats)) toHunt = curr;
             }
             // if current Prey is nearer then toHunt
-            else if (curr.getLocation().getDistance(owner.getLocation())
-                    < toHunt.getLocation().getDistance(owner.getLocation())) {
+            else if (curr.getLocation().getDistance(body.getLocation())
+                    < toHunt.getLocation().getDistance(body.getLocation())) {
 
                 if (isHuntable(curr, threats)) toHunt = curr;
             }
             // if current Prey is larger then toHunt and not more far away
-            else if (curr.getLocation().getDistance(owner.getLocation())
-                    == toHunt.getLocation().getDistance(owner.getLocation())
+            else if (curr.getLocation().getDistance(body.getLocation())
+                    == toHunt.getLocation().getDistance(body.getLocation())
                     && curr.getStrength() > toHunt.getStrength()) {
 
                 if (isHuntable(curr, threats)) toHunt = curr;
@@ -143,9 +168,14 @@ public class HunterAI extends AI {
         return toHunt;
     }
 
-
+    /**
+     * Checks whether a prey is huntable based on threats nearby.
+     * @param p prey that is going to be checked.
+     * @param threats threats that are dangerous to the hunter.
+     * @return true if p is huntable without danger.
+     */
     private boolean isHuntable(Prey p, List<LivingCreature> threats) {
-        BoardObject.Location myLoc = owner.getLocation();
+        BoardObject.Location myLoc = body.getLocation();
         BoardObject.Location pLoc = p.getLocation();
         for (LivingCreature threat: threats) {
             BoardObject.Location tLoc = threat.getLocation();
@@ -164,7 +194,10 @@ public class HunterAI extends AI {
         return true;
     }
 
-
+    /**
+     * Identifies Prey that are huntable.
+     * @return all preys that could be hunted.
+     */
     private List<Prey> identifyHuntablePrey() {
         List<Prey> huntablePrey = new ArrayList<>();
         for (Memory longTerm: longTermMemory) {
@@ -178,7 +211,10 @@ public class HunterAI extends AI {
         return huntablePrey;
     }
 
-
+    /**
+     * Identifies everything seen that is dangerous for the hunter.
+     * @return list of threats.
+     */
     private List<LivingCreature> identifyThreats() {
         List<LivingCreature> threats = new ArrayList<>();
         for (Memory longTerm: longTermMemory) {
@@ -192,7 +228,10 @@ public class HunterAI extends AI {
         return threats;
     }
 
-
+    /**
+     * Gets biggest prey that is either seen or saved in long term memory.
+     * @return biggest known prey.
+     */
     private Prey getBiggestPrey() {
         Prey temp1 = getBiggest(longTermMemory);
         Prey temp2 = getBiggest(shortTermMemory.toArray(new Memory[0]));
@@ -202,6 +241,12 @@ public class HunterAI extends AI {
         if (temp2.getStrength() > temp1.getStrength()) return temp2;
         return temp1;
     }
+
+    /**
+     * Gets biggest prey out of an array of memories.
+     * @param memories memories that are going to be checked.
+     * @return biggest prey inside the memory array.
+     */
     private Prey getBiggest(Memory[] memories) {
         Prey biggest = null;
         for (Memory memory: memories) {
@@ -216,7 +261,10 @@ public class HunterAI extends AI {
         return biggest;
     }
 
-
+    /**
+     * walks around and invites other hunters to the group. If the AI still remembers other hunter either from long or
+     * short term memory. The hunter will go to the biggest possible hunter to invite to the group.
+     */
     void searchForGroupMembers() {
         Hunter strongest = null;
         for (Memory shortTerm: shortTermMemory) {
@@ -239,53 +287,73 @@ public class HunterAI extends AI {
             }
         }
         if (strongest != null) {
-            owner.move(strongest.getLocation());
+            body.move(strongest.getLocation());
         }
         moveRandomly();
     }
 
-
+    /**
+     * Invites a new Hunter to the group.
+     * @param h hunter that is going to be invited.
+     * @return true if invitation is accepted.
+     */
     private boolean inviteToGroup(Hunter h) {
         int groupRadius = 3;
-        if (owner.getLocation().getDistance(h.getLocation()) < groupRadius) {
+        if (body.getLocation().getDistance(h.getLocation()) < groupRadius) {
             if (groupIntellingence == null) return false;
             return h.receiveGroupInvitation(groupIntellingence);
         }
         return false;
     }
 
-
+    /**
+     * hunts a specific prey.
+     * @param p prey that is going to be hunted.
+     */
     private void hunt(Prey p) {
         status.setStatus("hunting");
-        owner.move(p.getLocation());
-        if (owner.getLocation().getDistance(p.getLocation()) == 1 && owner.getPossibleSteps() >= 1.0) {
-            owner.attack(p);
+        body.move(p.getLocation());
+        if (body.getLocation().getDistance(p.getLocation()) == 1 && body.getPossibleSteps() >= 1.0) {
+            body.attack(p);
+        } else if (body.getLocation().getDistance(p.getLocation()) != 1) {
+            moveRandomly();
         }
     }
 
-
+    /**
+     * moves around randomly.
+     */
     void moveRandomly() {
         int direction = ThreadLocalRandom.current().nextInt(1, 4 + 1);
         switch (direction) {
             case 1:
-                owner.moveNorth();
+                body.moveNorth();
                 break;
             case 2:
-                owner.moveSouth();
+                body.moveSouth();
                 break;
             case 3:
-                owner.moveWest();
+                body.moveWest();
                 break;
             case 4:
-                owner.moveEast();
+                body.moveEast();
                 break;
         }
     }
 
-    public Status getStatus() {
+    /**
+     * return current status.
+     * @return current status object.
+     */
+    Status getStatus() {
         return status;
     }
 
+    /**
+     * joins a group.
+     * @param group group that this hunter is going to join-
+     * @return true if success.
+     */
     public boolean joinGroup(GroupAI group) {
         if (group == groupIntellingence) return true;
         if (isGroupmember() && group.getGroupSize() < groupIntellingence.getGroupSize()) return false;
@@ -295,52 +363,90 @@ public class HunterAI extends AI {
         return true;
     }
 
+    /**
+     * leaves the current group.
+     */
     public void leaveGroup() {
         if (groupIntellingence == null) return;
         groupIntellingence.remove(this);
         groupIntellingence = null;
     }
 
+    /**
+     * returns wether this hunter is group member.
+     * @return true if the hunter is a group member.
+     */
     public boolean isGroupmember() {
         if (groupIntellingence != null && groupIntellingence.getGroupSize() == 1) return false;
         return (groupIntellingence != null);
     }
 
+    /**
+     * Gets current group.
+     * @return current group object.
+     */
     public GroupAI getGroup() {
         return groupIntellingence;
     }
 
+    /**
+     * Gets the group strength of the current group.
+     * @return -1 if hunter is no group member.
+     */
     public int getGroupStrength() {
+        if (groupIntellingence == null) return -1;
         return groupIntellingence.getGroupStrength();
     }
 
+    /**
+     * Gets the body the AI is controlling.
+     * @return Hunter object.
+     */
     Hunter getBody() {
-        return (Hunter) owner;
+        return (Hunter) body;
     }
 
+    /**
+     * A special kind of memory that saves a priority with the memory. It extends on the normal AI memory.
+     */
     public class HunterMemory extends AI.Memory implements Comparable {
+        /**
+         * Priority of the memory
+         */
         private int prio;
 
-        public HunterMemory(BoardObject thing) {
+        /**
+         * The constructor to create a new hunter memory. The priority gets calculated automatically.
+         * @param thing BoardObject that is going to be saved in the memory.
+         */
+        HunterMemory(BoardObject thing) {
             super(thing);
             prio = calcPriority();
         }
 
-        public int getPriority() {
+        /**
+         * Gets the priority of the memory.
+         * @return priority value of the memory.
+         */
+        int getPriority() {
             return prio;
         }
 
+        /**
+         * Calculates the priority of the memory.
+         * @return int value that represents the priority of the memory.
+         */
         private int calcPriority() {
             BoardObject thing = getThingMemorized();
             int prio = 0;
 
-            if (thing instanceof Prey && ((Prey)thing).getStrength() >= owner.getStrength()) {
+            if (thing instanceof Prey && ((Prey)thing).getStrength() >= body.getStrength()) {
                 prio = 5;
             }
-            else if (thing instanceof Prey && ((Prey)thing).getStrength() < owner.getStrength()) {
+            else if (thing instanceof Prey && ((Prey)thing).getStrength() < body.getStrength()) {
                 prio = 4;
             }
-            else if (thing instanceof Hunter && ((Hunter)thing).getStrength() > owner.getStrength()) {
+            else if (thing instanceof Hunter && ((Hunter)thing).getStrength() > body.getStrength()) {
                 prio = 2;
             }
             else if (thing instanceof Hunter) {
@@ -349,12 +455,18 @@ public class HunterAI extends AI {
             return prio;
         }
 
-        public void remove() {
+        /**
+         * Removes the memory out of long term memory.
+         */
+        void remove() {
             for (int i = 0; i < longTermMemory.length; i++) {
                 if (longTermMemory[i] == this) longTermMemory[i] = null;
             }
         }
 
+        /**
+         * Overrides notifyNewRound so that the memory gets deleted once it is too old.
+         */
         @Override
         public void notifyNewRound() {
             super.notifyNewRound();
@@ -363,6 +475,11 @@ public class HunterAI extends AI {
             }
         }
 
+        /**
+         * Compares this memory two another memory. The one with the higher priority will be taller.
+         * @param o object to campre to.
+         * @return based on priority difference.
+         */
         @Override
         public int compareTo(Object o) {
             if (!(o instanceof HunterMemory)) return 0;

@@ -26,7 +26,10 @@
  */
 package UI.RangeSlider.multirange;
 
+
 /**
+ * !!! COPIED FROM: https://github.com/albertoqa/MultiRange/blob/master/src/main/java/multirange/Utils.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
  * Created by alberto on 16/01/2017.
  */
 public class Utils {

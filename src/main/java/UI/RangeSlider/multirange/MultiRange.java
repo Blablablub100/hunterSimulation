@@ -41,6 +41,9 @@ import javafx.util.StringConverter;
 import java.util.*;
 
 /**
+ *
+ * !!! COPIED FROM: https://github.com/albertoqa/MultiRange/blob/master/src/main/java/multirange/MultiRange.java
+ * !!! WE CHANGED THIS UP A LITTLE TO FIT IN OUR PROJECT.
  * The MultiRange control is simply a JavaFX Slider control with support
  * for multiple 'thumbs', rather than one. A thumb is the non-technical name for the
  * draggable area inside the Slider / MultiRange that allows for a value to be
@@ -82,7 +85,7 @@ public class MultiRange extends Control {
      * Creates a default (horizontal) multiRange instance using default values of 0.0,
      * 1.0 for min/max respectively.
      */
-    public MultiRange() {
+    protected MultiRange() {
         this(0, 1.0);
     }
 
@@ -92,7 +95,7 @@ public class MultiRange extends Control {
      * @param min The minimum allowable value that the MultiRange will allow
      * @param max The maximum allowable value that the MultiRange will allow
      */
-    public MultiRange(double min, double max) {
+    protected MultiRange(double min, double max) {
         getStyleClass().setAll(DEFAULT_STYLE_CLASS);
 
         setMin(min);
@@ -607,7 +610,7 @@ public class MultiRange extends Control {
      *
      * @param value new max value
      */
-    public final void setMax(double value) {
+    private void setMax(double value) {
         maxProperty().set(value);
     }
 
@@ -653,7 +656,7 @@ public class MultiRange extends Control {
      *
      * @param value new min value
      */
-    public final void setMin(double value) {
+    private void setMin(double value) {
         minProperty().set(value);
     }
 
@@ -713,7 +716,7 @@ public class MultiRange extends Control {
      * to be within the allowable range as specified by the
      * {@link #minProperty() min} and {@link #maxProperty() max} properties.
      */
-    public final void setLowValue(double d) {
+    private void setLowValue(double d) {
         lowValueProperty().set(d);
     }
 
@@ -736,7 +739,7 @@ public class MultiRange extends Control {
      * to be within the allowable range as specified by the
      * {@link #minProperty() min} and {@link #maxProperty() max} properties.
      */
-    public final void setHighValue(double d) {
+    private void setHighValue(double d) {
         if (!highValueProperty().isBound()) highValueProperty().set(d);
     }
 
@@ -754,7 +757,7 @@ public class MultiRange extends Control {
      * @return the value of SnapToTicks.
      * @see #snapToTicksProperty()
      */
-    public final boolean isSnapToTicks() {
+    private boolean isSnapToTicks() {
         return snapToTicks != null && snapToTicks.get();
     }
 
@@ -765,7 +768,7 @@ public class MultiRange extends Control {
      *
      * @return A BooleanProperty.
      */
-    public final BooleanProperty snapToTicksProperty() {
+    private BooleanProperty snapToTicksProperty() {
         if (snapToTicks == null) {
             snapToTicks = new StyleableBooleanProperty(false) {
                 @Override

@@ -7,18 +7,6 @@ import UI.UserInput;
 
 public class SimulationController {
 
-    //TODO !!!! WENN HUNTER GLEICH GROß PREY KLEBT ER DIE GANZE ZEIT DRAN
-
-    // TODO
-    /*
-    Bug fixes:
-    - Avg Hunter killed by Prey not working
-    - Avg Prey killed by Hunter not working
-    - Amount Prey killed not working
-    - Draw Group Radius
-    - if hunter strengths equals prey strength, hunter will stand in front of it for ever
-     */
-
     private Board board;
     private Statistics stats;
     private int simSteps;
@@ -33,7 +21,7 @@ public class SimulationController {
         this.stats = new Statistics(this);
     }
 
-    // musst be called to create the initial state of the simulation
+    // must be called to create the initial state of the simulation
     private void initSimulation(UserInput input) {
         board = new Board(input.getBoardWidth()
                 , input.getBoardHeight()
@@ -54,7 +42,7 @@ public class SimulationController {
     }
 
     public void simulateNextStep() {
-        for (LivingCreature curr: getBoard().getLivingCreatues()) {
+        for (LivingCreature curr: getBoard().getLivingCreatures()) {
             curr.react();
         }
         simSteps++;
