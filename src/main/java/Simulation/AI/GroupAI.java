@@ -26,7 +26,7 @@ public class GroupAI {
      */
     private List<HunterAI> members;
     /**
-     * An object of the target the gorup is going to hunter.
+     * An object of the target the group is going to hunter.
      */
     private Prey target;
     /**
@@ -134,7 +134,7 @@ public class GroupAI {
 
     /**
      * This method checks whether there are two group members near a target. This is important because the target prey
-     * can only die if there are at least two group mebers near it.
+     * can only die if there are at least two group members near it.
      * @return returns true if there are at least two group members near the target.
      */
     private boolean twoMembersNearTarget() {
@@ -159,7 +159,7 @@ public class GroupAI {
     /**
      * This method checks if any group member is near a location.
      * @param startLoc the location that is going to be checked.
-     * @return true if there is a group member near startloc.
+     * @return true if there is a group member near startLoc.
      */
     private boolean isMemberNearby(BoardObject.Location startLoc) {
         for (HunterAI member: members) {
@@ -283,7 +283,7 @@ public class GroupAI {
 
     /**
      * Gets the nearest group member to the target.
-     * @return nearest goup member to the target.
+     * @return nearest group member to the target.
      */
     private HunterAI getNearestMember() {
         HunterAI nearest = null;

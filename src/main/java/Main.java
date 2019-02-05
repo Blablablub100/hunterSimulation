@@ -1,9 +1,14 @@
 import Simulation.SimulationController;
 import UI.CLI;
 
+/**
+ * Is used only for debugging purposes together with the CLI class.
+ */
 class Main {
-
-
+    /**
+     * Starts the CLI, sets up simulation and runs it for 500 steps.
+     * @param args not used.
+     */
     public static void main(String[] args) {
 
         CLI test = new CLI();

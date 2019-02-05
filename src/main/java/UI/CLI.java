@@ -5,8 +5,15 @@ import Simulation.SimulationObjects.*;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Provides a simple Command Line interface for debugging purposes.
+ */
 public class CLI {
 
+    /**
+     * Gets user input.
+     * @return input done by the user.
+     */
     public UserInput getInput() {
         Scanner sc = new Scanner(System.in);
 
@@ -38,7 +45,10 @@ public class CLI {
         return input;
     }
 
-
+    /**
+     * Prints out the current state of the board in the CLI.
+     * @param b current state of the board.
+     */
     public void printBoard(Board b) {
         char[][] boardOutputCLI = new char[b.getWidth()][b.getHeight()];
         fill(boardOutputCLI, '#');
@@ -58,6 +68,11 @@ public class CLI {
         outputBoard(boardOutputCLI);
     }
 
+    /**
+     * Used for CLI output. Sets characters in the character array used for CLI printing.
+     * @param board current state of the board.
+     * @param o current object.
+     */
     private void setElement(char[][] board, BoardObject o) {
         BoardObject.Location loc = o.getLocation();
         if (o instanceof Hunter) {
@@ -71,6 +86,11 @@ public class CLI {
         }
     }
 
+    /**
+     * Fills char arrays with a char.
+     * @param toFill char array that is going to be filled.
+     * @param c character that it is going to be filled with.
+     */
     private void fill(char[][] toFill, char c) {
         for(int x = 0; x < toFill.length; x++) {
             for(int y = 0; y < toFill[x].length; y++) {
@@ -79,6 +99,10 @@ public class CLI {
         }
     }
 
+    /**
+     * prints the board to screen.
+     * @param output board in form of a char array.
+     */
     private void outputBoard(char[][] output) {
         for(int y = 0; y < output[0].length; y++) {
             for(int x = 0; x < output.length; x++) {

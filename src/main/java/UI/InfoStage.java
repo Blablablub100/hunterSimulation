@@ -10,21 +10,65 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX stage used for displaying additional information.
+ */
 class InfoStage {
 
+    /**
+     * Stage that is going to be displayed.
+     */
     private Stage infoStage;
+    /**
+     * BoardObject whose additional information is going to be showed.
+     */
     private BoardObject object;
+    /**
+     * Property for the windows title.
+     */
     private StringProperty title;
+    /**
+     * Property containing the LivingCreatures status.
+     */
     private StringProperty status = new SimpleStringProperty();
+    /**
+     * Property containing the objects x value.
+     */
     private IntegerProperty x = new SimpleIntegerProperty();
+    /**
+     * Property containing the objects y value.
+     */
     private IntegerProperty y = new SimpleIntegerProperty();
+    /**
+     * Property containing the LivingCreatures energy value.
+     */
     private IntegerProperty energy = new SimpleIntegerProperty();
+    /**
+     * Property containing the DeadCorpses pieces.
+     */
     private IntegerProperty pieces = new SimpleIntegerProperty();
+    /**
+     * Property containing the DeadCorpses counter for how many pieces are already eaten.
+     */
     private IntegerProperty timesEaten = new SimpleIntegerProperty();
+    /**
+     * Property containing the information whether the hunter is a group member or not.
+     */
     private BooleanProperty groupMember = new SimpleBooleanProperty(false);
+    /**
+     * Property containing the groupStrength of the hunter. If he is not a group member the group strength
+     * will be equal its normal strength.
+     */
     private IntegerProperty groupStrength = new SimpleIntegerProperty();
+    /**
+     * List of Properties containing a String representation of the LivingCreatures long term memory.
+     */
     private StringProperty[] longTerm;
 
+    /**
+     * crete a new InfoStage for an object. This will immediately show the window.
+     * @param object
+     */
     InfoStage(BoardObject object) {
         if (object == null) return;
         this.object = object;
@@ -40,6 +84,9 @@ class InfoStage {
         launch();
     }
 
+    /**
+     * launches the stage (showing the window).
+     */
     private void launch() {
         infoStage = new Stage();
         infoStage.titleProperty().bind(title);
@@ -59,10 +106,16 @@ class InfoStage {
         infoStage.show();
     }
 
+    /**
+     * closes the infoStage window.
+     */
     void close() {
         infoStage.close();
     }
 
+    /**
+     * Updates the information showed in the infoStage. Gets called every iteration.
+     */
     void update() {
         x.set(object.getLocation().getX());
         y.set(object.getLocation().getY());
@@ -82,6 +135,9 @@ class InfoStage {
         }
     }
 
+    /**
+     * Updates the windows title.
+     */
     private void updateTitle() {
         String type = "Obstacle ";
         if (object instanceof Hunter) type = "Hunter ";
@@ -90,6 +146,9 @@ class InfoStage {
         title.set(type + "at Location " + x.getValue() + ","+y.getValue());
     }
 
+    /**
+     * Updates the showed memory information.
+     */
     private void updateMem() {
         AI.Memory[] longTermMem = ((LivingCreature) object).getLongTermMemory();
         for (int i = 0; i < longTermMem.length; i++) {
@@ -97,6 +156,11 @@ class InfoStage {
         }
     }
 
+    /**
+     * Converts a memory to a String.
+     * @param mem memory that gets converted.
+     * @return memory in printable String form.
+     */
     private String getMemoryString(AI.Memory mem) {
         String memoryString = "";
         if (mem == null) {
@@ -122,12 +186,22 @@ class InfoStage {
         return memoryString;
     }
 
+    /**
+     * Creates a Label for showing a header in the infoStage.
+     * @param header String value showed in the header.
+     * @return Label ready for display.
+     */
     private Label createHeaderLabel(String header) {
         Label label = new Label(header);
         label.setStyle("-fx-font-weight:700");
         return label;
     }
 
+    /**
+     * Creates a memoryBox for showing all the memory saved into the long term memory.
+     * @param memory all memory values in an array.
+     * @return finished VBox ready for display.
+     */
     private VBox createMemoryBox(AI.Memory[] memory) {
         VBox memoryBox = new VBox();
         memoryBox.setSpacing(5);
@@ -139,6 +213,10 @@ class InfoStage {
         return memoryBox;
     }
 
+    /**
+     * Creates a VBox for showing the objects attribute.
+     * @return ready to print VBox.
+     */
     private VBox createAttributeBox() {
         VBox attributesBox = new VBox();
         Label attributesHeader = createHeaderLabel("Attributes");
@@ -175,10 +253,22 @@ class InfoStage {
         return attributesBox;
     }
 
+    /**
+     * Creates an HBox for showing one attribute.
+     * @param name name of the attribute.
+     * @param value value of the attribute.
+     * @return finished HBox ready for printing.
+     */
     private HBox createAttributeBox(String name, int value) {
         return createAttributeBox(name, Integer.toString(value));
     }
 
+    /**
+     * Creates an HBox for showing one attribute.
+     * @param name name of the attribute.
+     * @param value value of the attribute.
+     * @return finished HBox ready for printing.
+     */
     private HBox createAttributeBox(String name, String value) {
         HBox attributeBox = new HBox();
         attributeBox.setSpacing(5);

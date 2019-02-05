@@ -14,6 +14,7 @@ import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,6 +32,9 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Provides the main entry point of the program. Also shows the GUI.
+ */
 public class GUI extends Application{
 
 
@@ -46,65 +50,204 @@ public class GUI extends Application{
         CARRION
     }
 
-
+    /**
+     * Starting point of the program when using the GUI
+     * @param args not used
+     */
     public static void main(String...args){
         Application.launch(args);
     }
 
+    /**
+     * Simulation controller for the current simulation.
+     */
     private SimulationController sim;
+    /**
+     * Thread executing the simulation steps with specific delay.
+     */
     private Thread simulationThread;
+    /**
+     * Used for controlling the thread. If run is set to false the thread will cancel.
+     */
     private boolean run = false;
+    /**
+     * Used for controlling the thread. If pause is true the simulation will pause.
+     */
     private boolean pause = false;
+    /**
+     * The root-pane for the main windows.
+     */
     private BorderPane root;
+    /**
+     * The HashMap Containing the hunter groups and their corresponding colors.
+     */
     private HashMap<GroupAI, String> colors = new HashMap<>();
-
+    /**
+     * ArrayList saving all the infoWindows. InfoWindows are the small windows that open when you click
+     * on a cell that is not empty.
+     */
     private List<InfoStage> infos = new ArrayList<>();
-
+    /**
+     * Used for printing the grid on the main menu.
+     */
     private GridView<States> gridView;
+    /**
+     * Used for printing the grid on the main menu.
+     */
     private GridModel<States> gridModel;
+    /**
+     * Property for saving the number of rows or board height. It is bound to the height slider.
+     */
     private IntegerProperty numberOfRows = new SimpleIntegerProperty(30);
+    /**
+     * Property for saving the number of columns or board width. It is bound to the width slider.
+     */
     private IntegerProperty numberOfColumns = new SimpleIntegerProperty(30);
+    /**
+     * Property for saving the initial amount of hunters. It is bound to the hunter slider.
+     */
     private IntegerProperty numberOfHunter = new SimpleIntegerProperty(10);
+    /**
+     * Property for saving the initial amount of preys. It is bound to prey slider.
+     */
     private IntegerProperty numberOfPrey = new SimpleIntegerProperty(10);
+    /**
+     * Property for saving the initial amount of obstacles. It is bound to the obstacles slider.
+     */
     private IntegerProperty numberOfObstacles = new SimpleIntegerProperty(10);
 
+    /**
+     * Property for showing the hunter/ prey radio. It is bound to statistics field.
+     */
     private SimpleDoubleProperty hpRatio = new SimpleDoubleProperty(0.0);
+    /**
+     * Property for showing the average food gain per iteration by hunter. Is is bound to the statistics
+     * field.
+     */
     private SimpleDoubleProperty avgFoodGainH = new SimpleDoubleProperty(0.0);
+    /**
+     * Property for showing the average food gain per iteration by prey. Is is bound to the statistics
+     * field.
+     */
     private SimpleDoubleProperty avgFoodGainP = new SimpleDoubleProperty(0.0);
+    /**
+     * Property for showing the average Prey killed by Hunter. It is bound to the statistics field.
+     */
     private SimpleDoubleProperty avgPkilledByH = new SimpleDoubleProperty(0.0);
+    /**
+     * Property for showing the average Hunter killed by Prey. It is bound to the statistics field.
+     */
     private SimpleDoubleProperty avgHkilledByP = new SimpleDoubleProperty(0.0);
-
+    /**
+     * Property for showing the amount of dead hunter. It is bound to the statistics field.
+     */
     private IntegerProperty deadHunter = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of dead prey. It is bound to the statistics field.
+     */
     private IntegerProperty deadPrey = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of Hunter starved. It is bound to the statistics field.
+     */
     private IntegerProperty amtHunterStarved = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of Prey starved. It is bound to the statistics field.
+     */
     private IntegerProperty amtPreyStarved = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of Hunter killed. It is bound to the statistics field.
+     */
     private IntegerProperty amtHunterKilled = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of Prey killed. It is bound to the statistics field.
+     */
     private IntegerProperty amtPreyKilled = new SimpleIntegerProperty(0);
+    /**
+     * Property for showing the amount of Carrion currently on the board. It is bound to the statistics
+     * field.
+     */
     private IntegerProperty amtCarrion = new SimpleIntegerProperty(0);
 
+    /**
+     * This Property is used to control the border width of the grid.
+     */
     private IntegerProperty cellBorderWidth = new SimpleIntegerProperty(1);
 
+    /**
+     * Property bound to the lower value of the hunter speed RangeSlider.
+     */
     private IntegerProperty hunterMinSpeed = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter speed RangeSlider.
+     */
     private IntegerProperty hunterMaxSpeed = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunter strength RangeSlider.
+     */
     private IntegerProperty hunterMinStrength = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter strength RangeSlider.
+     */
     private IntegerProperty hunterMaxStrength = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunter view distance RangerSlider.
+     */
     private IntegerProperty hunterMinSight = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter view distance RangerSlider.
+     */
     private IntegerProperty hunterMaxSight = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunters initial energy.
+     */
     private IntegerProperty hunterMinEnergy = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunters initial energy.
+     */
     private IntegerProperty hunterMaxEnergy = new SimpleIntegerProperty(99);
 
+    /**
+     * Property bound to the lower value of the prey speed RangeSlider.
+     */
     private IntegerProperty preyMinSpeed = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter speed RangeSlider.
+     */
     private IntegerProperty preyMaxSpeed = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunter strength RangeSlider.
+     */
     private IntegerProperty preyMinStrength = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter strength RangeSlider.
+     */
     private IntegerProperty preyMaxStrength = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunter view distance RangerSlider.
+     */
     private IntegerProperty preyMinSight = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunter view distance RangerSlider.
+     */
     private IntegerProperty preyMaxSight = new SimpleIntegerProperty(9);
+    /**
+     * Property bound to the lower value of the hunters initial energy.
+     */
     private IntegerProperty preyMinEnergy = new SimpleIntegerProperty(2);
+    /**
+     * Property bound to the higher value of the hunters initial energy.
+     */
     private IntegerProperty preyMaxEnergy = new SimpleIntegerProperty(99);
 
+    /**
+     * Property bound to the simulation speed Slider.
+     */
     private IntegerProperty simSpeed = new SimpleIntegerProperty(100);
 
-
+    /**
+     * This method is used for printing the current simulation on th board.
+     * @param sim current simulation controller.
+     */
     private void printSim(SimulationController sim) {
         clear();
         List<BoardObject> things = sim.getBoard().getBoardObjects();
@@ -126,6 +269,11 @@ public class GUI extends Application{
         }
     }
 
+    /**
+     * paints a group of hunters in their corresponding colors.
+     * @param c cell to paint.
+     * @param h hunter on that cell.
+     */
     private void paintGroup(Cell c, Hunter h) {
         checkGroupAliveness();
         Pane gridPane = gridView.getCellPane(c);
@@ -146,6 +294,9 @@ public class GUI extends Application{
         }
     }
 
+    /**
+     * Check whether group is alive.
+     */
     private void checkGroupAliveness() {
         GroupAI[] groups = colors.keySet().toArray(new GroupAI[colors.keySet().size()]);
         for (int i = 0; i < groups.length; i++) {
@@ -153,6 +304,10 @@ public class GUI extends Application{
         }
     }
 
+    /**
+     * starts the main window.
+     * @param stage stage that the window is going to be in.
+     */
     @Override
     public void start(Stage stage) {
         stage.setTitle("Hunter Simulation");
@@ -201,12 +356,12 @@ public class GUI extends Application{
         // every time a new cell is added, we add an click listener to it.
         gridModel.setOnCellAddedHandler((cell)->{
             // the click handler switches the state of the cells
-            cell.setOnClick(event -> switchStates(cell));
+            cell.setOnClick(event -> showInfo(cell));
 
             // move over cells with pressed mouse button will switch states
             cell.setOnMouseOver(event -> {
                 if(event.isPrimaryButtonDown()){
-                    switchStates(cell);
+                    showInfo(cell);
                 }
             });
         });
@@ -237,6 +392,9 @@ public class GUI extends Application{
         stage.show();
     }
 
+    /**
+     * starts the simulation.
+     */
     private void startSim() {
         root.getLeft().setMouseTransparent(true);
         if (simulationThread != null) return;
@@ -268,11 +426,19 @@ public class GUI extends Application{
             run = true;
             printSim(sim);
             simulationThread.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (WrongUserInputException e) {
+            Stage stage = new Stage();
+            Parent errorRoot = new Pane();
+            stage.setTitle("ERROR wrong user input");
+            ((Pane) errorRoot).getChildren().addAll(new Label(e.toString()));
+            stage.setScene(new Scene(errorRoot, 400, 100));
+            stage.show();
         }
     }
 
+    /**
+     * Cancels the ongoing simulation.
+     */
     private void cancelSim() {
         run = false;
         root.getLeft().setMouseTransparent(false);
@@ -281,10 +447,14 @@ public class GUI extends Application{
         for (InfoStage info: infos) {
             info.close();
         }
+        infos.clear();
         resetStats();
         clear();
     }
 
+    /**
+     * Clears the Screen, turns every cell empty.
+     */
     private void clear() {
         for (Cell cell: gridModel.getCells()) {
             Pane p = gridView.getCellPane(cell);
@@ -293,17 +463,20 @@ public class GUI extends Application{
         }
     }
 
-
-    private void switchStates(Cell<States> cell) {
+    /**
+     * Launches an infoStage.
+     * @param cell Cell the infoStage is for.
+     */
+    private void showInfo(Cell<States> cell) {
         if (sim == null) return;
         BoardObject clickedObject = sim.getBoard().getObjectAtLocation(new BoardObject.Location(cell.getColumn(), cell.getRow()));
         if (clickedObject == null) return;
         infos.add(new InfoStage(clickedObject));
-
     }
 
     /**
      * Create a controls panel so that we can control the Grid properties.
+     * @return ready to print VBox containing controls.
      */
     private VBox createGridControls(){
         VBox controlsBox = new VBox();
@@ -350,6 +523,10 @@ public class GUI extends Application{
         return controlsBox;
     }
 
+    /**
+     * Creates VBox containing simulation controls.
+     * @return ready to show VBox containing simulation controls.
+     */
     private VBox createSimulationControls() {
         VBox controlsBox = new VBox();
         controlsBox.setSpacing(5);
@@ -374,6 +551,10 @@ public class GUI extends Application{
         return controlsBox;
     }
 
+    /**
+     * Creates VBox for showing Statistics on the right side of the stage.
+     * @return ready to print VBox containing all Statistics.
+     */
     private VBox createQuickStatistics() {
         VBox controlsBox = new VBox();
         controlsBox.setSpacing(5);
@@ -410,10 +591,22 @@ public class GUI extends Application{
         return controlsBox;
     }
 
+    /**
+     * Creates an HBox containing one Statistic and binds it to a Property.
+     * @param name name of the statistic.
+     * @param val property it is bound to.
+     * @return ready to print finished HBox.
+     */
     private HBox createStatisticsBox(String name, Property<Number> val) {
         return gethBox(name, val);
     }
 
+    /**
+     * Creates an HBox containing a name and a Property.
+     * @param name name of the HBox.
+     * @param val value of the HBox.
+     * @return ready to print finished HBox.
+     */
     static HBox gethBox(String name, Property<?> val) {
         HBox stat = new HBox();
         stat.setSpacing(5);
@@ -426,6 +619,11 @@ public class GUI extends Application{
         return stat;
     }
 
+    /**
+     * Creates an HBox containing a header label in bold.
+     * @param headerString String that is going to be on the header.
+     * @return finished ready to print HBox.
+     */
     private HBox createHeader(String headerString) {
         HBox header = new HBox();
         header.setSpacing(5);
@@ -435,6 +633,10 @@ public class GUI extends Application{
         return header;
     }
 
+    /**
+     * Creates an HBox containing all Buttons needed for controlling the simulation.
+     * @return ready to print finished HBox.
+     */
     private HBox createSimButtons() {
         Button startButton = new Button("Start");
         startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -466,6 +668,15 @@ public class GUI extends Application{
         return controls;
     }
 
+    /**
+     * Creates an HBox containing a RangeSlider.
+     * @param labelString Label at the side of the RangeSlider.
+     * @param lo Property for low value of the RangeSlider.
+     * @param hi Property for high value of the RangeSlier.
+     * @param min min value for the RangeSlider.
+     * @param max max value for the RangeSlider.
+     * @return Ready to print finished HBox containing a RangeSlider.
+     */
     private HBox createRangeControl(String labelString, Property<Number> lo, Property<Number> hi, int min, int max) {
         labelString = labelString+"\n";
         HBox control = new HBox();
@@ -484,10 +695,17 @@ public class GUI extends Application{
         label.textProperty().bind(Bindings.concat(labelString, lo, spacer, hi));
         control.getChildren().addAll(label, multiRange);
 
-
         return control;
     }
 
+    /**
+     * Creates an HBox containing a Slider.
+     * @param labelString String that is going to be displayed near the Slider.
+     * @param numberValue Property that is going to be bound to the Sliders value.
+     * @param min The minimum value of the RangeSlider.
+     * @param max The maximum value of the RangerSlider.
+     * @return finished ready to display HBox.
+     */
     private HBox createNumberControl(String labelString, Property<Number> numberValue, double min, double max){
         HBox control = new HBox();
         control.setSpacing(5);
@@ -505,6 +723,9 @@ public class GUI extends Application{
         return control;
     }
 
+    /**
+     * Resets the statistics. Only used before starting a new simulation.
+     */
     private void resetStats() {
         hpRatio.set(0);
         avgFoodGainH.set(0);
@@ -521,17 +742,30 @@ public class GUI extends Application{
         amtCarrion.set(0);
     }
 
+    /**
+     * Pauses the simulation.
+     */
     private void pauseSim() {
         pause = true;
     }
 
-
+    /**
+     * Resumes the simulation.
+     */
     private void resumeSim() {
         pause = false;
     }
 
+    /**
+     * Thread that is used for starting the thread printing the simulation and simulating the next step.
+     * This thread is also pausable by the pause boolean.
+     */
     class executeStepsThread extends Thread {
 
+        /**
+         * Gets called directly when the Thread is started.
+         * it starts the Thread for simulating and displaying new Threads after some waiting time.
+         */
         public void run() {
             while (run) {
                 while (pause) {
@@ -548,6 +782,10 @@ public class GUI extends Application{
             }
         }
 
+        /**
+         * Lets the Thread sleep for a given amount of milliseconds.
+         * @param ms amount of milliseconds for delay.
+         */
         private void sleep(int ms) {
             try {
                 TimeUnit.MILLISECONDS.sleep(ms);
@@ -557,6 +795,9 @@ public class GUI extends Application{
         }
     }
 
+    /**
+     * This thread is used for simulating new steps and updating the main window.
+     */
     class NextStepThread extends Thread {
 
         public void run() {
@@ -571,6 +812,9 @@ public class GUI extends Application{
             });
         }
 
+        /**
+         * Updates Stats displayed on the main window.
+         */
         private void updateStats() {
             hpRatio.set(roundTo2(sim.getStats().getHunterPreyRatio()));
             avgFoodGainH.set(roundTo2(sim.getStats().getAvgFoodGainPerIterationHunter()));
@@ -589,7 +833,12 @@ public class GUI extends Application{
             for (InfoStage info: infos) info.update();
         }
 
-        // https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+        /**
+         * Used to round double to 2 digits after point.
+         * https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+         * @param value value that is going to be rounded.
+         * @return rounded value.
+         */
         double roundTo2(double value) {
             BigDecimal bd = new BigDecimal(value);
             bd = bd.setScale(2, RoundingMode.HALF_UP);

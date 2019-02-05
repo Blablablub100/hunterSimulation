@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The abstract AI class provides some basic guidelines aboout how the Prey and Hunter AI are implemented.
+ * The abstract AI class provides some basic guidelines about how the Prey and Hunter AI are implemented.
  * It also has some methods already implemented.
  */
 public abstract class AI {

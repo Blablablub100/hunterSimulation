@@ -97,7 +97,7 @@ public interface BoardObject {
         }
 
         /**
-         * Moves in a ceratain direction based on string input.
+         * Moves in a certain direction based on string input.
          * @param direction can be north, south, west or east.
          * @return Returns itself for concatenation.
          */

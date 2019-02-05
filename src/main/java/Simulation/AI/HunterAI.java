@@ -22,7 +22,7 @@ public class HunterAI extends AI {
     /**
      * This attribute saves the current group. Null if the Hunter is not a group member.
      */
-    private GroupAI groupIntellingence = null;
+    private GroupAI groupIntelligence = null;
 
     /**
      * The only constructor for creating a new HunterAI.
@@ -58,7 +58,7 @@ public class HunterAI extends AI {
         shortTermMemory = getShortTermMemory(thingsSeen);
         filterToLongTermMemory();
         if (isGroupmember()) {
-            groupIntellingence.steerGroup(this);
+            groupIntelligence.steerGroup(this);
             return;
         }
 
@@ -83,7 +83,7 @@ public class HunterAI extends AI {
         // check if there is  a big Prey I can groupHunt
         Prey biggest = getBiggestPrey();
         if (biggest != null && !isGroupmember()) {
-            groupIntellingence = new GroupAI(this, biggest);
+            groupIntelligence = new GroupAI(this, biggest);
             searchForGroupMembers();
             status.setStatus("searching group members");
         } else if (toHunt == null && !status.getStatus().equals("fleeing")) {
@@ -300,8 +300,8 @@ public class HunterAI extends AI {
     private boolean inviteToGroup(Hunter h) {
         int groupRadius = 3;
         if (body.getLocation().getDistance(h.getLocation()) < groupRadius) {
-            if (groupIntellingence == null) return false;
-            return h.receiveGroupInvitation(groupIntellingence);
+            if (groupIntelligence == null) return false;
+            return h.receiveGroupInvitation(groupIntelligence);
         }
         return false;
     }
@@ -355,11 +355,11 @@ public class HunterAI extends AI {
      * @return true if success.
      */
     public boolean joinGroup(GroupAI group) {
-        if (group == groupIntellingence) return true;
-        if (isGroupmember() && group.getGroupSize() < groupIntellingence.getGroupSize()) return false;
+        if (group == groupIntelligence) return true;
+        if (isGroupmember() && group.getGroupSize() < groupIntelligence.getGroupSize()) return false;
         else if (isGroupmember()) leaveGroup();
-        this.groupIntellingence = group;
-        groupIntellingence.add(this);
+        this.groupIntelligence = group;
+        groupIntelligence.add(this);
         return true;
     }
 
@@ -367,18 +367,18 @@ public class HunterAI extends AI {
      * leaves the current group.
      */
     public void leaveGroup() {
-        if (groupIntellingence == null) return;
-        groupIntellingence.remove(this);
-        groupIntellingence = null;
+        if (groupIntelligence == null) return;
+        groupIntelligence.remove(this);
+        groupIntelligence = null;
     }
 
     /**
-     * returns wether this hunter is group member.
+     * returns whether this hunter is group member.
      * @return true if the hunter is a group member.
      */
     public boolean isGroupmember() {
-        if (groupIntellingence != null && groupIntellingence.getGroupSize() == 1) return false;
-        return (groupIntellingence != null);
+        if (groupIntelligence != null && groupIntelligence.getGroupSize() == 1) return false;
+        return (groupIntelligence != null);
     }
 
     /**
@@ -386,7 +386,7 @@ public class HunterAI extends AI {
      * @return current group object.
      */
     public GroupAI getGroup() {
-        return groupIntellingence;
+        return groupIntelligence;
     }
 
     /**
@@ -394,8 +394,8 @@ public class HunterAI extends AI {
      * @return -1 if hunter is no group member.
      */
     public int getGroupStrength() {
-        if (groupIntellingence == null) return -1;
-        return groupIntellingence.getGroupStrength();
+        if (groupIntelligence == null) return -1;
+        return groupIntelligence.getGroupStrength();
     }
 
     /**
@@ -477,7 +477,7 @@ public class HunterAI extends AI {
 
         /**
          * Compares this memory two another memory. The one with the higher priority will be taller.
-         * @param o object to campre to.
+         * @param o object to compare to.
          * @return based on priority difference.
          */
         @Override

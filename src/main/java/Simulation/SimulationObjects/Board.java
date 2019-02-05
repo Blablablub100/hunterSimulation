@@ -257,7 +257,7 @@ public class Board {
 
     /**
      * Checks whether a location is empty.
-     * @param loc Location that is goint to be checked.
+     * @param loc Location that is going to be checked.
      * @return true if empty.
      */
     boolean isEmpty(BoardObject.Location loc) {

@@ -121,7 +121,7 @@ public class PreyAI extends AI {
 
     /**
      * checks if a board object is a thread.
-     * @param thing Boardobject to check.
+     * @param thing BoardObject to check.
      * @return true if thing is dangerous to the prey.
      */
     private boolean isThread(BoardObject thing) {

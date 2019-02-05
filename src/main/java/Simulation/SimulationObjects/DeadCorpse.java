@@ -28,7 +28,7 @@ public class DeadCorpse implements BoardObject {
     private int pieces;
 
     /**
-     * This is the only contructor to create a new DeadCorpse object.
+     * This is the only constructor to create a new DeadCorpse object.
      * @param board the board that this DeadCorpse is placed upon. The board is necessary for the rotting feature.
      * @param loc the location the DeadCorpse is laying at.
      * @param size the size of DeadCorpse. Normally this is the strength of the killed prey.
@@ -62,7 +62,7 @@ public class DeadCorpse implements BoardObject {
 
     /**
      * Gets the amount of pieces this DeadCorpse consists of.
-     * @return amount of pices this DeadCorpse consists of.
+     * @return amount of pieces this DeadCorpse consists of.
      */
     public int getPieces() {
         return pieces;

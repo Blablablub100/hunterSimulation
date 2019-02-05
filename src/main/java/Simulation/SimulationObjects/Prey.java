@@ -6,8 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Class representing a prey in a simulation. Provides core functionality of a prey.
+
+ */
 public class Prey extends LivingCreature {
 
+    /**
+     * Constructor for creating a new prey. Every attribute despite of the location and the board will be assigned
+     * randomly.
+     * @param loc location where the prey is going to start.
+     * @param myBoard board the prey will be upon.
+     */
     Prey(Location loc, Board myBoard) {
         brain = new PreyAI(this);
         this.loc = loc;
@@ -28,7 +38,15 @@ public class Prey extends LivingCreature {
         energy = ThreadLocalRandom.current().nextInt(1, 10 + 1);
         sightDistance = ThreadLocalRandom.current().nextInt(1, 10 + 1);
     }
-
+    /**
+     * Constructor for creating a new prey.
+     * @param loc location where the prey is going to start.
+     * @param myBoard board the prey will be upon.
+     * @param speed the speed corresponds to the maximum amount of steps a prey can make in one iteration.
+     * @param strength the strength of the prey.
+     * @param sight the sight corresponds to the viewing distance of the prey.
+     * @param energy initial energy of the prey. If this value is lower then zero the hunter will starve immediately.
+     */
     Prey(Location loc, Board myBoard, int speed, int strength, int sight, int energy) {
         this.loc = loc;
         this.myBoard = myBoard;
@@ -49,7 +67,9 @@ public class Prey extends LivingCreature {
         brain = new PreyAI(this);
     }
 
-    // methods from LivingCreature
+    /**
+     * Reacts to the current situation. This method is only called by the SimulationController.
+     */
     @Override
     public void react() {
         if (energy <= 0) {
@@ -61,6 +81,10 @@ public class Prey extends LivingCreature {
         brain.react();
     }
 
+    /**
+     * This method calculates a list of things the prey is able to see.
+     * @return List of BoardObjects the prey can see.
+     */
     @Override
     public List<BoardObject> see() {
 
@@ -85,7 +109,9 @@ public class Prey extends LivingCreature {
         }
         return objectsSeen;
     }
-
+    /**
+     * Used for scanning area north of prey.
+     */
     private void seeNorth(List<BoardObject> objectsSeen){
         // in viewing direction
         int viewWidth = 1;
@@ -133,7 +159,9 @@ public class Prey extends LivingCreature {
             viewWidth++;
         }
     }
-
+    /**
+     * Used for scanning area south of prey.
+     */
     private void seeSouth(List<BoardObject> objectsSeen){
         // in viewing direction
         int viewWidth = 1;
@@ -182,6 +210,9 @@ public class Prey extends LivingCreature {
         }
     }
 
+    /**
+     * Used for scanning area west of prey.
+     */
     private void seeWest(List<BoardObject> objectsSeen){
         // in viewing direction
         int viewWidth = 1;
@@ -229,7 +260,9 @@ public class Prey extends LivingCreature {
             viewWidth++;
         }
     }
-
+    /**
+     * Used for scanning area east of hunter.
+     */
     private void seeEast(List<BoardObject> objectsSeen){
         // in viewing direction
         int viewWidth = 1;
@@ -277,7 +310,12 @@ public class Prey extends LivingCreature {
             viewWidth++;
         }
     }
-
+    /**
+     * Helping method for seeing.
+     * @param objectsSeen objects that are seen.
+     * @param viewWidth width of how wide a prey is able to see.
+     * @param currY current y location.
+     */
     private void northAndSouthScanOfForwardAndBackwards(List<BoardObject> objectsSeen, int viewWidth, int currY) {
         for (int j = viewWidth * (-1); j <= viewWidth; j++) {
             int currX = loc.getX() + j;
@@ -285,7 +323,12 @@ public class Prey extends LivingCreature {
             if (tmp != null) objectsSeen.add(tmp);
         }
     }
-
+    /**
+     * Helping method for seeing.
+     * @param objectsSeen objects that are seen.
+     * @param viewWidth width of how wide a prey is able to see.
+     * @param currX current x location.
+     */
     private void northAndSouthScanOfLeftAndRight(List<BoardObject> objectsSeen, int viewWidth, int currX) {
         if(viewWidth == 0){
             int currY = loc.getY();
@@ -299,7 +342,12 @@ public class Prey extends LivingCreature {
             }
         }
     }
-
+    /**
+     * Helping method for seeing.
+     * @param objectsSeen objects that are seen.
+     * @param viewWidth width of how wide a prey is able to see.
+     * @param currX current x location.
+     */
     private void westAndEastScanOfForwardAndBackwards(List<BoardObject> objectsSeen, int viewWidth, int currX) {
         for (int j = viewWidth * (-1); j <= viewWidth; j++) {
             int currY;
@@ -308,7 +356,12 @@ public class Prey extends LivingCreature {
             if (tmp != null) objectsSeen.add(tmp);
         }
     }
-
+    /**
+     * Helping method for seeing.
+     * @param objectsSeen objects that are seen.
+     * @param viewWidth width of how wide a prey is able to see.
+     * @param currY current y location.
+     */
     private void westAndEastScanOfLeftAndRight(List<BoardObject> objectsSeen, int viewWidth, int currY) {
         if(viewWidth == 0){
             int currX = loc.getX();
@@ -324,6 +377,11 @@ public class Prey extends LivingCreature {
         }
     }
 
+    /**
+     * Attacks another LivingCreature and eats it if the attack was successful.
+     * @param opponent LivingCreature that is going to be attack.
+     * @return true if the attack was successful.
+     */
     @Override
     public boolean attack(LivingCreature opponent) {
         if (getLocation().getDistance(opponent.getLocation()) > 1) return false;

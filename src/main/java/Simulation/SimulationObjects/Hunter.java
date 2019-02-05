@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Hunter extends LivingCreature {
 
     /**
-     * Constructor for creating a new Hunter. Every attribute despite of the location and the board will be assigned
+     * Constructor for creating a new hunter. Every attribute despite of the location and the board will be assigned
      * randomly.
      * @param loc location where the hunter is going to start.
      * @param myBoard board the hunter will be upon.
@@ -39,7 +39,7 @@ public class Hunter extends LivingCreature {
     }
 
     /**
-     * Constructor for creating a new Hunter.
+     * Constructor for creating a new hunter.
      * @param loc location where the hunter is going to start.
      * @param myBoard board the hunter will be upon.
      * @param speed the speed corresponds to the maximum amount of steps a hunter can make in one iteration.
@@ -118,7 +118,7 @@ public class Hunter extends LivingCreature {
     }
 
     /**
-     * Gets the current strength of the hunter. If the hunter is a group member the gorup strength will be returned.
+     * Gets the current strength of the hunter. If the hunter is a group member the group strength will be returned.
      * @return strength or group strength of the hunter.
      */
     @Override
@@ -139,23 +139,35 @@ public class Hunter extends LivingCreature {
     }
 
     /**
-     * Generic 
-     * @return
+     * Generic getter for getting the group the hunter is part of.
+     * @return null if the hunter is no group member.
      */
     public GroupAI getGroup() {
         return ((HunterAI) brain).getGroup();
     }
 
+    /**
+     * Generic getter for the board the hunter in on.
+     * @return The hunters board object.
+     */
     public Board getBoard() {
         return myBoard;
     }
 
+    /**
+     * This method is used for receiving group invitations from other hunters.
+     * @param group group the hunter is invited to.
+     * @return true if the hunter joined the group.
+     */
     public boolean receiveGroupInvitation(GroupAI group) {
         return ((HunterAI)brain).joinGroup(group);
     }
 
 
-    // seeing logic starting from here
+    /**
+     * This method calculates a list of things the hunter is able to see.
+     * @return List of BoardObjects the hunter can see.
+     */
     @Override
     public List<BoardObject> see() {
         // things that the hunter is able to see
@@ -174,6 +186,10 @@ public class Hunter extends LivingCreature {
         }
     }
 
+    /**
+     * Used for scanning area north of hunter.
+     * @return things that are seen.
+     */
     private List<BoardObject> seeNorth() {
         BoardObject.Location tmp = (BoardObject.Location) getLocation().clone();
         List<BoardObject.Location> toCheck = new ArrayList<>();
@@ -187,6 +203,10 @@ public class Hunter extends LivingCreature {
         return scan(toCheck);
     }
 
+    /**
+     * Used for scanning area south of hunter.
+     * @return things that are seen.
+     */
     private List<BoardObject> seeSouth() {
         BoardObject.Location tmp = (BoardObject.Location) getLocation().clone();
         List<BoardObject.Location> toCheck = new ArrayList<>();
@@ -200,6 +220,10 @@ public class Hunter extends LivingCreature {
         return scan(toCheck);
     }
 
+    /**
+     * Helping method used for seeing.
+     * @return things that are seen.
+     */
     private void scanViewWidth(List<BoardObject.Location> toCheck, Location tmp, int stepsSeen) {
         int stepsWest = stepsSeen;
         while (stepsWest > 0) {
@@ -218,6 +242,10 @@ public class Hunter extends LivingCreature {
         }
     }
 
+    /**
+     * Used for scanning area west of hunter.
+     * @return things that are seen.
+     */
     private List<BoardObject> seeWest() {
         BoardObject.Location tmp = (BoardObject.Location) getLocation().clone();
         List<BoardObject.Location> toCheck = new ArrayList<>();
@@ -231,6 +259,10 @@ public class Hunter extends LivingCreature {
         return scan(toCheck);
     }
 
+    /**
+     * Used for scanning area east of hunter.
+     * @return things that are seen.
+     */
     private List<BoardObject> seeEast() {
         BoardObject.Location tmp = (BoardObject.Location) getLocation().clone();
         List<BoardObject.Location> toCheck = new ArrayList<>();
@@ -244,6 +276,10 @@ public class Hunter extends LivingCreature {
         return scan(toCheck);
     }
 
+    /**
+     * Helping method used for seeing.
+     * @return things that are seen.
+     */
     private void scanViewHeight(List<BoardObject.Location> toCheck, Location tmp, int stepsSeen) {
         int stepsNorth = stepsSeen;
         while (stepsNorth > 0) {
@@ -262,6 +298,10 @@ public class Hunter extends LivingCreature {
         }
     }
 
+    /**
+     * Helping method used for seeing.
+     * @return things that are seen.
+     */
     private List<BoardObject> scan(List<BoardObject.Location> toCheck) {
         List<BoardObject> res = new ArrayList<>();
         for (Location location : toCheck) {
