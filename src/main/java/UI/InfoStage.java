@@ -22,11 +22,10 @@ public class InfoStage {
     private IntegerProperty y = new SimpleIntegerProperty();
     private IntegerProperty energy = new SimpleIntegerProperty();
     private IntegerProperty pieces = new SimpleIntegerProperty();
+    private IntegerProperty timesEaten = new SimpleIntegerProperty();
     private BooleanProperty groupMember = new SimpleBooleanProperty(false);
     private IntegerProperty groupStrength = new SimpleIntegerProperty();
-    private StringProperty longTerm[];
-    private List<StringProperty> shortTerm = new ArrayList<>();
-
+    private StringProperty[] longTerm;
 
     InfoStage(BoardObject object) {
         if (object == null) return;
@@ -52,13 +51,13 @@ public class InfoStage {
 
         if (object instanceof LivingCreature) {
             LivingCreature lc = (LivingCreature) object;
-            Label longTermHeader = createHeaderLabel("Long Term Memory");
+            Label longTermHeader = createHeaderLabel(" Long Term Memory");
             memoryBox.getChildren().addAll(longTermHeader, createMemoryBox(lc.getLongTermMemory()));
         }
 
         infoRoot.setLeft(createAttributeBox());
         infoRoot.setCenter(memoryBox);
-        infoStage.setScene(new Scene(infoRoot, 400, 200));
+        infoStage.setScene(new Scene(infoRoot));
         infoStage.show();
     }
 
@@ -77,6 +76,7 @@ public class InfoStage {
         }
         if (object instanceof DeadCorpse) {
             pieces.set(((DeadCorpse) object).getPieces());
+            timesEaten.set(((DeadCorpse) object).getTimesEaten());
         }
     }
 
@@ -111,7 +111,7 @@ public class InfoStage {
             }
             memoryString = memoryString + "at " + x.getValue() + "," + y.getValue();
             if (mem.getThingMemorized() instanceof LivingCreature) {
-                memoryString = memoryString + " with a strength of " +
+                memoryString = memoryString + " , strength of " +
                         ((LivingCreature) mem.getThingMemorized()).getStrength();
             }
         }
@@ -128,9 +128,10 @@ public class InfoStage {
         VBox memoryBox = new VBox();
         memoryBox.setSpacing(5);
         for (int i = 0; i < memory.length; i++) {
-            HBox singleMemBox = GUI.gethBox(Integer.toString(i+1)+".", longTerm[i]);
+            HBox singleMemBox = GUI.gethBox(" "+Integer.toString(i+1)+".", longTerm[i]);
             memoryBox.getChildren().add(singleMemBox);
         }
+        memoryBox.setPrefWidth(200);
         return memoryBox;
     }
 
@@ -140,6 +141,7 @@ public class InfoStage {
 
         if (object instanceof LivingCreature) {
             LivingCreature lc = (LivingCreature) object;
+            attributesBox.setPrefWidth(260);
 
             HBox statusBox = GUI.gethBox("Status\t\t\t", status);
             HBox speedBox = createAttributeBox("Speed\t\t\t", lc.getMaxMovementSpeed());
@@ -161,8 +163,9 @@ public class InfoStage {
             }
         } else if (object instanceof DeadCorpse) {
             HBox piecesBox = GUI.gethBox("Pieces\t\t\t", pieces);
+            HBox timesEatenBox = GUI.gethBox("Times Eaten \t\t", timesEaten);
             HBox shareSizeBox = createAttributeBox("Share size\t\t", ((DeadCorpse) object).getShare());
-            attributesBox.getChildren().addAll(piecesBox, shareSizeBox);
+            attributesBox.getChildren().addAll(piecesBox, timesEatenBox, shareSizeBox);
         }
         return attributesBox;
     }

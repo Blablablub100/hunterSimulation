@@ -3,14 +3,6 @@ import UI.CLI;
 
 public class Main {
 
-    /* TODO
-    1. [X] fix AI statuses
-    2. [X] code cleanup
-    3. [X] implement Statistics
-    4. [] design UI
-     */
-
-
 
     public static void main(String[] args) {
 
@@ -23,15 +15,12 @@ public class Main {
             sim.simulateNextStep();
             System.out.println("=============================================");
             test.printBoard(sim.getBoard());
-            if (i == 499)
-                System.out.println(i);
             try {
-                //Thread.sleep(100);
+                Thread.sleep(100);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
-
         System.out.println("END");
     }
 }

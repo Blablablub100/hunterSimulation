@@ -28,7 +28,10 @@ public class HunterAI extends AI {
         List<BoardObject> thingsSeen = owner.see();
         shortTermMemory = getShortTermMemory(thingsSeen);
         filterToLongTermMemory();
-        if (isGroupmember()) groupIntellingence.steerGroup(this);
+        if (isGroupmember()) {
+            groupIntellingence.steerGroup(this);
+            return;
+        }
 
         // first 4 finished -> MemoryManagement done
 
@@ -99,6 +102,10 @@ public class HunterAI extends AI {
                 if((longTerm == null)
                         || (shortTerm.getPriority() > ((HunterMemory) longTerm).getPriority())
                         || longTerm.getThingMemorized() == shortTerm.getThingMemorized()) {
+                    // check if longTermMemory already contains it
+                    for (int j = 0; j < longTermMemory.length; j++) {
+                        if (longTermMemory[j] == shortTerm) break;
+                    }
                     longTermMemory[i] = shortTerm;
                     break;
                 }
@@ -233,9 +240,8 @@ public class HunterAI extends AI {
         }
         if (strongest != null) {
             owner.move(strongest.getLocation());
-        } else {
-            moveRandomly();
         }
+        moveRandomly();
     }
 
 
@@ -258,7 +264,7 @@ public class HunterAI extends AI {
     }
 
 
-    private void moveRandomly() {
+    void moveRandomly() {
         int direction = ThreadLocalRandom.current().nextInt(1, 4 + 1);
         switch (direction) {
             case 1:
@@ -296,7 +302,12 @@ public class HunterAI extends AI {
     }
 
     public boolean isGroupmember() {
+        if (groupIntellingence != null && groupIntellingence.getGroupSize() == 1) return false;
         return (groupIntellingence != null);
+    }
+
+    public GroupAI getGroup() {
+        return groupIntellingence;
     }
 
     public int getGroupStrength() {

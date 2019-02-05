@@ -1,4 +1,4 @@
-package UI.grid;
+package UI.Grid;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -58,8 +58,8 @@ public class GridModel<State> {
     }
 
     /**
-     * This consumer is called every time when a new cell is added to the grid. This happens when the size of
-     * the grid grows.
+     * This consumer is called every time when a new cell is added to the Grid. This happens when the size of
+     * the Grid grows.
      *
      * @param handler the consumer.
      */
@@ -93,11 +93,11 @@ public class GridModel<State> {
      * Diagonal cells are not included.
      *
      * Only existing neighbour cells are included in the returned list. This means that
-     * if the reference cell is located f.e. in the upper left corner of the grid, there is no cell
+     * if the reference cell is located f.e. in the upper left corner of the Grid, there is no cell
      * above and on the left of this cell. In this case only two cells are returned: the one below and on the right
      * of the reference cell.
      *
-     * If the size of the grid is <code>1</code> there is only one cell available that obviously has no
+     * If the size of the Grid is <code>1</code> there is only one cell available that obviously has no
      * neighbours. An empty collection is returned in this case.
      *
      * @param column the column no. of the reference cell

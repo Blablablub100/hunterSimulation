@@ -36,7 +36,7 @@ public class GroupAI {
     }
 
     void steerGroup(HunterAI h) {
-        if (time > 1000) {
+        if (time > 20 && getGroupStrength() < target.getStrength()) {
             if (corpse != null) corpse.rot();
             ungroup();
             return;
@@ -65,6 +65,8 @@ public class GroupAI {
                 h.getBody().eat(corpse.eat());
                 h.leaveGroup();
                 h.getStatus().setStatus("calm");
+            } else {
+                h.moveRandomly();
             }
         } else if (!h.getBody().getBoard().getPreys().contains(target)) {
             ungroup();
@@ -79,7 +81,8 @@ public class GroupAI {
                         , target.getStrength()
                         , members.size());
                 target.die();
-                time = time - 5;
+                h.getBody().getBoard().getStats().incPreyKilledByHunter();
+                time = time = 15;
                 h.getBody().getBoard().spawn(tmp);
                 calcGoals();
                 corpse = tmp;
@@ -254,5 +257,15 @@ public class GroupAI {
     public int getGroupSize() {
         if (corpse != null) return Integer.MAX_VALUE;
         return members.size();
+    }
+
+    public boolean isLeader(HunterAI hunter) {
+        if (hunter == leader) return true;
+        return false;
+    }
+
+    public boolean isAlive() {
+        if (members.size() == 0) return false;
+        else return true;
     }
 }

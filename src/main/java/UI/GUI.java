@@ -1,13 +1,12 @@
 package UI;
 
-import Simulation.AI.AI;
+import Simulation.AI.GroupAI;
 import Simulation.SimulationController;
 import Simulation.SimulationObjects.*;
 import UI.RangeSlider.RangeSlider;
-import UI.grid.Cell;
-import UI.grid.GridModel;
-import UI.grid.GridView;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import UI.Grid.Cell;
+import UI.Grid.GridModel;
+import UI.Grid.GridView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -21,29 +20,26 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class GUI extends Application{
 
 
     /**
-     * The states that a grid cell can have in our example
+     * The states that a Grid cell can have in our example
      */
-    public static enum States {
+    public enum States {
         EMPTY,
         B,
         HUNTER,
-        GROUPED_HUNTER,
         PREY,
         OBSTACLE,
         CARRION
@@ -59,6 +55,7 @@ public class GUI extends Application{
     private boolean run = false;
     private boolean pause = false;
     private BorderPane root;
+    private HashMap<GroupAI, String> colors = new HashMap<>();
 
     private List<InfoStage> infos = new ArrayList<>();
 
@@ -114,6 +111,7 @@ public class GUI extends Application{
             if (thing instanceof Hunter) {
                 Cell c = gridModel.getCell(thing.getLocation().getX(), thing.getLocation().getY());
                 c.changeState(States.HUNTER);
+                if (((Hunter) thing).isGroupMember()) paintGroup(c, (Hunter) thing);
             } else if (thing instanceof Prey) {
                 Cell c = gridModel.getCell(thing.getLocation().getX(), thing.getLocation().getY());
                 c.changeState(States.PREY);
@@ -124,6 +122,33 @@ public class GUI extends Application{
                 Cell c = gridModel.getCell(thing.getLocation().getX(), thing.getLocation().getY());
                 c.changeState(States.CARRION);
             }
+        }
+    }
+
+    private void paintGroup(Cell c, Hunter h) {
+        checkGroupAliveness();
+        Pane gridPane = gridView.getCellPane(c);
+        if (colors.containsKey(h.getGroup())) {
+            gridPane.setStyle(colors.get(h.getGroup()));
+            return;
+        }
+        String prefix = "-fx-background-color: #";
+        for (int i = 60; i < 98; i = i+3) { // max 1000 hunter
+            for (int j = 30; j < 60; j = j+3) {
+                String curr = Integer.toString(i) + Integer.toString(j) + "01";
+                if (!colors.containsValue(prefix + curr)) {
+                    colors.put(h.getGroup(), prefix + curr);
+                    gridPane.setStyle(prefix+curr);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void checkGroupAliveness() {
+        GroupAI[] groups = colors.keySet().toArray(new GroupAI[colors.keySet().size()]);
+        for (int i = 0; i < groups.length; i++) {
+            if (!groups[i].isAlive()) colors.remove(groups[i]);
         }
     }
 
@@ -139,7 +164,7 @@ public class GUI extends Application{
         gridModel.setDefaultState(States.EMPTY);
 
 
-        // create the grid view and shunter coloret the grid model
+        // create the Grid view and shunter coloret the Grid model
         gridView = new GridView<>();
         gridView.setGridModel(gridModel);
 
@@ -186,7 +211,7 @@ public class GUI extends Application{
         });
 
 
-        // bind the number of rows/columns in the grid model
+        // bind the number of rows/columns in the Grid model
         gridModel.numberOfColumns().bind(numberOfColumns);
         gridModel.numberOfRows().bind(numberOfRows);
 
@@ -246,12 +271,15 @@ public class GUI extends Application{
         root.getLeft().setMouseTransparent(false);
         sim = null;
         simulationThread = null;
+        resetStats();
         clear();
     }
 
     private void clear() {
         for (Cell cell: gridModel.getCells()) {
+            Pane p = gridView.getCellPane(cell);
             cell.changeState(States.EMPTY);
+            p.setStyle("");
         }
     }
 
@@ -261,17 +289,11 @@ public class GUI extends Application{
         BoardObject clickedObject = sim.getBoard().getObjectAtLocation(new BoardObject.Location(cell.getColumn(), cell.getRow()));
         if (clickedObject == null) return;
         infos.add(new InfoStage(clickedObject));
-        /*final States stateBefore = cell.getState();
-        if (stateBefore == States.EMPTY) {
-            cell.changeState(States.B);
-        } else {
-            cell.changeState(States.EMPTY);
-        }*/
 
     }
 
     /**
-     * Create a controls panel so that we can control the grid properties.
+     * Create a controls panel so that we can control the Grid properties.
      */
     private VBox createGridControls(){
         VBox controlsBox = new VBox();
@@ -332,7 +354,7 @@ public class GUI extends Application{
         Slider slider = new Slider();
         speedBox.getChildren().addAll(label, slider);
 
-        label.textProperty().bind(Bindings.concat("Simulation Speed\t\t", simSpeed));
+        label.textProperty().bind(Bindings.concat("Simulation Speed\t\t", simSpeed, " ms"));
         slider.valueProperty().bindBidirectional(simSpeed);
 
         slider.setMin(50);
@@ -473,6 +495,22 @@ public class GUI extends Application{
         return control;
     }
 
+    private void resetStats() {
+        hpRatio.set(0);
+        avgFoodGainH.set(0);
+        avgFoodGainP.set(0);
+        avgPkilledByH.set(0);
+        avgHkilledByP.set(0);
+
+        deadHunter.set(0);
+        deadPrey.set(0);
+        amtHunterStarved.set(0);
+        amtPreyStarved.set(0);
+        amtHunterKilled.set(0);
+        amtPreyKilled.set(0);
+        amtCarrion.set(0);
+    }
+
     private void pauseSim() {
         pause = true;
     }
@@ -494,6 +532,7 @@ public class GUI extends Application{
                     run = false;
                     return;
                 }
+                if (simulationThread != this) return;
                 sleep(simSpeed.get());
                 if (!pause) new NextStepThread().start();
             }

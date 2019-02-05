@@ -1,14 +1,13 @@
-package UI.grid;
+package UI.Grid;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 /**
- * This class represents a single Cell of the grid. It is created and managed by the {@link eu.lestard.grid.GridModel}.
+ * This class represents a single Cell of the Grid. It is created and managed by the {@link eu.lestard.grid.GridModel}.
  *
  * @param <State> the generic type of states that the cell can have. The state needs to be an enum.
  */
@@ -59,14 +58,14 @@ public class Cell <State> {
     }
 
     /**
-     * @return the column where this cell is located in the grid.
+     * @return the column where this cell is located in the Grid.
      */
     public int getColumn() {
         return column;
     }
 
     /**
-     * @return the row where this cell is located in the grid.
+     * @return the row where this cell is located in the Grid.
      */
     public int getRow() {
         return row;

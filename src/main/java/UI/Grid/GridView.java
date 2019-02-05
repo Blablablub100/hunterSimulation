@@ -1,4 +1,4 @@
-package UI.grid;
+package UI.Grid;
 
 import eu.lestard.advanced_bindings.api.NumberBindings;
 import javafx.beans.InvalidationListener;
@@ -26,13 +26,13 @@ import java.util.function.Function;
 
 
 /**
- * This class is the UI part of the grid and defines how the grid is shown in the view.
+ * This class is the UI part of the Grid and defines how the Grid is shown in the view.
  *
  * To use this class you need to first create a {@link eu.lestard.grid.GridModel} and add it to this view class with the {@link #setGridModel} method.
  *
- * After that you can define what the grid will look like when a cell gets a specific State.
+ * After that you can define what the Grid will look like when a cell gets a specific State.
  *
- * @param <State> the generic enum type that defines the states that the grid view can show.
+ * @param <State> the generic enum type that defines the states that the Grid view can show.
  */
 public class GridView<State> extends StackPane {
 
@@ -103,7 +103,7 @@ public class GridView<State> extends StackPane {
 
     /**
      * This method is called when the gridModel is added to the view. It is used
-     * to define the bindings for the size of the grid cells.
+     * to define the bindings for the size of the Grid cells.
      *
      */
     private void initGridModel() {
@@ -231,7 +231,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * This method is called when new cells are added in the grid model.
+     * This method is called when new cells are added in the Grid model.
      */
     private void addedCell(NumberBinding pxPerCell, Cell<State> cell) {
         NumberBinding xStart = pxPerCell.multiply(cell.getColumn());
@@ -358,11 +358,11 @@ public class GridView<State> extends StackPane {
      * A mapping function gets a cell as param and has to return a {@link Node} instance.
      *
      * The function is called every time a cell gets the defined state. The returned node is added
-     * to the cell in the grid.
+     * to the cell in the Grid.
      *
-     * This way you can add nodes to the grid when cells are changing there state.
+     * This way you can add nodes to the Grid when cells are changing there state.
      *
-     * For example you can add a Label to the grid for every state.
+     * For example you can add a Label to the Grid for every state.
      * In the example we assume a States enum with the
      * enum constants 'A' and 'B':
      *
@@ -413,7 +413,7 @@ public class GridView<State> extends StackPane {
 
 
     /**
-     * The size of a single cell in the grid.
+     * The size of a single cell in the Grid.
      *
      * @return the size as read-only property.
      */
@@ -422,7 +422,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The width of the root pane of the grid.
+     * The width of the root pane of the Grid.
      *
      * @return the width as read-only property.
      */
@@ -431,7 +431,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The height of the root pane of the grid.
+     * The height of the root pane of the Grid.
      *
      * @return the height as read-only property.
      */
@@ -440,7 +440,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The layoutX property of the root pane of the grid.
+     * The layoutX property of the root pane of the Grid.
      *
      * @return the layoutX as read-only property.
      */
@@ -449,7 +449,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The layoutY property of the root pane of the grid.
+     * The layoutY property of the root pane of the Grid.
      *
      * @return the layoutY as read-only property.
      */
@@ -458,7 +458,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The width of the borders around each cell in the grid.
+     * The width of the borders around each cell in the Grid.
      *
      * Default value is: 1.
      *
@@ -469,7 +469,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The color of the borders around each cell in the grid.
+     * The color of the borders around each cell in the Grid.
      *
      * Default value is: {@link Color#LIGHTGREY}.
      *
@@ -481,7 +481,7 @@ public class GridView<State> extends StackPane {
 
 
     /**
-     * The width of the border around the whole grid.
+     * The width of the border around the whole Grid.
      *
      * Default value is: 0.
      *
@@ -492,7 +492,7 @@ public class GridView<State> extends StackPane {
     }
 
     /**
-     * The color of the border around the whole grid.
+     * The color of the border around the whole Grid.
      *
      * Default value is: {@link Color#TRANSPARENT}.
      *

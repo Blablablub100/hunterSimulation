@@ -70,6 +70,7 @@ public class Hunter extends LivingCreature {
         if (getLocation().getDistance(opponent.getLocation()) > 1) return false;
         if (opponent.getStrength() > getStrength()) return false;
         if (!(opponent instanceof Prey)) return false;
+        if (!myBoard.getPreys().contains(opponent)) return false;
         Location tmp = opponent.getLocation();
         eat(opponent.getStrength());
         opponent.die();
@@ -98,6 +99,10 @@ public class Hunter extends LivingCreature {
     public void die() {
         ((HunterAI)brain).leaveGroup();
         super.die();
+    }
+
+    public GroupAI getGroup() {
+        return ((HunterAI) brain).getGroup();
     }
 
     public Board getBoard() {

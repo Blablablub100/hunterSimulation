@@ -93,26 +93,6 @@ public class Statistics {
         return simulation.getBoard().getNonLivingBoardObjects().size() - getObstacleCount();
     }
 
-    public int getAvgHunterSpeed() {
-        List<Hunter> hunters = simulation.getBoard().getHunters();
-        if (hunters.size() == 0) return 0;
-        int sum = 0;
-        for (Hunter hunter: hunters) {
-            sum = sum + hunter.getMaxMovementSpeed();
-        }
-        return sum/hunters.size();
-    }
-
-    public int getAvgPreySpeed() {
-        List<Prey> preys = simulation.getBoard().getPreys();
-        if (preys.size() == 0) return 0;
-        int sum = 0;
-        for (Prey prey: preys) {
-            sum = sum + prey.getMaxMovementSpeed();
-        }
-        return sum/preys.size();
-    }
-
     public double getAvgPreyKilledByHunter() {
         if (amountPreyKilledByHunter == 0) return 0;
         return (double) amountPreyKilledByHunter / (double) getInitialHunterCount();
